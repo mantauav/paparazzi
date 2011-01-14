@@ -47,7 +47,6 @@
 #include "generated/flight_plan.h"
 #include "mcu_periph/uart.h"
 #include "gps.h"
-//include "gps_ubx.h"
 #include "gps_nmea.h"
 #include "subsystems/nav.h"
 #include "latlong.h"
