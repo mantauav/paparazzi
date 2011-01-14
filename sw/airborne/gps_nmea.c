@@ -67,7 +67,6 @@ int32_t  gps_utm_east, gps_utm_north;
 uint8_t  gps_utm_zone;
 uint8_t  gps_mode;
 
-//AD missing configure status variable added
 #ifdef GPS_CONFIGURE
 static uint8_t gps_status_config;
 #endif
