@@ -37,7 +37,9 @@
 #error "The flag GPS has been deprecated. Please replace it with USE_GPS."
 #endif
 
-#ifdef UBX
+#ifdef NMEA
+#include "gps_nmea.h"
+#elif defined UBX
 #include "gps_ubx.h"
 #elif defined USE_GPS_XSENS
 #include "gps_xsens.h"
@@ -113,7 +115,11 @@ extern struct svinfo gps_svinfos[GPS_NB_CHANNELS];
 #define GpsLink(_x) _GpsLink(GPS_LINK, _x)
 
 #define GpsBuffer() GpsLink(ChAvailable())
+#ifdef NMEA
+#define ReadGpsBuffer() { while (GpsLink(ChAvailable())&&!gps_msg_received) parse_nmea_char(GpsLink(Getch())); }
+#else
 #define ReadGpsBuffer() { while (GpsLink(ChAvailable())&&!gps_msg_received) parse_ubx(GpsLink(Getch())); }
+#endif
 #define GpsUartSend1(c) GpsLink(Transmit(c))
 #define GpsUartInitParam(_a,_b,_c) GpsLink(InitParam(_a,_b,_c))
 #define GpsUartRunning GpsLink(TxRunning)
