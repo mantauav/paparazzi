@@ -49,15 +49,24 @@ void airspeed_adc_init( void ) {
 }
 
 void airspeed_adc_update( void ) {
+  float airspeed;
 #ifndef SITL
-  adc_airspeed_val = buf_airspeed.sum / buf_airspeed.av_nb_sample;
+  adc_airspeed_val = (buf_airspeed.sum / buf_airspeed.av_nb_sample + AIRSPEED_ADC_OFFSET);
 #ifdef AIRSPEED_QUADRATIC_SCALE
-  float airspeed = (adc_airspeed_val - AIRSPEED_BIAS);
+  airspeed = (adc_airspeed_val - AIRSPEED_BIAS);
   if (airspeed <= 0.0f)
     airspeed = 0.0f;
   airspeed = sqrtf(airspeed) * AIRSPEED_QUADRATIC_SCALE;
+#else 
+#ifdef AIRSPEED_ADC_DELTAPRESSURE
+  float deltapressure=(float)adc_airspeed_val*AIRSPEED_ADC_SCALE; //convert the adc value into millibars
+  if (deltapressure < 0.0)
+    deltapressure=0;
+  airspeed=dp2cas(deltapressure,1013.25);
+  airspeed = AIRSPEED_SCALE * (airspeed - AIRSPEED_BIAS);         //correct the airspeed with constants wind tunnel. should be verified.
 #else
-  float airspeed = AIRSPEED_SCALE * (adc_airspeed_val - AIRSPEED_BIAS);
+  airspeed = AIRSPEED_SCALE * (adc_airspeed_val - AIRSPEED_BIAS);
+#endif
 #endif
   EstimatorSetAirspeed(airspeed);
 #else // SITL
@@ -66,3 +75,12 @@ void airspeed_adc_update( void ) {
   adc_airspeed_val = 0;
 #endif //SITL
 }
+
+//Function to calculate airspeed from pressure differential. Units are millibars and meters/second
+float dp2cas(float dp, float Pref)
+{	
+  float a_sl = 343; // Speed of sound dry air at 20C (m/s)
+  float speed = a_sl*sqrt( 5*(pow((dp/Pref + 1),(2./7.)) - 1.) );
+  return speed;
+}
+

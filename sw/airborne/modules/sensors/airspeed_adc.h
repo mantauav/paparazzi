@@ -29,5 +29,7 @@ extern uint16_t adc_airspeed_val;
 
 void airspeed_adc_init( void );
 void airspeed_adc_update( void );
-
+float dp2cas(float dp, float Pref);
 #endif /* AIRSPEED_ADC_H */
+
+
