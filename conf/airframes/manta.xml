@@ -194,7 +194,7 @@
 
 <!--    <subsystem name="gyro"          type="vn100"/>		 -->
     <subsystem name="gps" 		    type="nmea">
-      <configure name="GPS_BAUD" value="B57600"/>
+      <configure name="GPS_BAUD" value="B38400"/>
     </subsystem>
     <subsystem name="navigation"/>
   </firmware>

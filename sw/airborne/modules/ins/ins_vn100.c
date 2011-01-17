@@ -26,7 +26,7 @@
  * \brief driver for the VectorNav VN100
  */
 
-#include "ins_vn100.h"
+#include "modules/ins/ins_vn100.h"
 
 #include "generated/airframe.h"
 #include "led.h"
@@ -190,10 +190,10 @@ void parse_ins_msg( void ) {
 
 
 extern void ins_report_task( void ) {
-  DOWNLINK_SEND_AHRS_LKF(DefaultChannel,
+/*  DOWNLINK_SEND_AHRS_LKF(DefaultChannel,
       &ins_eulers.phi, &ins_eulers.theta, &ins_eulers.psi,
       &ins_quat.qi, &ins_quat.qx, &ins_quat.qy, &ins_quat.qz,
       &ins_rates.p, &ins_rates.q, &ins_rates.r,
       &ins_accel.x, &ins_accel.y, &ins_accel.z,
-      &ins_mag.x, &ins_mag.y, &ins_mag.z);
+      &ins_mag.x, &ins_mag.y, &ins_mag.z);*/
 }

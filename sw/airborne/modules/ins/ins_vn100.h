@@ -32,7 +32,7 @@
 #define INS_VN100_H
 
 #include "std.h"
-#include "VN100.h"
+#include "modules/ins/VN100.h"
 #include "math/pprz_algebra_float.h"
 
 extern float ins_roll_neutral; //for testing, may be the wrong spot to put this
