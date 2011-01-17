@@ -41,6 +41,8 @@
 extern uint8_t fbw_mode;
 extern bool_t failsafe_mode;
 
+extern uint8_t reset_processor;
+#define main_fbw_reset(a) BOARDRESET()
 void init_fbw( void );
 void periodic_task_fbw( void );
 void event_task_fbw( void );

@@ -6,10 +6,17 @@
     <file name="ins_vn100.h"/>
   </header>
   <init fun="ins_init()"/>
-  <periodic fun="ins_periodic_task()" freq="4"/>
+  <periodic fun="ins_periodic_task()" freq="30"/>
   <periodic fun="ins_report_task()" freq="4"/>
   <event fun="ins_event_task()"/>
-  <makefile>
+
+  <makefile target="ap">
+    <define name="USE_SPI_SLAVE0"/>
+    <define name="SPI_MASTER"/>
+    <file name="ins_vn100.c"/>
+    <file name="fw_ins_vn100.c"/>
+  </makefile>
+  <makefile target="sim">
     <file name="ins_vn100.c"/>
     <file name="fw_ins_vn100.c"/>
   </makefile>

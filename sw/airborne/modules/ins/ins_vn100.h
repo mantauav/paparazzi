@@ -35,6 +35,9 @@
 #include "VN100.h"
 #include "math/pprz_algebra_float.h"
 
+extern float ins_roll_neutral; //for testing, may be the wrong spot to put this
+extern float ins_pitch_neutral; //for testing, may be the wrong spot to put this
+
 /* state */
 extern struct FloatEulers ins_eulers;
 extern struct FloatQuat ins_quat;

@@ -28,9 +28,12 @@
 
 #include "modules/ins/ins_vn100.h"
 #include "mcu_periph/spi.h"
+#include "mcu_periph/uart.h"
+#include "messages.h"
+#include "downlink.h"
 
 void ins_init( void ) {
-
+#ifndef SITL
   /* SPI polarity = 1 - data sampled on rising edge */
   SpiSetCPOL();
   /* SPI phase = 1 - SCK idle high */
@@ -41,10 +44,11 @@ void ins_init( void ) {
   ins_baud = VN100_BAUD;
 
   ins_init_status = INS_VN100_SET_BAUD;
-
+#endif
 }
 
 static inline bool_t ins_configure( void ) {
+  #ifndef SITL
   switch (ins_init_status) {
     case INS_VN100_SET_BAUD :
       last_send_packet.RegID = VN100_REG_SBAUD;
@@ -69,10 +73,12 @@ static inline bool_t ins_configure( void ) {
   spi_buffer_output = (uint8_t*)&last_send_packet;
   SpiSelectSlave0();
   SpiStart();
+  #endif
   return FALSE;
 }
 
 void ins_periodic_task( void ) {
+  #ifndef SITL
   if (!SpiCheckAvailable()) {
     SpiOverRun();
     return;
@@ -89,19 +95,18 @@ void ins_periodic_task( void ) {
   spi_buffer_length = 4+VN100_REG_YMR_SIZE;
   SpiSelectSlave0();
   SpiStart();
-
+  #endif
 }
 
-#include "mcu_periph/uart.h"
-#include "messages.h"
-#include "downlink.h"
 
 void ins_event_task( void ) {
+  #ifndef SITL
   if (spi_message_received) {
     spi_message_received = FALSE;
     parse_ins_msg();
     //uint8_t s = 4+VN100_REG_QMR_SIZE;
     //DOWNLINK_SEND_DEBUG(DefaultChannel,s,spi_buffer_input);
   }
+  #endif
 }
 

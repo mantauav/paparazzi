@@ -169,6 +169,7 @@
 
 /* 32-bit Parameter Type */
 typedef union {
+  uint8_t  byte[4];
   uint32_t UInt;
   float    Float;
 } VN100_Param;

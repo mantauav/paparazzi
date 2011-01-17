@@ -54,6 +54,7 @@
 
 
 uint8_t fbw_mode;
+uint8_t reset_processor=0;
 
 #include "inter_mcu.h"
 

@@ -34,6 +34,15 @@
 #include "downlink.h"
 #include "messages.h"
 
+#include "mcu_periph/uart.h"
+
+
+#include "autopilot.h"
+#include "estimator.h"
+
+float ins_roll_neutral=0.0;
+float ins_pitch_neutral=0.0;
+
 struct FloatEulers ins_eulers;
 struct FloatQuat ins_quat;
 struct FloatRates ins_rates;
@@ -58,6 +67,7 @@ uint8_t ins_init_status;
 /* ins_init and ins_periodic_task to be implemented according to the airframe type : FW or BOOZ */
 
 void parse_ins_msg( void ) {
+  #ifndef SITL
   if (last_received_packet.ErrID != VN100_Error_None) {
     //TODO send error
     return;
@@ -171,14 +181,13 @@ void parse_ins_msg( void ) {
       ins_rates.p = last_received_packet.Data[9].Float;
       ins_rates.q = last_received_packet.Data[10].Float;
       ins_rates.r = last_received_packet.Data[11].Float;
+      EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
       break;
   }
-
+  #endif
 }
 
-#include "mcu_periph/uart.h"
-#include "messages.h"
-#include "downlink.h"
+
 
 extern void ins_report_task( void ) {
   DOWNLINK_SEND_AHRS_LKF(DefaultChannel,
