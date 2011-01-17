@@ -1,0 +1,17 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="baro_MS5803" dir="sensors">
+  <header>
+    <file name="baro_MS5803.h"/>
+  </header>
+  <init fun="baro_MS5803_init()"/> 
+  <periodic fun="baro_getAltitude()" freq="10"/> 
+<!--  <event fun="baro_MS5803_event()"/> -->
+  <makefile target="ap">
+    <file name="baro_MS5803.c"/>
+    <define name="USE_BARO_MS5803"/>
+    <define name="USE_SPI_SLAVE0"/>
+    <define name="SPI_MASTER"/>
+  </makefile>
+</module>
+
