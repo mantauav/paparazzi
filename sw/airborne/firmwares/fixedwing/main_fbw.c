@@ -44,6 +44,10 @@
 #include "fbw_downlink.h"
 #include "paparazzi.h"
 
+#ifdef USE_RC_GYRO
+//#include "modules/sensors/rc_gyro.h"
+#endif
+
 #ifdef MCU_SPI_LINK
 #include "link_mcu.h"
 #endif
@@ -175,7 +179,19 @@ void periodic_task_fbw( void ) {
   }
 
 #ifdef ACTUATORS
+  #ifdef USE_RC_GYRO
+  if (fbw_mode == FBW_MODE_MANUAL)
+  {
+    rc_gyro_apply_damping(commands);
+    SetActuatorsFromCommands(rc_gyro_damped_commands)
+  }
+  else
+  {
+    SetActuatorsFromCommands(commands)
+  }
+  #else
   SetActuatorsFromCommands(commands);
+  #endif
 #endif
 
 

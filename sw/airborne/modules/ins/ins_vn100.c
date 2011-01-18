@@ -181,7 +181,12 @@ void parse_ins_msg( void ) {
       ins_rates.p = last_received_packet.Data[9].Float;
       ins_rates.q = last_received_packet.Data[10].Float;
       ins_rates.r = last_received_packet.Data[11].Float;
-      EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
+      //EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
+      EstimatorSetPhiTheta(ins_eulers.phi-ins_roll_neutral,ins_eulers.theta-ins_pitch_neutral);
+      #ifdef USE_RC_GYRO
+      rc_gyro_update_rates(ins_rates.p,ins_rates.q,ins_rates.r);
+      #endif      
+
       break;
   }
   #endif

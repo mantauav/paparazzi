@@ -165,6 +165,11 @@
       <define name="AIRSPEED_ADC_DELTAPRESSURE"/>             <!-- use the dp2cas function to calculate airspeed   -->
   </load>
   <load name="baro_MS5803.xml"/>
+  <load name="rc_gyro.xml">
+    <define name="RC_GYRO_ROLL_GAIN"  value="-500"/>
+    <define name="RC_GYRO_PITCH_GAIN"  value="-1000"/>
+    <define name="RC_GYRO_YAW_GAIN"  value="-500"/>
+  </load>
 </modules>
 
   <firmware name="fixedwing">
