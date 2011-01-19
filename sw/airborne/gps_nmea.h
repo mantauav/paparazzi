@@ -1,72 +1,42 @@
 /*
- * Paparazzi autopilot $Id: gps_ubx.h 6376 2010-11-07 04:30:44Z flixr $
- *
- * Copyright (C) 2004-2006  Pascal Brisset, Antoine Drouin
- *
- * This file is part of paparazzi.
- *
- * paparazzi is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * paparazzi is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with paparazzi; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- *
+ * gps_nmea.h
  */
-
-/** \file gps_nmea.h
- * \brief NMEA protocol specific code
- *
-*/
-
 
 #ifndef GPS_NMEA_H
 #define GPS_NMEA_H
 
-#define GPS_NB_CHANNELS 16
-#include "gps.h"
+#include <std.h> // typedefs for inttypes and bool_t
 
-#ifdef DEBUG_NMEA
-#define NMEA_PRINT(...) {  UsbSPrintString( __VA_ARGS__);};
-#else
-#define NMEA_PRINT(...) {};
-#endif
+#define NMEA_MAXLEN 255
 
+extern char nmea_msg_buf[NMEA_MAXLEN];
+extern int  nmea_msg_len;
+
+/**
+ * Fast forward to the next field, modifies current_idx;
+ * Return 0 if no next field, 1 otherwise
+ * in nmea_msg_buf[].Input argument is the current position in 
+ * the nmea_msg_buf[].
+ */
+uint8_t nextField(uint8_t *current_idx);
+
+/**
+ * Attempt to reject empty sentences.
+ * Return 1 if sentence contains no data, 0 otherwise.
+ */
+uint8_t isEmptySentence(uint8_t current_idx);
+ 
 void parse_nmea_GPGSA(void);
 void parse_nmea_GPRMC(void);
 void parse_nmea_GPGGA(void);
+void parse_nmea_GPGSV(void);
 
-extern uint16_t gps_reset;
+/**
+ * set of helper query functions
+ */
+bool_t isGPRMC(void);
+bool_t isGPGGA(void);
+bool_t isGPGSA(void);
+bool_t isGPGSV(void);
 
-
-
-/** The function to be called when a characted friom the device is available */
-void parse_nmea_char( uint8_t c );
-
-
-#define GpsParse(_gps_buffer, _gps_buffer_size) { \
-  uint8_t i; \
-  for(i = 0; i < _gps_buffer_size; i++) { \
-    parse_ubx(_gps_buffer[i]); \
-  } \
-}
-
-#define GpsFixValid() (gps_mode == 3)
-
-#define gps_nmea_Reset(_val) { \
-  gps_reset = _val; \
-}
-
-#ifdef GPS_TIMESTAMP
-uint32_t itow_from_ticks(uint32_t clock_ticks);
-#endif
-#define ubxsend_cfg_rst(a,b) {};
 #endif /* GPS_NMEA_H */
