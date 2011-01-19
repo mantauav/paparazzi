@@ -39,6 +39,7 @@
 
 #ifdef NMEA
 #include "gps_nmea.h"
+#define GPS_NB_CHANNELS 16
 #elif defined UBX
 #include "gps_ubx.h"
 #elif defined USE_GPS_XSENS

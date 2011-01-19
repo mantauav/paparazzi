@@ -29,28 +29,24 @@
  *
  * TODO: THIS NMEA-PARSER IS NOT WELL TESTED AND INCOMPLETE!!!
  * Status:
- *  Parsing GGA and RMC is complete, GSA and other records are
- *  incomplete.
+ *  Max to fill in
  */
 
-#include <inttypes.h>
-#include <string.h> 
-#include <math.h>
 
 #ifdef DEBUG_NMEA
 // do debug-output if run on the DEBUG_NMEA-target
-#include <stdlib.h>
 #endif
 
-#include "flight_plan.h"
-#include "uart.h"
+#include <stdlib.h>
+#include "string.h"
+
+#include "paparazzi.h"
+#include "generated/flight_plan.h"
+#include "mcu_periph/uart.h"
 #include "gps.h"
 #include "gps_nmea.h"
-#include "nav.h"
+#include "subsystems/nav.h"
 #include "latlong.h"
-
-//AD
-#include "usb_debug.h"
 
 
 int32_t  gps_lat;  // latitude in degrees * 1e-7
@@ -59,6 +55,7 @@ uint16_t gps_PDOP; // precision
 bool_t   gps_pos_available = FALSE;
 
 uint32_t gps_itow;
+uint16_t gps_week;
 int32_t  gps_alt;
 uint16_t gps_gspeed; // in cm/s
 int16_t  gps_climb;
@@ -260,7 +257,7 @@ void parse_nmea_GPRMC() {
   // get ground speed (in m/s)
   if ((gps_mode ==2) || (gps_mode==3)){      
     double speed = strtod(&nmea_msg_buf[i], &endptr);
-    gps_gspeed = (uint16_t)(speed * 0.514444444); //convert knots to m/s 
+    gps_gspeed = (uint16_t)(speed * 51.4444444); //convert knots to m/s 
   }
     
   if (!nextField(&i)) return;
@@ -518,7 +515,7 @@ void parse_gps_msg( void ) {
  * setting gps_msg_received to TRUE
  * after a full line.
  */
-void parse_ubx( uint8_t c ) {
+void parse_nmea_char( uint8_t c ) {
 
   //reject empty lines
   if (nmea_msg_len == 0) {

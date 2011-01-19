@@ -9,6 +9,13 @@
 
 #define NMEA_MAXLEN 255
 
+/**
+ * Preprocessor definitions
+ *
+ */
+
+#define GpsFixValid() (gps_mode == 3) //3 indicates 3d fix, 2 is 2d fix
+
 extern char nmea_msg_buf[NMEA_MAXLEN];
 extern int  nmea_msg_len;
 
@@ -38,5 +45,7 @@ bool_t isGPRMC(void);
 bool_t isGPGGA(void);
 bool_t isGPGSA(void);
 bool_t isGPGSV(void);
+
+void parse_nmea_char( uint8_t c );
 
 #endif /* GPS_NMEA_H */
