@@ -44,7 +44,7 @@
 #include "LPC21xx.h"
 #include "mcu_periph/spi.h"
 #include "sys_time.h"
-#include "baro_MS5803.h"
+#include "modules/sensors/baro_MS5803.h"
 
 //#include "usb_debug.h"
 

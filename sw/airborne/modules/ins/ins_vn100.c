@@ -26,7 +26,7 @@
  * \brief driver for the VectorNav VN100
  */
 
-#include "ins_vn100.h"
+#include "modules/ins/ins_vn100.h"
 
 #include "generated/airframe.h"
 #include "led.h"
@@ -181,7 +181,12 @@ void parse_ins_msg( void ) {
       ins_rates.p = last_received_packet.Data[9].Float;
       ins_rates.q = last_received_packet.Data[10].Float;
       ins_rates.r = last_received_packet.Data[11].Float;
-      EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
+      //EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
+      EstimatorSetPhiTheta(ins_eulers.phi-ins_roll_neutral,ins_eulers.theta-ins_pitch_neutral);
+      #ifdef USE_RC_GYRO
+      rc_gyro_update_rates(ins_rates.p,ins_rates.q,ins_rates.r);
+      #endif      
+
       break;
   }
   #endif
@@ -190,10 +195,10 @@ void parse_ins_msg( void ) {
 
 
 extern void ins_report_task( void ) {
-  DOWNLINK_SEND_AHRS_LKF(DefaultChannel,
+/*  DOWNLINK_SEND_AHRS_LKF(DefaultChannel,
       &ins_eulers.phi, &ins_eulers.theta, &ins_eulers.psi,
       &ins_quat.qi, &ins_quat.qx, &ins_quat.qy, &ins_quat.qz,
       &ins_rates.p, &ins_rates.q, &ins_rates.r,
       &ins_accel.x, &ins_accel.y, &ins_accel.z,
-      &ins_mag.x, &ins_mag.y, &ins_mag.z);
+      &ins_mag.x, &ins_mag.y, &ins_mag.z);*/
 }

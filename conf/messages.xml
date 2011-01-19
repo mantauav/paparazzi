@@ -254,8 +254,8 @@
 
   <message name="GYRO_RATES" id="36">
     <field name="roll_adc" type="int16"/>
-    <field name="roll" type="float" unit="rad/s"/>
-    <field name="pitch" type="float" unit="rad/s"/>
+    <field name="roll"  type="float" unit="rad/s"  alt_unit="degres/s" alt_unit_coef="57.29578" />
+    <field name="pitch" type="float" unit="rad/s"  alt_unit="degres/s" alt_unit_coef="57.29578" />
   </message>
 
   <message name="ENERGY" id="37">
@@ -1553,7 +1553,22 @@
     <field name="mz" type="int32" unit="adc"/>
   </message>
 
-  <!--206 is free -->
+  <message name="MANTA_TESTING" id="206">
+    <field name="phi"   type="float" unit="rad"   alt_unit="degres"   alt_unit_coef="57.29578" />
+    <field name="theta" type="float" unit="rad"   alt_unit="degres"   alt_unit_coef="57.29578" />
+    <field name="psi"   type="float" unit="rad"   alt_unit="degres"   alt_unit_coef="57.29578" />
+    <field name="p"     type="float" unit="rad/s" alt_unit="degres/s" alt_unit_coef="57.29578" />
+    <field name="q"     type="float" unit="rad/s" alt_unit="degres/s" alt_unit_coef="57.29578" />
+    <field name="r"     type="float" unit="rad/s" alt_unit="degres/s" alt_unit_coef="57.29578" />
+    <field name="ax"    type="float" />
+    <field name="ay"    type="float" />
+    <field name="az"    type="float" />
+    <field name="mx"    type="float" />
+    <field name="my"    type="float" />
+    <field name="mz"    type="float" />
+    <field name="baro_alt" type="float"/>
+  </message>
+
   <!--207 is free -->
   <!--208 is free -->
 

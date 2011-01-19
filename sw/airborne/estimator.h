@@ -124,7 +124,7 @@ extern void alt_kalman( float );
 
 #define EstimatorSetAtt(phi, psi, theta) { estimator_phi = phi; estimator_psi = psi; estimator_theta = theta; }
 #define EstimatorSetPhiPsi(phi, psi) { estimator_phi = phi; estimator_psi = psi; }
-
+#define EstimatorSetPhiTheta(phi, theta) { estimator_phi = phi; estimator_theta = theta; }
 #define EstimatorSetRate(p, q) { estimator_p = p; estimator_q = q; }
 
 extern void estimator_update_state_infrared( void );
