@@ -45,6 +45,8 @@ bool_t isGPRMC(void);
 bool_t isGPGGA(void);
 bool_t isGPGSA(void);
 bool_t isGPGSV(void);
+inline uint8_t atoh(uint8_t a,uint8_t b);
+uint8_t nmea_checksum_valid(uint8_t buf[],uint8_t buf_len);
 
 void parse_nmea_char( uint8_t c );
 

@@ -27,9 +27,9 @@
  *
  * This file is a drop-in replacement for gps_ubx.c
  *
- * TODO: THIS NMEA-PARSER IS NOT WELL TESTED AND INCOMPLETE!!!
- * Status:
- *  Max to fill in
+ * TODO: THIS NMEA-PARSER IS PARTIALLY TESTED AND INCOMPLETE!!!
+ * Status: 
+ * 
  */
 
 
@@ -38,16 +38,20 @@
 #endif
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "string.h"
 
 #include "paparazzi.h"
 #include "generated/flight_plan.h"
+#include "generated/airframe.h"
 #include "mcu_periph/uart.h"
 #include "gps.h"
 #include "gps_nmea.h"
 #include "subsystems/nav.h"
 #include "latlong.h"
 
+#include "ap_downlink.h"
+#include "messages.h"
 
 int32_t  gps_lat;  // latitude in degrees * 1e-7
 int32_t  gps_lon;  // longitude in degrees * 1e-7
@@ -63,6 +67,8 @@ int16_t  gps_course;
 int32_t  gps_utm_east, gps_utm_north;
 uint8_t  gps_utm_zone;
 uint8_t  gps_mode;
+
+uint8_t debug_msg[80];
 
 char nmea_msg_buf[NMEA_MAXLEN];
 int  nmea_msg_len = 0;
@@ -135,7 +141,7 @@ void gps_configure ( void ) {
   WriteGpsBuffer(fixRateCmd);
   // output RMC, GGA, GSA at 4Hz and GSV at 1Hz
   WriteGpsBuffer(nmeaOutputCmd);
-
+  gps_nb_ovrn=0;
   gps_configuring=FALSE;	
 }
 #endif /* GPS_CONFIGURE */
@@ -198,7 +204,10 @@ uint8_t isEmptySentence(uint8_t current_idx){
  * nmea_msg_buf.
  */
 void parse_nmea_GPGSA() {
+  char* endptr;  // end of parsed substrings
   uint8_t i = 7; // current position in the message
+  uint8_t activesv;
+  float pdop_float;
 
   //USB_DEBUG_OUT("isGPGSA: %s\n\r", nmea_msg_buf);
 
@@ -215,6 +224,26 @@ void parse_nmea_GPGSA() {
   if (gps_mode == 1){
     gps_mode = 0;
   }
+
+  // get active satellite info
+  //ignored
+  for (activesv = 3;activesv++;activesv <=14){
+    if (!nextField(&i)) return;
+  }
+  
+  //get PDOP
+  pdop_float = (float)strtod(&nmea_msg_buf[i], &endptr) + 1.0;
+  gps_PDOP = (uint16_t)(pdop_float*100);
+
+  if (!nextField(&i)) return;
+  //get HDOP
+  //ignored
+
+  if (!nextField(&i)) return;
+  //get VDOP
+  //ignored
+
+  
 }
 
 /**
@@ -353,7 +382,8 @@ void parse_nmea_GPGGA() {
   if (!nextField(&i)) return;
 
   // get horizontal dilution of position
-  // ignored
+  //ignored
+   
   if (!nextField(&i)) return;
   
   // get altitude (in cm)
@@ -415,12 +445,13 @@ void parse_nmea_GPGSV() {
   if (!nextField(&i)) return;
 
   // get num satellites in view
-  gps_numSV = atoi(&nmea_msg_buf[i]);
+  gps_nb_channels = atoi(&nmea_msg_buf[i]);  //Get number of satellites in view
+  gps_nb_channels = Min(gps_nb_channels, GPS_NB_CHANNELS);
 
   for (ch = 0; ch < channels_per_msg; ch++){ 
     
     // if valid satellite data
-    if (gps_nb_channel < gps_numSV){
+    if (gps_nb_channel < gps_nb_channels){
       
       // next field: satellite number
       if (!nextField(&i)) break;
@@ -488,26 +519,48 @@ bool_t isGPGSV(){
   return (nmea_msg_len > 5 && !strncmp(nmea_msg_buf, "$GPGSV", 6));
 }
 
-void parse_gps_msg( void ) {
-  
-  nmea_msg_buf[nmea_msg_len] = 0;
-  
-  if(isGPRMC()){
-    parse_nmea_GPRMC();
-  } else if (isGPGGA()){
-    parse_nmea_GPGGA();
-  } else if (isGPGSA()){
-    parse_nmea_GPGSA();
-  } else if (isGPGSV()){
-    parse_nmea_GPGSV();
-  } else {
-    // nothing to do, ignore unsupported message
-  }
-  
-  // reset message-buffer
-  nmea_msg_len = 0;
+
+
+/**
+ * Converts two ascii characters that represent a hex byte to decimal value.
+ * Note does not do any error checking on whether characters are in range 0..9 or A..F
+ * Used in checksum calculation
+ */
+inline uint8_t atoh(uint8_t a,uint8_t b)
+{
+  uint8_t val;
+  if (a<58)
+    val=(a-48)*16;
+  else
+    val=(a-55)*16;
+  if (b<58)
+    val+=b-48;
+  else
+    val+=b-55;
+  return val;  
 }
 
+/**
+ * Verify an NMEA checksum
+ * checksum consists of XORing each byte between $ and *
+ */
+uint8_t nmea_checksum_valid(uint8_t buf[],uint8_t buf_len)
+{
+  uint8_t i=0;
+  uint8_t cksum=0;
+  uint8_t msg_cksum;
+  if (buf[0] != '$')
+    return 0;
+  if (buf[buf_len-3]!='*')
+    return 0;
+  for (i=1;i<buf_len-3;i++)
+    cksum ^= buf[i];
+  msg_cksum = atoh(nmea_msg_buf[buf_len-2],nmea_msg_buf[buf_len-1]);
+  if (cksum == msg_cksum)
+    return 1;
+  else
+    return 0;
+}
 
 /**
  * This is the actual parser.
@@ -515,15 +568,47 @@ void parse_gps_msg( void ) {
  * setting gps_msg_received to TRUE
  * after a full line.
  */
-void parse_nmea_char( uint8_t c ) {
+void parse_gps_msg( void ) {
+  
+  nmea_msg_buf[nmea_msg_len] = 0;
+  if (nmea_checksum_valid(nmea_msg_buf,nmea_msg_len))
+  {
+    if(isGPRMC()){
+      parse_nmea_GPRMC();
+    } else if (isGPGGA()){
+      parse_nmea_GPGGA();
+    } else if (isGPGSA()){
+      parse_nmea_GPGSA();
+    } else if (isGPGSV()){
+      parse_nmea_GPGSV();
+    } else {
+      // nothing to do, ignore unsupported message
+    }
+  }
+  else {
+    //reported as gps_nb_err in gps message window.
+    gps_nb_ovrn++;
+  }
+    
+  nmea_msg_buf[nmea_msg_len]=0;
+  // reset message-buffer
+  nmea_msg_len = 0;
+}
 
+/**
+ * This is the actual parser.
+ * It reads one character at a time
+ * setting gps_msg_received to TRUE
+ * after a full line.
+ */
+
+void parse_nmea_char( uint8_t c ) {
   //reject empty lines
   if (nmea_msg_len == 0) {
     if (c == '\r' || c == '\n'){
       return;
     }
   }
-
   // fill the buffer, unless it's full
   if (nmea_msg_len < NMEA_MAXLEN - 1) {
     // messages end with a linefeed
@@ -535,9 +620,7 @@ void parse_nmea_char( uint8_t c ) {
       nmea_msg_len ++;
     }
   }
-  
   if (nmea_msg_len >= NMEA_MAXLEN - 1){
     gps_msg_received = TRUE;
   }
-  
 }

@@ -1,5 +1,7 @@
 /*
- * Copyright (C) 2010 The Paparazzi Team
+ * $Id$
+ *
+ * Copyright (C) 2010 Aurora Flight Sciences
  *
  * This file is part of paparazzi.
  *
@@ -18,6 +20,21 @@
  * the Free Software Foundation, 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
+ */
+
+/*
+ *    Adevitt
+ *    adevitt@aurora.aero
+ *    1/17/2011
+ *
+ */
+
+/** \file rc_gyro.c
+ *  \brief Code to apply rate damping when in manual mode from any rate source
+ *
+ * uses: any source of gyros
+ *  call rc_gyro_update_rates(p,q,r) with rate info. 
+ *  gains can be set in settings tab if so configured for airframe.
  */
 
 
