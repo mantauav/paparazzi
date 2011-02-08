@@ -11,8 +11,8 @@
   <servos>
     <servo name="MOTOR_LEFT"    no="7" min="1000" neutral="1000" max="2000"/>
     <servo name="MOTOR_RIGHT"   no="6" min="1000" neutral="1000" max="2000"/>
-    <servo name="AILEVON_LEFT"  no="4" min="1900" neutral="1500" max="1100"/>
-    <servo name="AILEVON_RIGHT" no="3" min="1100" neutral="1500" max="1900"/>  
+    <servo name="AILEVON_LEFT"  no="4" min="2000" neutral="1500" max="1000"/>
+    <servo name="AILEVON_RIGHT" no="3" min="1000" neutral="1500" max="2000"/>  
   </servos>
 
   <commands>
@@ -31,7 +31,7 @@
 
   <section name="MIXER">
     <define name="AILEVON_AILERON_RATE"  value="0.75"/>
-    <define name="AILEVON_ELEVATOR_RATE" value="0.75"/>
+    <define name="AILEVON_ELEVATOR_RATE" value="1.0"/>
     <define name="RUDDER_RATE"           value="0.40"/> 
   </section>
 
@@ -41,8 +41,8 @@
     <let var="yaw"      value="@YAW * RUDDER_RATE"/>
     <set servo="MOTOR_LEFT"    value="@THROTTLE + $yaw"/>
     <set servo="MOTOR_RIGHT"   value="@THROTTLE - $yaw"/>
-    <set servo="AILEVON_LEFT"  value="$elevator - $aileron"/>
-    <set servo="AILEVON_RIGHT" value="$elevator + $aileron"/>
+    <set servo="AILEVON_LEFT"  value="$elevator + $aileron"/>
+    <set servo="AILEVON_RIGHT" value="$elevator - $aileron"/>
   </command_laws>
 
   <section name="AUTO1" prefix="AUTO1_">
@@ -66,7 +66,7 @@
   </section>
 
   <section name="MISC">
-    <define name="NOMINAL_AIRSPEED" value="13." unit="m/s"/>
+    <define name="NOMINAL_AIRSPEED" value="15" unit="m/s"/>
     <define name="CARROT" value="5." unit="s"/>
     <define name="KILL_MODE_DISTANCE" value="(1.2*MAX_DIST_FROM_HOME)"/>
     <define name="CONTROL_RATE" value="60" unit="Hz"/>
@@ -74,7 +74,7 @@
     <define name="NO_XBEE_API_INIT" value="TRUE"/>
     <define name="ALT_KALMAN_ENABLED" value="TRUE"/>
 
-    <define name="DEFAULT_CIRCLE_RADIUS" value="80."/>
+    <define name="DEFAULT_CIRCLE_RADIUS" value="50."/>
 
     <define name="GLIDE_AIRSPEED" value="10"/>
     <define name="GLIDE_VSPEED" value="3."/>
@@ -89,9 +89,9 @@
     <define name="ALTITUDE_MAX_CLIMB" value="2."/>
 
     <!-- auto throttle inner loop -->
-    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.32"/>
+    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.29"/>
     <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.25"/>
-    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.65"/>
+    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.75"/>
     <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
@@ -99,15 +99,17 @@
     <define name="AUTO_THROTTLE_IGAIN" value="0.1"/>
     <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.05"/>
 
+
+
     <define name="THROTTLE_SLEW_LIMITER" value="2" unit="s"/>
   </section>
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
     <define name="COURSE_PGAIN" value="-1.4"/>
 
-    <define name="ROLL_MAX_SETPOINT" value="0.6" unit="radians"/>
-    <define name="PITCH_MAX_SETPOINT" value="0.5" unit="radians"/>
-    <define name="PITCH_MIN_SETPOINT" value="-0.5" unit="radians"/>
+    <define name="ROLL_MAX_SETPOINT" value="0.523"  />
+    <define name="PITCH_MAX_SETPOINT" value="0.523" />
+    <define name="PITCH_MIN_SETPOINT" value="-0.087"/>
 
     <define name="PITCH_PGAIN" value="-12000."/>
     <define name="PITCH_DGAIN" value="1.5"/>
@@ -166,12 +168,31 @@
   </load>
   <load name="baro_MS5803.xml"/>
   <load name="rc_gyro.xml">
-    <define name="RC_GYRO_ROLL_GAIN"  value="-500"/>
+    <define name="RC_GYRO_ROLL_GAIN"  value="-650"/>
     <define name="RC_GYRO_PITCH_GAIN"  value="-1000"/>
-    <define name="RC_GYRO_YAW_GAIN"  value="-500"/>
+    <define name="RC_GYRO_YAW_GAIN"  value="-650"/>
   </load>
 </modules>
 
+<!-- HACK: for current use in sim -->
+  <section name="INFRARED" prefix="IR_">
+    <define name="ADC_IR1_NEUTRAL" value="512"/>
+    <define name="ADC_IR2_NEUTRAL" value="512"/>
+    <define name="ADC_TOP_NEUTRAL" value="512"/>
+
+    <define name="LATERAL_CORRECTION" value="-1"/>
+    <define name="LONGITUDINAL_CORRECTION" value="1"/>
+    <define name="VERTICAL_CORRECTION" value="1.5"/>
+
+    <define name="HORIZ_SENSOR_TILTED" value="1"/>
+    <define name="IR1_SIGN" value="1"/>
+    <define name="IR2_SIGN" value="-1"/>
+    <define name="TOP_SIGN" value="-1"/>
+
+    <define name="ROLL_NEUTRAL_DEFAULT" value="0" unit="deg"/>
+    <define name="PITCH_NEUTRAL_DEFAULT" value="0" unit="deg"/>
+  </section>
+<!-- HACKEND -->
   <firmware name="fixedwing">
     <target name="sim" 			board="pc"                   />
     <target name="ap" 			board="tiny_2.11"           />
@@ -181,7 +202,7 @@
       <define name="ALT_KALMAN" />
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
-      <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_FAILSAFE"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
+      <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_AUTO"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
 <!--    <define name="USE_AIRSPEED"/> -->
 
 <!------------------SUBSYSTEMS--------------->
@@ -189,6 +210,7 @@
 <!--    <subsystem name="usb_serial"                   /> -->
     <subsystem name="spi"/> 
     <subsystem name="radio_control" type="ppm"/>
+<!--    <subsystem name="attitude" 		type="infrared"/> -->
     <!-- Communication -->
     <subsystem name="telemetry" 	type="transparent">
        <configure name="MODEM_BAUD" 		value="B57600"/>

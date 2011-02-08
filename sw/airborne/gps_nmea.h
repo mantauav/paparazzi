@@ -15,6 +15,7 @@
  */
 
 #define GpsFixValid() (gps_mode == 3) //3 indicates 3d fix, 2 is 2d fix
+#define GPS_CONFIGURE
 
 extern char nmea_msg_buf[NMEA_MAXLEN];
 extern int  nmea_msg_len;

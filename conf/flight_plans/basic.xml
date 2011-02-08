@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
 
-<flight_plan alt="75" ground_alt="0" lat0="43.46223" lon0="1.27289" max_dist_from_home="900" name="Basic" security_height="25">
+<flight_plan alt="25" ground_alt="0" lat0="42.357015" lon0="-71.100689" max_dist_from_home="900" name="Basic" security_height="10">
   <header>
 #include "subsystems/navigation/nav_line.h"
 #include "datalink.h"
@@ -13,7 +13,7 @@
     <waypoint name="MOB" x="137.0" y="-11.6"/>
     <waypoint name="S1" x="-119.2" y="69.6"/>
     <waypoint name="S2" x="274.4" y="209.5"/>
-    <waypoint alt="30.0" name="AF" x="177.4" y="45.1"/>
+    <waypoint alt="10.0" name="AF" x="177.4" y="45.1"/>
     <waypoint alt="0.0" name="TD" x="28.8" y="57.0"/>
     <waypoint name="_BASELEG" x="168.8" y="-13.8"/>
     <waypoint name="CLIMB" x="-114.5" y="162.3"/>
@@ -36,7 +36,7 @@
       <attitude roll="0" throttle="0" vmode="throttle"/>
     </block>
     <block key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png" group="home">
-      <exception cond="estimator_z > ground_alt+25" deroute="Standby"/>
+      <exception cond="estimator_z > ground_alt+10" deroute="Standby"/>
       <set value="0" var="kill_throttle"/>
       <set value="0" var="estimator_flight_time"/>
       <go from="HOME" throttle="1.0" vmode="throttle" wp="CLIMB" pitch="15"/>

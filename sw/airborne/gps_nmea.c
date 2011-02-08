@@ -118,29 +118,43 @@ void ubxsend_cfg_rst(uint16_t bbr , uint8_t reset_mode) {
 #ifdef GPS_CONFIGURE
 /* GPS dynamic configuration */
 
-#include "uart.h"
+//#include "uart.h"
 
 void gps_configure_uart ( void ) {
   //UbxSend_CFG_PRT(0x01, 0x0, 0x0, 0x000008D0, GPS_BAUD, UBX_PROTO_MASK, UBX_PROTO_MASK, 0x0, 0x0);  
   //while (GpsUartRunning) ; /* FIXME */
-  GpsUartInitParam( UART_BAUD(GPS_BAUD),  UART_8N1, UART_FIFO_8);
+//  GpsUartInitParam( UART_BAUD(GPS_BAUD),  UART_8N1, UART_FIFO_8);
 }
+
+void gpsSend(uint8_t msg[])
+{
+  int i=0;
+  while (msg[i]!=0)
+  {
+    GpsUartSend1(msg[i]);
+    i++;
+  }
+}
+//  uint8_t fixRateCmd[]   = "$PMTK300,250,0,0,0,0*2A\r\n";
+  uint8_t fixRateCmd[]   = "$PMTK300,200,0,0,0,0*2F\r\n";
+  /* const unsigned char* fixRateQuery = "$PMTK400*36\r\n"; */
+  uint8_t nmeaQuetCmd[]     = "$PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n";
+  uint8_t nmeaOutputCmd[]   = "$PMTK314,0,1,0,1,1,4,0,0,0,0,0,0,0,0,0,0,0,0,0*2D\r\n";
 
 void gps_configure ( void ) {
   /* Initialize GPS receiver into desired operational mode, e.g. set FIX rate and update rates 
      for desired NMEA sentences */
-  const unsigned char* fixRateCmd   = "$PMTK300,250,0,0,0,0*2A\r\n";
-  /* const unsigned char* fixRateQuery = "$PMTK400*36\r\n"; */
-  const unsigned char* nmeaQuetCmd     = "$PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n";
-  const unsigned char* nmeaOutputCmd   = "$PMTK314,0,1,0,1,1,4,0,0,0,0,0,0,0,0,0,0,0,0,0*2D\r\n";
   /* const unsigned char* nmeaOutputQuery = "$PMTK,414*33\r\n"; */
 
   // turn off all nmea messages
-  WriteGpsBuffer(nmeaQuetCmd); 
+//  WriteGpsBuffer(nmeaQuetCmd); 
   // set gps fix rate to 4Hz
-  WriteGpsBuffer(fixRateCmd);
+//  WriteGpsBuffer(fixRateCmd);
+  gpsSend(fixRateCmd);
+  gpsSend(fixRateCmd);
+  gpsSend(fixRateCmd);
   // output RMC, GGA, GSA at 4Hz and GSV at 1Hz
-  WriteGpsBuffer(nmeaOutputCmd);
+//  WriteGpsBuffer(nmeaOutputCmd);
   gps_nb_ovrn=0;
   gps_configuring=FALSE;	
 }
@@ -286,7 +300,7 @@ void parse_nmea_GPRMC() {
   // get ground speed (in m/s)
   if ((gps_mode ==2) || (gps_mode==3)){      
     double speed = strtod(&nmea_msg_buf[i], &endptr);
-    gps_gspeed = (uint16_t)(speed * 51.4444444); //convert knots to m/s 
+    gps_gspeed = (uint16_t)(speed * 51.4444444); //convert knots to cm/s 
   }
     
   if (!nextField(&i)) return;

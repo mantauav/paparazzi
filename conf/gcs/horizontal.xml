@@ -1,40 +1,49 @@
 <layout width="1024" height="693">
   <rows>
     <widget NAME="map2d" SIZE="500">
+      <papget type="message_field" display="ruler" x="944" y="331">
+        <property name="scale" value="1-34"/>
+        <property name="field" value="MANTA_TESTING:baro_alt"/>
+        <property name="height" value="100."/>
+        <property name="index_on_right" value="false"/>
+        <property name="width" value="32."/>
+        <property name="point_per_unit" value="2."/>
+        <property name="step" value="10"/>
+      </papget>
       <papget type="message_field" display="text" x="857" y="60">
         <property name="scale" value="1."/>
         <property name="field" value="GPS_SOL:numSV"/>
         <property name="format" value="#SATS: %.0f"/>
         <property name="size" value="15."/>
-        <property name="color" value="green"/>
-      </papget>
-      <papget type="message_field" display="text" x="854" y="162">
-        <property name="scale" value="1."/>
-        <property name="field" value="AIRSPEED:airspeed"/>
-        <property name="format" value="Air Spd:%.2f"/>
-        <property name="size" value="15."/>
-        <property name="color" value="green"/>
+        <property name="color" value="red"/>
       </papget>
       <papget type="message_field" display="text" x="841" y="136">
         <property name="scale" value="0.01"/>
         <property name="field" value="GPS:speed"/>
         <property name="format" value="GPS Spd: %.2f"/>
         <property name="size" value="15."/>
-        <property name="color" value="green"/>
+        <property name="color" value="red"/>
       </papget>
       <papget type="message_field" display="text" x="844" y="84">
         <property name="scale" value="1."/>
         <property name="field" value="MANTA_TESTING:baro_alt"/>
         <property name="format" value="Baro Alt: %.2f"/>
         <property name="size" value="15."/>
-        <property name="color" value="green"/>
+        <property name="color" value="red"/>
+      </papget>
+      <papget type="message_field" display="text" x="854" y="162">
+        <property name="scale" value="1."/>
+        <property name="field" value="AIRSPEED:airspeed"/>
+        <property name="format" value="Air Spd:%.2f"/>
+        <property name="size" value="15."/>
+        <property name="color" value="red"/>
       </papget>
       <papget type="message_field" display="text" x="850" y="110">
         <property name="scale" value="0.01"/>
         <property name="field" value="GPS:alt"/>
         <property name="format" value="GPS Alt: %.2f"/>
         <property name="size" value="15."/>
-        <property name="color" value="green"/>
+        <property name="color" value="red"/>
       </papget>
     </widget>
     <columns>

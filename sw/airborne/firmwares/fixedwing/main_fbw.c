@@ -56,8 +56,13 @@
 #error "deprecated MILLIAMP_PER_PERCENT --> Please use MILLIAMP_AT_FULL_THROTTLE"
 #endif
 
+#ifndef RC_LOST_MODE_FBW
+#define RC_LOST_MODE_FBW FBW_MODE_FAILSAFE
+#endif
 
 uint8_t fbw_mode;
+uint8_t fbw_rc_really_lost_mode;
+
 uint8_t reset_processor=0;
 
 #include "inter_mcu.h"
@@ -85,6 +90,7 @@ void init_fbw( void ) {
 #endif
 
   fbw_mode = FBW_MODE_FAILSAFE;
+  fbw_rc_really_lost_mode = RC_LOST_MODE_FBW;
 
 #ifndef SINGLE_MCU
   mcu_int_enable();
@@ -122,7 +128,7 @@ void event_task_fbw( void) {
   if (inter_mcu_received_ap) {
     inter_mcu_received_ap = FALSE;
     inter_mcu_event_task();
-    if (ap_ok && fbw_mode == FBW_MODE_FAILSAFE) {
+    if (ap_ok && (fbw_mode == FBW_MODE_FAILSAFE) && (fbw_rc_really_lost_mode != FBW_MODE_FAILSAFE)) {
       fbw_mode = FBW_MODE_AUTO;
     }
     if (fbw_mode == FBW_MODE_AUTO) {
@@ -159,17 +165,22 @@ void periodic_task_fbw( void ) {
 
 #ifdef RADIO_CONTROL
   radio_control_periodic_task();
+  if (radio_control.status == RC_REALLY_LOST)
+    fbw_mode = fbw_rc_really_lost_mode;
+  if (fbw_mode == FBW_MODE_FAILSAFE)
+    set_failsafe_mode();
   if (fbw_mode == FBW_MODE_MANUAL && radio_control.status == RC_REALLY_LOST) {
     fbw_mode = FBW_MODE_AUTO;
   }
 #endif
+if (radio_control.status!=RC_OK)
+   fbw_mode = FBW_MODE_FAILSAFE;
 
 #ifdef INTER_MCU
   inter_mcu_periodic_task();
   if (fbw_mode == FBW_MODE_AUTO && !ap_ok)
     set_failsafe_mode();
 #endif
-
 #ifdef DOWNLINK
   fbw_downlink_periodic_task();
 #endif
@@ -180,7 +191,7 @@ void periodic_task_fbw( void ) {
 
 #ifdef ACTUATORS
   #ifdef USE_RC_GYRO
-  if (fbw_mode == FBW_MODE_MANUAL)
+  if ((fbw_mode == FBW_MODE_MANUAL) || (fbw_mode==FBW_MODE_AUTO))
   {
     rc_gyro_apply_damping(commands);
     SetActuatorsFromCommands(rc_gyro_damped_commands)

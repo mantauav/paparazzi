@@ -39,6 +39,7 @@
 #define FBW_MODE_OF_PPRZ(mode) ((mode) < TRESHOLD_MANUAL_PPRZ ? FBW_MODE_MANUAL : FBW_MODE_AUTO)
 
 extern uint8_t fbw_mode;
+extern uint8_t fbw_rc_really_lost_mode;
 extern bool_t failsafe_mode;
 
 extern uint8_t reset_processor;
