@@ -57,6 +57,7 @@ bool_t h_ctl_auto1_rate;
 float  h_ctl_roll_setpoint;
 float  h_ctl_roll_pgain;
 pprz_t h_ctl_aileron_setpoint;
+pprz_t h_ctl_rudder_setpoint;
 float  h_ctl_roll_slew;
 
 /* inner pitch loop parameters */
@@ -105,6 +106,7 @@ static inline void h_ctl_roll_rate_loop( void );
 #endif
 
 float h_ctl_roll_attitude_gain;
+float h_ctl_roll_attitude_rudder_gain;
 float h_ctl_roll_rate_gain;
 
 #ifdef AGR_CLIMB
@@ -156,6 +158,7 @@ void h_ctl_init( void ) {
 
 #ifdef H_CTL_ROLL_ATTITUDE_GAIN
   h_ctl_roll_attitude_gain = H_CTL_ROLL_ATTITUDE_GAIN;
+  h_ctl_roll_attitude_rudder_gain = H_CTL_ROLL_ATTITUDE_RUDDER_GAIN;
   h_ctl_roll_rate_gain = H_CTL_ROLL_RATE_GAIN;
 #endif
 
@@ -312,11 +315,15 @@ inline static void h_ctl_roll_loop( void ) {
   estimator_p = (err - last_err)/(1/60.);
   last_err = err;
 #endif
-  float cmd = - h_ctl_roll_attitude_gain * err
+  float cmd = h_ctl_roll_attitude_gain * err
     - h_ctl_roll_rate_gain * estimator_p
     + v_ctl_throttle_setpoint * h_ctl_aileron_of_throttle;
 
+  float cmd_rudder = h_ctl_roll_attitude_rudder_gain * err;
+    
+    
   h_ctl_aileron_setpoint = TRIM_PPRZ(cmd);
+  h_ctl_rudder_setpoint = TRIM_PPRZ(cmd_rudder);
 }
 
 #else // H_CTL_ROLL_ATTITUDE_GAIN

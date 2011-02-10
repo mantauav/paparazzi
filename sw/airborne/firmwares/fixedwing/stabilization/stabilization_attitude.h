@@ -54,6 +54,7 @@ extern bool_t h_ctl_auto1_rate;
 extern float  h_ctl_roll_setpoint;
 extern float  h_ctl_roll_pgain;
 extern pprz_t h_ctl_aileron_setpoint;
+extern pprz_t h_ctl_rudder_setpoint;
 extern float  h_ctl_roll_slew;
 
 /* inner pitch loop parameters */
@@ -86,6 +87,7 @@ extern void h_ctl_course_loop ( void );
 extern void h_ctl_attitude_loop ( void );
 
 extern float h_ctl_roll_attitude_gain;
+extern float h_ctl_roll_attitude_rudder_gain;
 extern float h_ctl_roll_rate_gain;
 
 #endif /* FW_H_CTL_H */
