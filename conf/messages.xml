@@ -1567,6 +1567,12 @@
     <field name="my"    type="float" />
     <field name="mz"    type="float" />
     <field name="baro_alt" type="float"/>
+    <field name="df1"    type="float" />
+    <field name="df2"    type="float" />
+    <field name="df3"    type="float" />
+    <field name="df4"    type="float" />
+    <field name="df5"    type="float" />
+    <field name="df6"    type="float" />
   </message>
 
   <!--207 is free -->

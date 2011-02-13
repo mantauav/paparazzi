@@ -94,7 +94,7 @@
    ac_id="37"
    airframe="airframes/manta.xml"
    radio="radios/spektrum_dx7.xml"
-   telemetry="telemetry/default.xml"
+   telemetry="telemetry/manta.xml"
    flight_plan="flight_plans/fortdevens.xml"
    settings=" settings/tuning_manta.xml"
    gui_color="#6233ba"

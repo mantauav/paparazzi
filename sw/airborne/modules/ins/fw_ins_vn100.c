@@ -65,6 +65,18 @@ static inline bool_t ins_configure( void ) {
       spi_buffer_length = 4+VN100_REG_ADOF_SIZE;
       ins_init_status++;
       break;
+    case INS_VN100_SET_MAG_REF :
+      last_send_packet.RegID = VN100_REG_REF;
+      last_send_packet.Data[0].Float=1.92487;
+      last_send_packet.Data[1].Float=-0.51819;
+      last_send_packet.Data[2].Float=4.88002;
+      last_send_packet.Data[3].Float=0;
+      last_send_packet.Data[4].Float=0;
+      last_send_packet.Data[5].Float=-9.793746;
+      spi_buffer_length = 4+VN100_REG_REF_SIZE;
+      ins_init_status++;
+      break;
+
     case INS_VN100_READY :
       return TRUE;
   }
@@ -89,10 +101,18 @@ void ins_periodic_task( void ) {
   // Fill request for QMR
   last_send_packet.CmdID = VN100_CmdID_ReadRegister;
   last_send_packet.RegID = VN100_REG_YMR;
+  spi_buffer_length = 4+VN100_REG_YMR_SIZE;
+
+  // Fill request for REF
+/*
+  last_send_packet.CmdID = VN100_CmdID_ReadRegister;
+  last_send_packet.RegID = VN100_REG_REF;
+  spi_buffer_length = 4+VN100_REG_REF_SIZE;*/
+
 
   spi_buffer_input = (uint8_t*)&last_received_packet;
   spi_buffer_output = (uint8_t*)&last_send_packet;
-  spi_buffer_length = 4+VN100_REG_YMR_SIZE;
+
   SpiSelectSlave0();
   SpiStart();
   #endif

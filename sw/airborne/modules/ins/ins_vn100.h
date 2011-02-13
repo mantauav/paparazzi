@@ -45,7 +45,9 @@ extern struct FloatRates ins_rates;
 extern struct FloatRMat ins_rmat;
 extern struct FloatVect3 ins_accel;
 extern struct FloatVect3 ins_mag;
-
+extern struct FloatVect3 ins_ref_mag; //Magnetic reference vector for local field.
+extern struct FloatVect3 ins_ref_grav; //Gravity reference vector for local field.
+extern struct FloatVect3 df1,df2;
 extern volatile uint8_t ins_msg_received;
 
 extern void ins_init( void );
@@ -79,7 +81,8 @@ extern uint8_t ins_init_status;
 #define INS_VN100_SET_BAUD      0
 #define INS_VN100_SET_ADOR      1
 #define INS_VN100_SET_ADOF      2
-#define INS_VN100_READY         3
+#define INS_VN100_SET_MAG_REF   3
+#define INS_VN100_READY         4
 
 /* Telemetry */
 #define PERIODIC_SEND_AHRS(_chan) DOWNLINK_SEND_AHRS_LKF(_chan, \
