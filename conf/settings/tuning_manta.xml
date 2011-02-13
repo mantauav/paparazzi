@@ -30,11 +30,11 @@
     </dl_settings>
 
     <dl_settings NAME="control">
-<!--      <dl_settings NAME="damping">
+      <dl_settings NAME="damping">
         <dl_setting MAX="0" MIN="-3000" STEP="10" VAR="rc_gyro_roll_gain" module="sensors/rc_gyro"/>
         <dl_setting MAX="0" MIN="-3000" STEP="10" VAR="rc_gyro_pitch_gain" module="sensors/rc_gyro"/>
         <dl_setting MAX="0" MIN="-3000" STEP="10" VAR="rc_gyro_yaw_gain" module="sensors/rc_gyro"/>
-      </dl_settings> -->
+      </dl_settings> 
       <dl_settings NAME="ins">
 <!--        <dl_setting MAX="100" MIN="0" STEP="1" VAR="imu_health" shortname="health" module="subsystems/ahrs" /> -->
 <!--        <dl_setting MAX="100" MIN="0" STEP="1" VAR="renorm_sqrt_count" shortname="err_norm" module="subsystems/ahrs" /> -->

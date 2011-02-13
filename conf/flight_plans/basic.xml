@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
 
-<flight_plan alt="25" ground_alt="0" lat0="42.357015" lon0="-71.100689" max_dist_from_home="900" name="Basic" security_height="10">
+<flight_plan alt="25" ground_alt="0" lat0="42.492571" lon0="-71.676468" max_dist_from_home="900" name="Basic" security_height="10">
   <header>
 #include "subsystems/navigation/nav_line.h"
 #include "datalink.h"
@@ -32,7 +32,7 @@
     </block>
     <block name="Holding point">
       <!--set var="nav_mode" value="NAV_MODE_ROLL"/-->
-      <set value="1" var="kill_throttle"/>
+      <set value="0" var="kill_throttle"/>
       <attitude roll="0" throttle="0" vmode="throttle"/>
     </block>
     <block key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png" group="home">
