@@ -26,13 +26,13 @@
     <set command="THROTTLE" value="@THROTTLE"/>
     <set command="ROLL"     value="@ROLL"/>
     <set command="PITCH"    value="@PITCH"/>
-    <set command="YAW"      value="@YAW"/>
+    <set command="YAW"      value="@YAW*0.5"/>
   </rc_commands>
 
   <section name="MIXER">
     <define name="AILEVON_AILERON_RATE"  value="0.75"/>
     <define name="AILEVON_ELEVATOR_RATE" value="1.0"/>
-    <define name="RUDDER_RATE"           value="0.15"/> 
+    <define name="RUDDER_RATE"           value="0.3"/> 
   </section>
 
   <command_laws>

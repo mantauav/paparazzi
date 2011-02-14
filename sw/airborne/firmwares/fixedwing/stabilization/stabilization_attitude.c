@@ -45,7 +45,7 @@ float h_ctl_course_pre_bank_correction;
 float h_ctl_course_pgain;
 float h_ctl_course_dgain;
 float h_ctl_roll_max_setpoint;
-
+float h_ctl_last_course_error=0.0;
 /* roll and pitch disabling */
 bool_t h_ctl_disabled;
 
@@ -171,11 +171,14 @@ nav_ratio=0;
  * \brief
  *
  */
+
 void h_ctl_course_loop ( void ) {
   static float last_err;
 
   // Ground path error
   float err = estimator_hspeed_dir - h_ctl_course_setpoint;
+  h_ctl_last_course_error=err;
+
   NormRadAngle(err);
 
 #ifdef STRONG_WIND

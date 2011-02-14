@@ -46,6 +46,7 @@ extern struct FloatRMat ins_rmat;
 extern struct FloatVect3 ins_accel;
 extern struct FloatVect3 ins_mag;
 extern struct FloatVect3 ins_ref_mag; //Magnetic reference vector for local field.
+extern float  ins_ref_mag_declination;
 extern struct FloatVect3 ins_ref_grav; //Gravity reference vector for local field.
 extern struct FloatVect3 df1,df2;
 extern volatile uint8_t ins_msg_received;
