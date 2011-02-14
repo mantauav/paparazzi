@@ -32,6 +32,9 @@
       <set value="0" var="kill_throttle"/>
       <attitude roll="0" throttle="0" vmode="throttle"/>
     </block>
+    <block name="Goto XY of sticks">
+      <call fun="fly_to_xy_from_rc"/>
+    </block>
     <block group="home" key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png">
       <exception cond="estimator_z > ground_alt+10" deroute="Standby"/>
       <set value="0" var="kill_throttle"/>
@@ -86,4 +89,4 @@
       <attitude roll="0.0" throttle="0.0" until="FALSE" vmode="throttle"/>
     </block>
   </blocks>
-</flight_plan>
+</flight_plan>	

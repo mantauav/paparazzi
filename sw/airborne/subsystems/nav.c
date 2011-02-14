@@ -338,6 +338,12 @@ void fly_to_xy(float x, float y) {
   }
 }
 
+bool_t fly_to_xy_from_rc()
+{
+  fly_to_xy(estimator_x+radio_control.values[RADIO_ROLL]/100,estimator_y-radio_control.values[RADIO_PITCH]/100);
+  return FALSE;
+}
+
 /**
  *  \brief Computes the carrot position along the desired segment.
  */

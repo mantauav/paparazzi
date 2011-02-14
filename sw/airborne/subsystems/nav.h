@@ -103,7 +103,7 @@ void nav_without_gps(void);
 
 extern float nav_circle_trigo_qdr; /** Angle from center to mobile */
 extern void nav_circle_XY(float x, float y, float radius);
-
+extern bool_t fly_to_xy_from_rc();
 #define NavCircleWaypoint(wp, radius) \
   nav_circle_XY(waypoints[wp].x, waypoints[wp].y, radius)
 

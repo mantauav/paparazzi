@@ -105,9 +105,20 @@ static inline void h_ctl_roll_rate_loop( void );
 #define H_CTL_ROLL_RATE_GAIN 0.
 #endif
 
+#ifndef H_CTL_ATTITUDE_HOLD_ROLL_GAIN
+#define H_CTL_ATTITUDE_HOLD_ROLL_GAIN 0.0
+#endif
+
+#ifndef H_CTL_ATTITUDE_HOLD_RUDDER_GAIN
+#define H_CTL_ATTITUDE_HOLD_RUDDER_GAIN 0.0
+#endif
+
 float h_ctl_roll_attitude_gain;
 float h_ctl_roll_attitude_rudder_gain;
 float h_ctl_roll_rate_gain;
+
+float h_ctl_attitude_hold_roll_gain;
+float h_ctl_attitude_hold_rudder_gain;
 
 #ifdef AGR_CLIMB
 static float nav_ratio;
@@ -161,6 +172,10 @@ void h_ctl_init( void ) {
   h_ctl_roll_attitude_rudder_gain = H_CTL_ROLL_ATTITUDE_RUDDER_GAIN;
   h_ctl_roll_rate_gain = H_CTL_ROLL_RATE_GAIN;
 #endif
+
+
+  h_ctl_attitude_hold_roll_gain=H_CTL_ATTITUDE_HOLD_ROLL_GAIN;
+  h_ctl_attitude_hold_rudder_gain=H_CTL_ATTITUDE_HOLD_RUDDER_GAIN;
 
 #ifdef AGR_CLIMB
 nav_ratio=0;
@@ -320,9 +335,9 @@ inline static void h_ctl_roll_loop( void ) {
 #endif
   float cmd = h_ctl_roll_attitude_gain * err
     - h_ctl_roll_rate_gain * estimator_p
-    + v_ctl_throttle_setpoint * h_ctl_aileron_of_throttle;
+    + v_ctl_throttle_setpoint * h_ctl_aileron_of_throttle - h_ctl_attitude_hold_roll_gain * estimator_phi; //sign on roll rate incorrect?
 
-  float cmd_rudder = h_ctl_roll_attitude_rudder_gain * err;
+  float cmd_rudder = h_ctl_roll_attitude_rudder_gain * err - h_ctl_attitude_hold_rudder_gain * estimator_phi;
     
     
   h_ctl_aileron_setpoint = TRIM_PPRZ(cmd);

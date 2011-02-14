@@ -232,8 +232,6 @@ void estimator_update_state_gps( void ) {
   float w_ve = sinf(estimator_hspeed_dir) * estimator_hspeed_mod - wind_east;
   if (estimator_heading_source == 0)
     estimator_psi = atan2f(w_ve, w_vn);
-  else
-    estimator_psi=ins_eulers.psi;
   if (estimator_psi < 0.)
     estimator_psi += 2 * M_PI;
 #ifdef EXTRA_DOWNLINK_DEVICE

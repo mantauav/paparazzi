@@ -186,6 +186,8 @@ void parse_ins_msg( void ) {
       ins_eulers.phi   = RadOfDeg(last_received_packet.Data[2].Float);
       ins_eulers.theta = RadOfDeg(last_received_packet.Data[1].Float);
       ins_eulers.psi   = RadOfDeg(last_received_packet.Data[0].Float-ins_ref_mag_declination);
+      if (ins_eulers.psi < 0.)
+        ins_eulers.psi += 2 * M_PI;
       ins_mag.x = last_received_packet.Data[3].Float;
       ins_mag.y = last_received_packet.Data[4].Float;
       ins_mag.z = last_received_packet.Data[5].Float;
@@ -196,11 +198,18 @@ void parse_ins_msg( void ) {
       ins_rates.q = last_received_packet.Data[10].Float;
       ins_rates.r = last_received_packet.Data[11].Float;
       //EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
-      EstimatorSetPhiTheta(ins_eulers.phi-ins_roll_neutral,ins_eulers.theta-ins_pitch_neutral);
+      if (estimator_heading_source == 0)
+      {
+        EstimatorSetPhiTheta(ins_eulers.phi-ins_roll_neutral,ins_eulers.theta-ins_pitch_neutral);
+      }
+      else
+      {
+        EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
+      }
       float cd=(float)gps_course*0.1;
-      if (cd > 180)
-        cd = cd-360;
       df1.x=DegOfRad(ins_eulers.psi)-cd;
+      if (df1.x < 0)
+        df1.x += 360;
       #ifdef USE_RC_GYRO
       rc_gyro_update_rates(ins_rates.p,ins_rates.q,ins_rates.r);
       #endif      

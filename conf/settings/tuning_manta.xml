@@ -53,8 +53,11 @@
 
 
         <dl_setting MAX="0" MIN="-30000" STEP="250" VAR="h_ctl_roll_attitude_gain" shortname="roll attitude pgain" param="H_CTL_ROLL_ATTITUDE_GAIN"/>
-
 	<dl_setting MAX="0" MIN="-30000" STEP="250" VAR="h_ctl_roll_attitude_rudder_gain" shortname="roll attitude  rudder pgain" param="H_CTL_ROLL_ATTITUDE_RUDDER_GAIN"/>
+
+        <dl_setting MAX="0" MIN="-30000" STEP="100" VAR="h_ctl_attitude_hold_rudder_gain" shortname="attitude hold  rudder pgain" param="H_CTL_ATTITUDE_HOLD_RUDDER_GAIN"/>
+        <dl_setting MAX="0" MIN="-30000" STEP="100" VAR="h_ctl_attitude_hold_roll_gain" shortname="attitude hold  roll pgain" param="H_CTL_ATTITUDE_HOLD_ROLL_GAIN"/>
+
         <dl_setting MAX="0" MIN="-15000" STEP="250" VAR="h_ctl_roll_rate_gain" shortname="roll rate gain" param="H_CTL_ROLL_RATE_GAIN"/>
 
       </dl_settings>
