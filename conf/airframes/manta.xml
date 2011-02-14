@@ -26,13 +26,13 @@
     <set command="THROTTLE" value="@THROTTLE"/>
     <set command="ROLL"     value="@ROLL"/>
     <set command="PITCH"    value="@PITCH"/>
-    <set command="YAW"      value="@YAW"/>
+    <set command="YAW"      value="@YAW*0.5"/>
   </rc_commands>
 
   <section name="MIXER">
     <define name="AILEVON_AILERON_RATE"  value="0.75"/>
     <define name="AILEVON_ELEVATOR_RATE" value="1.0"/>
-    <define name="RUDDER_RATE"           value="0.40"/> 
+    <define name="RUDDER_RATE"           value="0.3"/> 
   </section>
 
   <command_laws>
@@ -41,8 +41,8 @@
     <let var="yaw"      value="@YAW * RUDDER_RATE"/>
     <set servo="MOTOR_LEFT"    value="@THROTTLE + $yaw"/>
     <set servo="MOTOR_RIGHT"   value="@THROTTLE - $yaw"/>
-    <set servo="AILEVON_LEFT"  value="$elevator + $aileron"/>
-    <set servo="AILEVON_RIGHT" value="$elevator - $aileron"/>
+    <set servo="AILEVON_LEFT"  value="$elevator - $aileron"/>
+    <set servo="AILEVON_RIGHT" value="$elevator + $aileron"/>
   </command_laws>
 
   <section name="AUTO1" prefix="AUTO1_">
@@ -89,15 +89,15 @@
     <define name="ALTITUDE_MAX_CLIMB" value="2."/>
 
     <!-- auto throttle inner loop -->
-    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.29"/>
+    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.35"/>
     <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.25"/>
-    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.75"/>
+    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.95"/>
     <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
     <define name="AUTO_THROTTLE_PGAIN" value="-0.01"/>
     <define name="AUTO_THROTTLE_IGAIN" value="0.1"/>
-    <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.05"/>
+    <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.0"/>
 
 
 
@@ -105,9 +105,9 @@
   </section>
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
-    <define name="COURSE_PGAIN" value="-1.4"/>
+    <define name="COURSE_PGAIN" value="-1.2"/>
 
-    <define name="ROLL_MAX_SETPOINT" value="0.523"  />
+    <define name="ROLL_MAX_SETPOINT" value="0.697"  />
     <define name="PITCH_MAX_SETPOINT" value="0.523" />
     <define name="PITCH_MIN_SETPOINT" value="-0.087"/>
 
@@ -118,8 +118,8 @@
 
     <define name="ROLL_SLEW" value="0.1"/>
 
-    <define name="ROLL_ATTITUDE_GAIN" value="-7500"/>
-
+    <define name="ROLL_ATTITUDE_GAIN" value="0"/>
+    <define name="ROLL_ATTITUDE_RUDDER_GAIN" value="-7500"/>
     <define name="ROLL_RATE_GAIN" value="-1500"/>
     <define name="ROLL_RATE_MODE_DEFAULT"  value="0"/>
     <define name="ROLL_RATE_SETPOINT_PGAIN"     value="-5"  />
@@ -202,7 +202,7 @@
       <define name="ALT_KALMAN" />
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
-      <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_AUTO"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
+      <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_FAILSAFE"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
 <!--    <define name="USE_AIRSPEED"/> -->
 
 <!------------------SUBSYSTEMS--------------->

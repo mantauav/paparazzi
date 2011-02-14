@@ -67,6 +67,9 @@ float estimator_hspeed_dir;
 float wind_east, wind_north;
 float estimator_airspeed;
 
+/*heading source*/
+uint8_t estimator_heading_source=0; //0=GPS, 1=ins
+
 #define NORM_RAD_ANGLE2(x) { \
     while (x > 2 * M_PI) x -= 2 * M_PI; \
     while (x < 0 ) x += 2 * M_PI; \
@@ -220,13 +223,17 @@ void estimator_update_state_gps( void ) {
   float fspeed = gps_gspeed / 100.;
   float fclimb = gps_climb / 100.;
   float fcourse = RadOfDeg(gps_course / 10.);
+
   EstimatorSetSpeedPol(fspeed, fcourse, fclimb);
 
   // Heading estimator from wind-information, usually computed with -DWIND_INFO
   // wind_north and wind_east initialized to 0, so still correct if not updated
   float w_vn = cosf(estimator_hspeed_dir) * estimator_hspeed_mod - wind_north;
   float w_ve = sinf(estimator_hspeed_dir) * estimator_hspeed_mod - wind_east;
-  estimator_psi = atan2f(w_ve, w_vn);
+  if (estimator_heading_source == 0)
+    estimator_psi = atan2f(w_ve, w_vn);
+  else
+    estimator_psi=ins_eulers.psi;
   if (estimator_psi < 0.)
     estimator_psi += 2 * M_PI;
 #ifdef EXTRA_DOWNLINK_DEVICE

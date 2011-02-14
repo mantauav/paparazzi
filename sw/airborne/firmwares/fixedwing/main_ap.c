@@ -160,7 +160,9 @@ static inline void copy_from_to_fbw ( void ) {
 #ifdef SetAutoCommandsFromRC
   SetAutoCommandsFromRC(ap_state->commands, fbw_state->channels);
 #elif defined RADIO_YAW && defined COMMAND_YAW
+#ifdef AUTO_YAW_FROM_RC
   ap_state->commands[COMMAND_YAW] = fbw_state->channels[RADIO_YAW];
+#endif
 #endif
 }
 
@@ -233,7 +235,7 @@ static inline void telecommand_task( void ) {
    */
   if (pprz_mode == PPRZ_MODE_AUTO1) {
     /** Roll is bounded between [-AUTO1_MAX_ROLL;AUTO1_MAX_ROLL] */
-    h_ctl_roll_setpoint = FLOAT_OF_PPRZ(fbw_state->channels[RADIO_ROLL], 0., -AUTO1_MAX_ROLL);
+    h_ctl_roll_setpoint = FLOAT_OF_PPRZ(fbw_state->channels[RADIO_ROLL], 0., AUTO1_MAX_ROLL);
 
     /** Pitch is bounded between [-AUTO1_MAX_PITCH;AUTO1_MAX_PITCH] */
     h_ctl_pitch_setpoint = FLOAT_OF_PPRZ(fbw_state->channels[RADIO_PITCH], 0., AUTO1_MAX_PITCH);
@@ -489,7 +491,7 @@ void periodic_task_ap( void ) {
       ap_state->commands[COMMAND_THROTTLE] = v_ctl_throttle_slewed;
       ap_state->commands[COMMAND_ROLL] = h_ctl_aileron_setpoint;
       ap_state->commands[COMMAND_PITCH] = h_ctl_elevator_setpoint;
-
+      ap_state->commands[COMMAND_YAW] = h_ctl_rudder_setpoint;
 #if defined MCU_SPI_LINK
       link_mcu_send();
 #elif defined INTER_MCU && defined SINGLE_MCU

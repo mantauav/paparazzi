@@ -223,7 +223,7 @@
 
 #ifdef MANTA_TESTING
 #ifndef SITL //HACK
-#define PERIODIC_SEND_MANTA_TESTING(_chan) DOWNLINK_SEND_MANTA_TESTING(_chan,&ins_eulers.phi,&ins_eulers.theta,&ins_eulers.psi,&ins_rates.p,&ins_rates.q,&ins_rates.r,&ins_accel.x,&ins_accel.y,&ins_accel.z,&ins_mag.x,&ins_mag.y,&ins_mag.z,&baro_MS5803_last_altitude)
+#define PERIODIC_SEND_MANTA_TESTING(_chan) DOWNLINK_SEND_MANTA_TESTING(_chan,&ins_eulers.phi,&ins_eulers.theta,&ins_eulers.psi,&ins_rates.p,&ins_rates.q,&ins_rates.r,&ins_accel.x,&ins_accel.y,&ins_accel.z,&ins_mag.x,&ins_mag.y,&ins_mag.z,&baro_MS5803_last_altitude,&df1.x,&h_ctl_last_course_error,&df1.z,&df2.x,&df2.y,&df2.z)
 #else
 #define PERIODIC_SEND_MANTA_TESTING {}
 #endif

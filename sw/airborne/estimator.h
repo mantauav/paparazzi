@@ -70,6 +70,9 @@ extern float wind_east, wind_north; /* m/s */
 extern float estimator_airspeed; /* m/s */
 
 
+/*heading source*/
+extern uint8_t estimator_heading_source; //0=GPS, 1=ins
+
 void estimator_init( void );
 void estimator_propagate_state( void );
 

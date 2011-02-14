@@ -36,7 +36,7 @@
 
 #include "mcu_periph/uart.h"
 
-
+#include "gps.h"
 #include "autopilot.h"
 #include "estimator.h"
 
@@ -49,6 +49,11 @@ struct FloatRates ins_rates;
 struct FloatRMat ins_rmat;
 struct FloatVect3 ins_accel;
 struct FloatVect3 ins_mag;
+struct FloatVect3 ins_ref_mag; //Magnetic reference vector for local field.
+struct FloatVect3 ins_ref_grav; //Gravity reference vector for local field.
+float  ins_ref_mag_declination=-15.4;
+
+struct FloatVect3 df1,df2;
 
 volatile uint8_t ins_msg_received;
 
@@ -84,6 +89,15 @@ void parse_ins_msg( void ) {
     case VN100_REG_SBAUD :
       ins_baud = last_received_packet.Data[0].UInt;
       break;
+    case VN100_REG_REF :
+      ins_ref_mag.x = last_received_packet.Data[0].Float;
+      ins_ref_mag.y = last_received_packet.Data[1].Float;
+      ins_ref_mag.z = last_received_packet.Data[2].Float;
+      ins_ref_grav.x = last_received_packet.Data[3].Float;
+      ins_ref_grav.y = last_received_packet.Data[4].Float;
+      ins_ref_grav.z = last_received_packet.Data[5].Float;    
+      break;
+
     case VN100_REG_YPR :
       ins_eulers.phi   = RadOfDeg(last_received_packet.Data[2].Float);
       ins_eulers.theta = RadOfDeg(last_received_packet.Data[1].Float);
@@ -171,7 +185,7 @@ void parse_ins_msg( void ) {
     case VN100_REG_YMR :
       ins_eulers.phi   = RadOfDeg(last_received_packet.Data[2].Float);
       ins_eulers.theta = RadOfDeg(last_received_packet.Data[1].Float);
-      ins_eulers.psi   = RadOfDeg(last_received_packet.Data[0].Float);
+      ins_eulers.psi   = RadOfDeg(last_received_packet.Data[0].Float-ins_ref_mag_declination);
       ins_mag.x = last_received_packet.Data[3].Float;
       ins_mag.y = last_received_packet.Data[4].Float;
       ins_mag.z = last_received_packet.Data[5].Float;
@@ -183,6 +197,10 @@ void parse_ins_msg( void ) {
       ins_rates.r = last_received_packet.Data[11].Float;
       //EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
       EstimatorSetPhiTheta(ins_eulers.phi-ins_roll_neutral,ins_eulers.theta-ins_pitch_neutral);
+      float cd=(float)gps_course*0.1;
+      if (cd > 180)
+        cd = cd-360;
+      df1.x=DegOfRad(ins_eulers.psi)-cd;
       #ifdef USE_RC_GYRO
       rc_gyro_update_rates(ins_rates.p,ins_rates.q,ins_rates.r);
       #endif      
