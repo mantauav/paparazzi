@@ -1,22 +1,25 @@
 <!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
 
-<flight_plan alt="25" ground_alt="0" lat0="42.492571" lon0="-71.676468" max_dist_from_home="900" name="Basic" security_height="10">
+<flight_plan alt="25" ground_alt="100" lat0="42.494966" lon0="-71.680976" max_dist_from_home="900" name="Basic" security_height="10">
   <header>
 #include "subsystems/navigation/nav_line.h"
 #include "datalink.h"
 </header>
   <waypoints>
-    <waypoint name="HOME" x="-247.1" y="184.2"/>
-    <waypoint name="STDBY" x="-140.3" y="248.4"/>
-    <waypoint name="1" x="-228.7" y="247.8"/>
-    <waypoint name="2" x="-61.0" y="122.0"/>
+    <waypoint name="HOME" x="0" y="0"/>
+    <waypoint name="STDBY" x="168.5" y="-18.0"/>
+    <waypoint name="1" x="77.1" y="-31.2"/>
+    <waypoint name="2" x="184.0" y="-106.3"/>
     <waypoint name="MOB" x="165.4" y="193.3"/>
-    <waypoint name="S1" x="150.7" y="161.8"/>
-    <waypoint name="S2" x="90.7" y="308.4"/>
-    <waypoint alt="10.0" name="AF" x="177.4" y="45.1"/>
-    <waypoint alt="0.0" name="TD" x="-149.6" y="80.2"/>
+    <waypoint name="S1" x="313.0" y="-9.1"/>
+    <waypoint name="S2" x="130.5" y="61.2"/>
+    <waypoint alt="10.0" name="AF" x="90.7" y="-65.8"/>
+    <waypoint alt="0.0" name="TD" x="32.5" y="-16.5"/>
     <waypoint name="_BASELEG" x="327.1" y="57.8"/>
-    <waypoint name="CLIMB" x="-213.3" y="129.3"/>
+    <waypoint name="CLIMB" x="105.6" y="-10.4"/>
+    <waypoint name="wp1" x="-423.1" y="540.9"/>
+    <waypoint name="wp3" x="-482.6" y="526.1"/>
+    <waypoint name="wp4" x="-574.4" y="509.0"/>
   </waypoints>
   <exceptions/>
   <blocks>
@@ -89,4 +92,4 @@
       <attitude roll="0.0" throttle="0.0" until="FALSE" vmode="throttle"/>
     </block>
   </blocks>
-</flight_plan>	
+</flight_plan>
