@@ -196,7 +196,10 @@ void parse_ins_msg( void ) {
       ins_rates.r = last_received_packet.Data[11].Float;
       //EstimatorSetAtt(ins_eulers.phi-ins_roll_neutral,ins_eulers.psi,ins_eulers.theta-ins_pitch_neutral);
       EstimatorSetPhiTheta(ins_eulers.phi-ins_roll_neutral,ins_eulers.theta-ins_pitch_neutral);
-      df1.x=DegOfRad(ins_eulers.psi)-(float)gps_course*0.10;
+      float cd=(float)gps_course*0.1;
+      if (cd > 180)
+        cd = cd-360;
+      df1.x=DegOfRad(ins_eulers.psi)-cd;
       #ifdef USE_RC_GYRO
       rc_gyro_update_rates(ins_rates.p,ins_rates.q,ins_rates.r);
       #endif      
