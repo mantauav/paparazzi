@@ -35,6 +35,9 @@
 #include "modules/ins/VN100.h"
 #include "math/pprz_algebra_float.h"
 
+#ifdef SITL
+extern float baro_MS5803_last_altitude;
+#endif
 extern float ins_roll_neutral; //for testing, may be the wrong spot to put this
 extern float ins_pitch_neutral; //for testing, may be the wrong spot to put this
 

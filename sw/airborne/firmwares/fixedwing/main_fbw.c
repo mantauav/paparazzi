@@ -177,6 +177,8 @@ void periodic_task_fbw( void ) {
 #endif
 if (radio_control.status!=RC_OK)
    fbw_mode = FBW_MODE_FAILSAFE;
+if ((radio_control.status==RC_OK) && (fbw_mode == FBW_MODE_FAILSAFE))
+   fbw_mode = FBW_MODE_MANUAL;
 
 #ifdef INTER_MCU
   inter_mcu_periodic_task();
