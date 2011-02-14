@@ -151,7 +151,7 @@ int init_hid_device(char* device_name)
 
   /* LED testing */
   
-  led_test( );
+//  led_test( );
 
 
   /* Which buttons has the device? */
