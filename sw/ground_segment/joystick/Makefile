@@ -31,8 +31,8 @@ LIBPPRZCMA=$(OCAMLLIB)/lib-pprz.cma
 
 all: test_stick input2ivy
 
-test_stick: test_stick.o
-	gcc -g -O2 -Wall -DSTICK_DBG `pkg-config glib-2.0 --cflags` -o $@ $^ usb_stick.c `pkg-config glib-2.0 --libs`  `pcre-config --libs` -lglibivy
+test_stick: test_stick.o usb_stick.c
+	gcc -g -O2 -Wall -DSTICK_DBG `pkg-config glib-2.0 --cflags` -o $@ $^ `pkg-config glib-2.0 --libs`  `pcre-config --libs` -lglibivy
 
 input2ivy: usb_stick.o ml_usb_stick.o input2ivy.cmo
 	$(OCAMLC) $(OCAMLINCLUDES) -custom -o $@ unix.cma str.cma glibivy-ocaml.cma xml-light.cma lib-pprz.cma lablgtk.cma $(TOOLSDIR)/fp_proc.cmo $^

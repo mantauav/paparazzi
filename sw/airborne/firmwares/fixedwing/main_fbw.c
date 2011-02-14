@@ -105,7 +105,9 @@ static inline void set_failsafe_mode( void ) {
 
 #ifdef RADIO_CONTROL
 static inline void handle_rc_frame( void ) {
+  #ifndef RADIO_CONTROL_NO_MODESET
   fbw_mode = FBW_MODE_OF_PPRZ(radio_control.values[RADIO_MODE]);
+  #endif
   if (fbw_mode == FBW_MODE_MANUAL)
     SetCommandsFromRC(commands, radio_control.values);
 }

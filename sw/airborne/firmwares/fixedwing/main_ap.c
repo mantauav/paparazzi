@@ -125,7 +125,7 @@ bool_t gps_lost = FALSE;
 
 /** \brief Update paparazzi mode
  */
-#if defined RADIO_CONTROL || defined RADIO_CONTROL_AUTO1
+#if (defined RADIO_CONTROL || defined RADIO_CONTROL_AUTO1) && !defined RADIO_CONTROL_NO_MODESET
 static inline uint8_t pprz_mode_update( void ) {
   if ((pprz_mode != PPRZ_MODE_HOME &&
        pprz_mode != PPRZ_MODE_GPS_OUT_OF_ORDER)

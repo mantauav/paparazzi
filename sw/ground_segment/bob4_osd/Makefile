@@ -1,6 +1,7 @@
-#
-#   $Id$
-#   Copyright (C) 2003 Pascal Brisset Antoine Drouin
+
+# Copyright 2011 Aurora Flight Sciences 
+#  James Peverill   jpeverill@aurora.aero
+
 #
 # This file is part of paparazzi.
 #
@@ -20,10 +21,16 @@
 # Boston, MA 02111-1307, USA.  
 # 
 
+# Quiet compilation
+Q=@
 
-Tools for controlling an aircraft with a ground joystick
+all: bob4_osd au_osd_setup
 
-Also used as general purpose joystick to ivybus connector.  Can generate arbitrary ivybus messages based on control input from buttons or axes.  Supports limiting, exponential and scaling on axes.
+bob4_osd: bob4_osd.c
+	gcc -o au_osd bob4_osd.c -I /usr/include/Ivy -livy -lm
 
+au_osd_setup: bob4_setup.c
+	gcc -o au_osd_setup bob4_setup.c -lm
 
-
+clean:
+	rm -f *~ *.o *.bak .depend au_osd au_osd_setup

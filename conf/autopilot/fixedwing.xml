@@ -14,7 +14,7 @@
   <define name="TRAFFIC_INFO" />
  </target>
 
- <subsystem name="radio_control" 	types="ppm"/>
+ <subsystem name="radio_control" 	types="ppm,datalink"/>
     <!-- Communication -->
  <subsystem name="telemetry" 	types="transparent|xbee_api|transparent_usb">
    <configure name="MODEM_BAUD"     values="B9600|B38400|B57600|B115200"/>
