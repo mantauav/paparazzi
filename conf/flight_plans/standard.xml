@@ -72,8 +72,8 @@
     </block>
     <block name="final">
       <exception cond="ground_alt + 10 > estimator_z" deroute="flare"/>
-      <go from="AF" approaching_time="THROTTLE_CUT_APPROACHING_TIME" hmode="route" wp="TD" alt="WaypointAlt(WP_AF)"/>
-      <go from="AF" approaching_time="FLARE_APPROACHING_TIME" vmode="throttle" throttle="0.1" hmode="route" wp="TD"/>
+      <go alt="WaypointAlt(WP_AF)" approaching_time="4" from="AF" hmode="route" wp="TD"/>
+      <go approaching_time="1" from="AF" hmode="route" throttle="0.1" vmode="throttle" wp="TD"/>
       <deroute block="flare"/>
     </block>
     <block name="flare">

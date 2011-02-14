@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "radio_control/rc_datalink.h"
+#include "rc_datalink.h"
 #include "subsystems/radio_control.h"
 
 int8_t rc_dl_values[ RC_DL_NB_CHANNEL ];
@@ -42,8 +42,23 @@ void parse_rc_datalink( uint8_t throttle_mode,
 
   rc_dl_values[RADIO_ROLL] = roll;
   rc_dl_values[RADIO_PITCH] = pitch;
-  rc_dl_values[RADIO_THROTTLE] = (int8_t)throttle;
+  rc_dl_values[RADIO_THROTTLE] = (int8_t)throttle << 2;  //bit shifted to scale to 0-256
+  rc_dl_values[RADIO_YAW] = 0;
   rc_dl_values[RADIO_MODE] = (int8_t)mode;
+
+  rc_dl_frame_available = TRUE;
+}
+
+void parse_rc_4ch_datalink( uint8_t throttle,
+			    int8_t roll,
+			    int8_t pitch,
+			    int8_t yaw)
+{
+  rc_dl_values[RADIO_ROLL] = roll;
+  rc_dl_values[RADIO_PITCH] = pitch;
+  rc_dl_values[RADIO_THROTTLE] = throttle;
+  rc_dl_values[RADIO_YAW] = yaw;
+  rc_dl_values[RADIO_MODE] = -1;
 
   rc_dl_frame_available = TRUE;
 }

@@ -40,6 +40,15 @@
  */
 
 
+/* ----------------------------------------------------------------------
+ *  This sensor has oversampling control which allows it to function
+     at different rates depending on desired resolution
+      with 4096 oversampling, max conversion is 9mS, resolution is .012mbar
+
+    It is recommended to use the 4096 oversample, and we can assume a 10mS conversion time.
+   ---------------------------------------------------------------------- */
+
+
 #include "std.h"
 #include "LPC21xx.h"
 #include "mcu_periph/spi.h"
@@ -65,7 +74,6 @@
 #define VAL_TCO ms5803_cal_table[CAL_TCO]
 #define VAL_T_REF ms5803_cal_table[CAL_T_REF]
 #define VAL_TEMPSENS ms5803_cal_table[CAL_TEMPSENS]
-
 
 #define CAL_NUM_VALUES 8
 
