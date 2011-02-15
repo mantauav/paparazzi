@@ -45,6 +45,8 @@ TMTC=sw/ground_segment/tmtc
 MULTIMON=sw/ground_segment/multimon
 LOGALIZER=sw/logalizer
 SIMULATOR=sw/simulator
+JOYSTICK=sw/ground_segment/joystick
+BOB4_OSD=sw/ground_segment/bob4_osd
 MAKE=make PAPARAZZI_SRC=$(PAPARAZZI_SRC) PAPARAZZI_HOME=$(PAPARAZZI_HOME)
 CONF=$(PAPARAZZI_SRC)/conf
 STATICINCLUDE =$(PAPARAZZI_HOME)/var/include
@@ -69,7 +71,7 @@ endif
 
 all: static conf
 
-static : lib center tools cockpit multimon tmtc logalizer lpc21iap sim_static static_h usb_lib
+static : lib center tools cockpit multimon tmtc logalizer lpc21iap sim_static static_h usb_lib joystick bob4_osd
 
 conf: conf/conf.xml conf/control_panel.xml
 
@@ -100,6 +102,12 @@ tmtc: lib cockpit
 
 multimon:
 	cd $(MULTIMON); $(MAKE)
+
+joystick:
+	cd $(JOYSTICK); $(MAKE)
+
+bob4_osd:
+	cd $(BOB4_OSD); $(MAKE)
 
 static_h: $(MESSAGES_H) $(MESSAGES2_H) $(UBX_PROTOCOL_H) $(XSENS_PROTOCOL_H) $(DL_PROTOCOL_H) $(DL_PROTOCOL2_H)
 
