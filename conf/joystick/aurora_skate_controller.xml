@@ -43,7 +43,7 @@ It has 9 buttons.
 
 
   <message class="datalink" name="RC_4CH" send_always="1">
-   <field name="throttle" value="Scale(0-ly,0,255)"/>
+   <field name="throttle" value="Scale(ly,0,127)"/>
    <field name="roll" value="rx"/>
    <field name="yaw" value="lx"/>
    <field name="pitch" value="ry"/>

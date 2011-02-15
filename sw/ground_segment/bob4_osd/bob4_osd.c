@@ -7,7 +7,6 @@
 //  It then parses them and renders them onto the OSD attached via serial link
 //  It is designed to read out to a BOB4 based OSD board
 //
-//
 
 
 //
@@ -45,6 +44,8 @@
 
 #define FALSE 0
 #define TRUE 1
+
+#define DEFAULT_PORT "/dev/ttyUSB1"
 
 //aspect ratio between BOB resolution aspect and screen aspect
 //  looks around 1 when TV set to wide mode
@@ -106,10 +107,6 @@ int TTY;
 
 // verbose mode
 int verbose = 0;
-// proprietary mode (turns off proprietary display items)
-int proprietary = 0;
-
-
 
 void ClearOSD()
 {
@@ -189,10 +186,10 @@ void BatteryCallback (IvyClientPtr app, void *data, int argc, char **argv)
     substring = strtok(NULL," ");
   }
 
-  if(proprietary == 0) {
-    //write out battery voltage
-    FDPRINTF(TTY,"\033[0;0H%2.2fV ",volts);
-  }
+
+  //write out battery voltage
+  FDPRINTF(TTY,"\033[0;0H%2.2fV ",volts);
+
 
   //write out flight time
   FDPRINTF(TTY,"\033[0;13H  %u:%02u ",flighttime/60,flighttime%60);
@@ -231,11 +228,13 @@ void EstimatorCallback (IvyClientPtr app, void *data, int argc, char **argv)
   if(altitude > 9999)
     altitude = 9999;
   
+  /*
   if(ground_level < altitude) {
     ground_level = altitude;
   }
   altitude -= ground_level;
-  
+  */  
+
   //write out altitude voltage
   FDPRINTF(TTY,"\033[9;0HAlt:");
   FDPRINTF(TTY,"\033[10;0H%04.1fm",altitude);
@@ -272,7 +271,7 @@ void AttitudeStatusCallback (IvyClientPtr app, void *data, int argc, char **argv
   while (substring!= NULL) {
     switch (counter) {
     case 2:
-      pitch_angle = atof(substring);
+      pitch_angle = atof(substring)/(3.141)*180;
       pitch_angle_valid = 0;
       break;
     }
@@ -587,8 +586,6 @@ void au_osd_print_help( void ) {
   printf(" -b <ivy_bus>    Use specified Ivy bus\n");
   printf(" -p <device>     Use <device> com port, default is /dev/ttyUSB1\n");
   printf(" -v              Enable verbose mode\n");
-  printf(" -o              Turn on proprietary mode (for shows)\n");
-  printf(" -t              Use MY_CMDS for velocity/altitude\n");
   printf(" -P              Set PAL explicitely on startup\n");
   printf(" -g              Set genlock mode\n");
 }
@@ -604,7 +601,7 @@ main (int argc, char**argv)
 	int palmode = 0;
 
 	char c;
-	while ( (c = getopt (argc, argv, "b:p:voPtg")) != EOF) {
+	while ( (c = getopt (argc, argv, "b:p:vog")) != EOF) {
 		switch (c) {
 		case 'g':
 		  printf("Setting Genlock Off\n");
@@ -624,10 +621,6 @@ main (int argc, char**argv)
 		  palmode = 1;
 		  printf("Setting PAL mode\n");
 		  break;
-		case 'o':
-		  proprietary = 1;
-		  printf("Using OSD in proprietary mode\n");
-		  break;
 		default:
 		  au_osd_print_help();
 		  abort();
@@ -639,7 +632,7 @@ main (int argc, char**argv)
 		bus = getenv ("IVYBUS");
 
 	if (!com_port)
-	  com_port = "/dev/ttyUSB1";
+	  com_port = DEFAULT_PORT;
 
 	printf("AU_OSD: Opening port: %s\n",com_port);
 
