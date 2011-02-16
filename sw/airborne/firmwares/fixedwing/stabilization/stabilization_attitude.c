@@ -48,7 +48,7 @@ float h_ctl_roll_max_setpoint;
 float h_ctl_last_course_error=0.0;
 float h_ctl_rc_course_rate=2.0/180*3.14;
 float h_ctl_rc_course_setpoint=0.0;
-bool_t h_ctl_use_rc_course = 1;
+bool_t h_ctl_use_rc_course = 0;
 /* roll and pitch disabling */
 bool_t h_ctl_disabled;
 
