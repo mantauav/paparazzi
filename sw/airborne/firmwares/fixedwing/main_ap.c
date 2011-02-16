@@ -199,7 +199,16 @@ static inline void reporting_task( void ) {
 #ifndef RC_LOST_MODE
 #define RC_LOST_MODE PPRZ_MODE_HOME
 #endif
-
+void ap_auto2_init(void)
+{
+  if (nav_capture_altitude)
+    nav_altitude_at_auto2_switch = estimator_z;
+//  if (v_ctl_capture_cruise_throttle)
+//    v_ctl_auto_throttle_nominal_cruise_throttle =  
+  h_ctl_rc_course_setpoint=estimator_psi;
+  if (v_ctl_throttle_capture)
+    v_ctl_auto_throttle_cruise_throttle = (float)radio_control.values[COMMAND_THROTTLE]/9600;
+}
 /** \brief Function to be called when a message from FBW is available */
 static inline void telecommand_task( void ) {
   uint8_t mode_changed = FALSE;
@@ -227,7 +236,11 @@ static inline void telecommand_task( void ) {
   }
   mode_changed |= mcu1_status_update();
   if ( mode_changed )
+  {
     PERIODIC_SEND_PPRZ_MODE(DefaultChannel);
+    if (pprz_mode == PPRZ_MODE_AUTO2)
+      ap_auto2_init();
+  }
 
 #if defined RADIO_CONTROL || defined RADIO_CONTROL_AUTO1
   /** In AUTO1 mode, compute roll setpoint and pitch setpoint from
@@ -430,6 +443,11 @@ void periodic_task_ap( void ) {
     kill_throttle |= launch && (dist2_to_home > Square(KILL_MODE_DISTANCE));
   }
 
+  if (!_10Hz) {
+    h_ctl_rc_course_setpoint += (float)radio_control.values[COMMAND_ROLL]/9600*h_ctl_rc_course_rate;
+    NormRadAngle(h_ctl_rc_course_setpoint);
+    df2.z=DegOfRad(h_ctl_rc_course_setpoint);
+  }
   switch(_4Hz) {
   case 0:
 #ifdef SITL

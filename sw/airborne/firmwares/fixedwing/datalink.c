@@ -32,7 +32,7 @@
 #include <inttypes.h>
 #include <string.h>
 #include "datalink.h"
-
+#include "generated/airframe.h"
 #include "generated/modules.h"
 
 #ifdef TRAFFIC_INFO

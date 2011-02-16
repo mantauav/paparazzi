@@ -73,7 +73,8 @@ void rc_gyro_update_rates(float roll_rate,float pitch_rate,float yaw_rate)
 
 void rc_gyro_apply_damping(pprz_t raw_commands[COMMANDS_NB])
 {
-  for (int i=0;i<COMMANDS_NB;i++)
+  int i;
+  for (i=0;i<COMMANDS_NB;i++)
     rc_gyro_damped_commands[i]=raw_commands[i];
 
   rc_gyro_damped_commands[COMMAND_ROLL] = (pprz_t)(raw_commands[COMMAND_ROLL] + rc_gyro_roll_rate*(float)rc_gyro_roll_gain);

@@ -22,6 +22,9 @@
     <file name="rc_gyro.c"/>
     <define name="USE_RC_GYRO"/>
   </makefile>
+  <makefile target="sim">
+    <file name="rc_gyro.c"/>
+  </makefile>
 
 </module>
 

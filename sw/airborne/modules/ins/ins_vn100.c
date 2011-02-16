@@ -220,7 +220,7 @@ void parse_ins_msg( void ) {
     case VN100_REG_YMR :
       ins_eulers.phi   = RadOfDeg(last_received_packet.Data[2].Float);
       ins_eulers.theta = RadOfDeg(last_received_packet.Data[1].Float);
-      ins_eulers.psi   = RadOfDeg(last_received_packet.Data[0].Float-ins_ref_mag_declination);
+      ins_eulers.psi   = RadOfDeg(last_received_packet.Data[0].Float+ins_ref_mag_declination);
       if (ins_eulers.psi < 0.)
         ins_eulers.psi += 2 * M_PI;
       ins_mag.x = last_received_packet.Data[3].Float;

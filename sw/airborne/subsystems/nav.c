@@ -73,6 +73,8 @@ float circle_bank = 0;
 
 /** Dynamically adjustable, reset to nav_altitude when it is changing */
 float flight_altitude;
+float nav_altitude_at_auto2_switch=0.0;
+bool_t nav_capture_altitude=1;
 
 float nav_glide_pitch_trim;
 #ifndef NAV_GLIDE_PITCH_TRIM
@@ -322,11 +324,12 @@ bool_t nav_approaching_xy(float x, float y, float from_x, float from_y, float ap
 void fly_to_xy(float x, float y) {
   desired_x = x;
   desired_y = y;
+  float course_desired;
   if (nav_mode == NAV_MODE_COURSE) {
-    h_ctl_course_setpoint = atan2(x - estimator_x, y - estimator_y);
-    if (h_ctl_course_setpoint < 0.)
-      h_ctl_course_setpoint += 2 * M_PI;
-    lateral_mode = LATERAL_MODE_COURSE;
+    course_desired = atan2(x - estimator_x, y - estimator_y);
+    if (course_desired < 0.)
+      course_desired += 2 * M_PI;
+    NavHeading(course_desired);
   } else {
     float diff = atan2(x - estimator_x, y - estimator_y) - estimator_hspeed_dir;
     NormRadAngle(diff);
@@ -338,9 +341,17 @@ void fly_to_xy(float x, float y) {
   }
 }
 
+float rc_target_N=10.0;
+float rc_target_E=0.0;
 bool_t fly_to_xy_from_rc()
 {
-  fly_to_xy(estimator_x+radio_control.values[RADIO_ROLL]/100,estimator_y-radio_control.values[RADIO_PITCH]/100);
+//  if (  (fabs(radio_control.values[RADIO_ROLL]/100) > 10) || (fabs(radio_control.values[RADIO_PITCH]/100) > 10))
+// || ( fabs(((float)radio_control.values[RADIO_PITCH]/100) > 10) )
+//  {
+    rc_target_N = -(float)radio_control.values[RADIO_PITCH]/100;
+    rc_target_E = (float)radio_control.values[RADIO_ROLL]/100;
+//  }
+  fly_to_xy(estimator_x+rc_target_E,estimator_y+rc_target_N);
   return FALSE;
 }
 
@@ -380,7 +391,10 @@ static void nav_set_altitude(void) {
     flight_altitude = nav_altitude;
     last_nav_altitude = nav_altitude;
   }
-  v_ctl_altitude_setpoint = flight_altitude;
+  if (nav_capture_altitude)
+    v_ctl_altitude_setpoint = nav_altitude_at_auto2_switch;
+  else
+    v_ctl_altitude_setpoint = flight_altitude;
 }
 
 /** \brief Home mode navigation (circle around HOME) */
@@ -443,6 +457,12 @@ void nav_init(void) {
  * to prevent the plane from crashing.
  */
 void nav_without_gps(void) {
+  if (h_ctl_use_rc_course)
+  {
+    NavHeading(h_ctl_rc_course_setpoint);
+  }
+  else
+  {
   lateral_mode = LATERAL_MODE_ROLL;
   v_ctl_mode = V_CTL_MODE_AUTO_THROTTLE;
 
@@ -455,6 +475,8 @@ void nav_without_gps(void) {
   nav_pitch = 0;
   nav_throttle_setpoint = TRIM_UPPRZ((V_CTL_AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE)*MAX_PPRZ);
 #endif
+  }
+   
 }
 
 

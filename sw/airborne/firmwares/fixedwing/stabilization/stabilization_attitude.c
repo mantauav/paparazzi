@@ -46,6 +46,9 @@ float h_ctl_course_pgain;
 float h_ctl_course_dgain;
 float h_ctl_roll_max_setpoint;
 float h_ctl_last_course_error=0.0;
+float h_ctl_rc_course_rate=2.0/180*3.14;
+float h_ctl_rc_course_setpoint=0.0;
+bool_t h_ctl_use_rc_course = 1;
 /* roll and pitch disabling */
 bool_t h_ctl_disabled;
 
@@ -335,9 +338,9 @@ inline static void h_ctl_roll_loop( void ) {
 #endif
   float cmd = h_ctl_roll_attitude_gain * err
     - h_ctl_roll_rate_gain * estimator_p
-    + v_ctl_throttle_setpoint * h_ctl_aileron_of_throttle - h_ctl_attitude_hold_roll_gain * estimator_phi; //sign on roll rate incorrect?
+    + v_ctl_throttle_setpoint * h_ctl_aileron_of_throttle - h_ctl_attitude_hold_roll_gain * h_ctl_roll_setpoint; //sign on roll rate incorrect?
 
-  float cmd_rudder = h_ctl_roll_attitude_rudder_gain * err - h_ctl_attitude_hold_rudder_gain * estimator_phi;
+  float cmd_rudder = h_ctl_roll_attitude_rudder_gain * err - h_ctl_attitude_hold_rudder_gain * h_ctl_roll_setpoint;
     
     
   h_ctl_aileron_setpoint = TRIM_PPRZ(cmd);

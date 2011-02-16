@@ -33,7 +33,7 @@
 
 #include <inttypes.h>
 #include "paparazzi.h"
-
+#include <std.h>
 /* Vertical mode */
 #define V_CTL_MODE_MANUAL        0
 #define V_CTL_MODE_AUTO_THROTTLE 1
@@ -41,7 +41,7 @@
 #define V_CTL_MODE_AUTO_ALT      3
 #define V_CTL_MODE_NB            4
 extern uint8_t v_ctl_mode;
-
+extern bool_t v_ctl_throttle_capture;
 /* outer loop */
 extern float v_ctl_altitude_error;
 extern float v_ctl_altitude_setpoint;

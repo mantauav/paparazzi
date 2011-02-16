@@ -68,7 +68,7 @@ float wind_east, wind_north;
 float estimator_airspeed;
 
 /*heading source*/
-uint8_t estimator_heading_source=0; //0=GPS, 1=ins
+uint8_t estimator_heading_source=1; //0=GPS, 1=ins
 
 #define NORM_RAD_ANGLE2(x) { \
     while (x > 2 * M_PI) x -= 2 * M_PI; \
@@ -241,6 +241,7 @@ void estimator_update_state_gps( void ) {
 
 #include "subsystems/sensors/infrared.h"
 void estimator_update_state_infrared( void ) {
+
   estimator_phi  = atan2(infrared.roll, infrared.top) - infrared.roll_neutral;
 
   estimator_theta  = atan2(infrared.pitch, infrared.top) - infrared.pitch_neutral;

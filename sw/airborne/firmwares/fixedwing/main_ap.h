@@ -33,5 +33,5 @@
 extern void init_ap( void );
 extern void periodic_task_ap( void );
 extern void event_task_ap( void );
-
+void ap_auto2_init(void);
 #endif

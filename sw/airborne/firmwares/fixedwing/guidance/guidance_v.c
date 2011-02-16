@@ -36,7 +36,7 @@
 
 /* mode */
 uint8_t v_ctl_mode;
-
+bool_t v_ctl_throttle_capture=0;
 /* outer loop */
 float v_ctl_altitude_setpoint;
 float v_ctl_altitude_pre_climb;

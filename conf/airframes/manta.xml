@@ -90,7 +90,7 @@
 
     <!-- auto throttle inner loop -->
     <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.35"/>
-    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.25"/>
+    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.0"/>
     <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.95"/>
     <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
@@ -105,8 +105,8 @@
   </section>
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
-    <define name="COURSE_PGAIN" value="-1.2"/>
-
+    <define name="COURSE_PGAIN" value="-0.308"/>
+    <define name="COURSE_DGAIN" value="0.012"/>
     <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
     <define name="PITCH_MAX_SETPOINT" value="0.523" /> <!--  0.523  ~ 30 deg  -->
     <define name="PITCH_MIN_SETPOINT" value="-0.087"/> <!-- -0.087 ~ -5 deg   -->
@@ -116,15 +116,15 @@
 
     <define name="ELEVATOR_OF_ROLL" value="1250"/>
 
-    <define name="ROLL_SLEW" value="0.1"/>
+    <define name="ROLL_SLEW" value="0.045"/>
 
-    <define name="ROLL_ATTITUDE_GAIN" value="-7500"/>
-    <define name="ROLL_ATTITUDE_RUDDER_GAIN" value="-5500"/>
+    <define name="ROLL_ATTITUDE_GAIN" value="-5300"/>
+    <define name="ROLL_ATTITUDE_RUDDER_GAIN" value="-1800"/>
     
     <define name="ATTITUDE_HOLD_ROLL_GAIN"   value="0"/>
-    <define name="ATTITUDE_HOLD_RUDDER_GAIN" value="-4500"/> 
+    <define name="ATTITUDE_HOLD_RUDDER_GAIN" value="-3600"/> 
 
-    <define name="ROLL_RATE_GAIN" value="-1500"/>
+    <define name="ROLL_RATE_GAIN" value="-1350"/>
     <define name="ROLL_RATE_MODE_DEFAULT"  value="0"/>
     <define name="ROLL_RATE_SETPOINT_PGAIN"     value="-5"  />
     <define name="HI_THROTTLE_ROLL_RATE_PGAIN"  value="1000"/>
@@ -172,9 +172,9 @@
   </load>
   <load name="baro_MS5803.xml"/>
   <load name="rc_gyro.xml">
-    <define name="RC_GYRO_ROLL_GAIN"  value="-650"/>
+    <define name="RC_GYRO_ROLL_GAIN"  value="-1100"/>
     <define name="RC_GYRO_PITCH_GAIN"  value="-1000"/>
-    <define name="RC_GYRO_YAW_GAIN"  value="-650"/>
+    <define name="RC_GYRO_YAW_GAIN"  value="-1000"/>
   </load>
 </modules>
 
@@ -213,8 +213,8 @@
     <subsystem name="control"                      />
 <!--    <subsystem name="usb_serial"                   /> -->
     <subsystem name="spi"/> 
-    <subsystem name="radio_control" type="datalink"/>
-    <define name="RADIO_CONTROL_NO_MODESET"/>
+    <subsystem name="radio_control" type="ppm"/>
+<!--    <define name="RADIO_CONTROL_NO_MODESET"/> -->
 <!--    <subsystem name="attitude" 		type="infrared"/> -->
     <!-- Communication -->
     <subsystem name="telemetry" 	type="transparent">

@@ -49,7 +49,8 @@ extern float cur_pos_y;
 extern float last_x, last_y;
 
 extern float desired_x, desired_y, nav_altitude, flight_altitude, nav_glide_pitch_trim;
-
+extern float nav_altitude_at_auto2_switch;
+extern bool_t nav_capture_altitude;
 extern pprz_t nav_throttle_setpoint;
 extern float nav_pitch; /* Rad */
 extern float rc_pitch;
@@ -169,7 +170,10 @@ bool_t nav_approaching_xy(float x, float y, float from_x, float from_y, float ap
 
 #define NavHeading(_course) { \
   lateral_mode = LATERAL_MODE_COURSE; \
-  h_ctl_course_setpoint = _course; \
+  if (h_ctl_use_rc_course) \
+    h_ctl_course_setpoint = h_ctl_rc_course_setpoint; \
+  else \
+    h_ctl_course_setpoint = _course; \
 }
 
 #define NavAttitude(_roll) { \

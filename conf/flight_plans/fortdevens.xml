@@ -7,16 +7,16 @@
 </header>
   <waypoints>
     <waypoint name="HOME" x="0" y="0"/>
-    <waypoint name="STDBY" x="168.5" y="-18.0"/>
-    <waypoint name="1" x="77.1" y="-31.2"/>
-    <waypoint name="2" x="184.0" y="-106.3"/>
+    <waypoint name="STDBY" x="112.2" y="-10.2"/>
+    <waypoint name="1" x="46.3" y="-15.8"/>
+    <waypoint name="2" x="122.5" y="-71.4"/>
     <waypoint name="MOB" x="165.4" y="193.3"/>
-    <waypoint name="S1" x="313.0" y="-9.1"/>
-    <waypoint name="S2" x="130.5" y="61.2"/>
-    <waypoint alt="10.0" name="AF" x="90.7" y="-65.8"/>
-    <waypoint alt="0.0" name="TD" x="32.5" y="-16.5"/>
-    <waypoint name="_BASELEG" x="327.1" y="57.8"/>
-    <waypoint name="CLIMB" x="105.6" y="-10.4"/>
+    <waypoint name="S1" x="177.1" y="-9.6"/>
+    <waypoint name="S2" x="103.6" y="48.3"/>
+    <waypoint alt="10.0" name="AF" x="191.3" y="-136.1"/>
+    <waypoint alt="0.0" name="TD" x="163.3" y="-120.7"/>
+    <waypoint name="_BASELEG" x="222.9" y="-155.2"/>
+    <waypoint name="CLIMB" x="178.3" y="-127.8"/>
     <waypoint name="wp1" x="-423.1" y="540.9"/>
     <waypoint name="wp3" x="-482.6" y="526.1"/>
     <waypoint name="wp4" x="-574.4" y="509.0"/>
@@ -65,10 +65,15 @@
     <block group="extra_pattern" name="Survey S1-S2" strip_button="Survey (wp S1-S2)" strip_icon="survey.png">
       <survey_rectangle grid="150" wp1="S1" wp2="S2"/>
     </block>
-    <block group="extra_pattern" name="Path 1,2,S1,S2,STDBY" strip_button="Path (1,2,S1,S2,STDBY)" strip_icon="path.png">
+    <block group="extra_pattern" name="Path 1,2,S1,S2" strip_button="Path (1,2,S1,S2)" strip_icon="path.png">
       <path wpts="1,2 S1"/>
-      <path approaching_time="1" pitch="auto" throttle="0.4" wpts="S1, S2 STDBY"/>
-      <deroute block="Standby"/>
+      <path approaching_time="1" pitch="auto" throttle="0.4" wpts="S1, S2 1"/>
+      <deroute block="Path 1,2,S1,S2"/>
+    </block>
+    <block group="extra_pattern" name="Path 1,S2,S1,2" strip_icon="path.png">
+      <path wpts="1,S2 S1"/>
+      <path approaching_time="1" pitch="auto" throttle="0.4" wpts="S1, 2 1"/>
+      <deroute block="Path 1,S2,S1,2"/>
     </block>
     <block group="land" name="Land Right AF-TD" strip_button="Land right (wp AF-TD)" strip_icon="land-right.png">
       <set value="DEFAULT_CIRCLE_RADIUS" var="nav_radius"/>
