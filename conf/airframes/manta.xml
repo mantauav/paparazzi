@@ -22,11 +22,20 @@
     <axis name="YAW"      failsafe_value="0"/>
   </commands>
 
+<!--
   <rc_commands>
     <set command="THROTTLE" value="@THROTTLE"/>
-    <set command="ROLL"     value="@ROLL"/>
-    <set command="PITCH"    value="@PITCH"/>
-    <set command="YAW"      value="@YAW*0.5"/>
+    <set command="ROLL"     value="@ROLL+rc_roll_trim"/>
+    <set command="PITCH"    value="@PITCH+rc_pitch_trim"/>
+    <set command="YAW"      value="@YAW*0.5+rc_yaw_trim"/>
+  </rc_commands>
+-->
+
+  <rc_commands>
+    <set command="THROTTLE" value="@THROTTLE"/>
+    <set command="ROLL"     value="@ROLL + rc_roll_trim"/>
+    <set command="PITCH"    value="@PITCH + rc_pitch_trim"/>
+    <set command="YAW"      value="@YAW*0.5 + rc_yaw_trim"/>
   </rc_commands>
 
   <section name="MIXER">
@@ -176,6 +185,7 @@
     <define name="RC_GYRO_PITCH_GAIN"  value="-1000"/>
     <define name="RC_GYRO_YAW_GAIN"  value="-650"/>
   </load>
+  <load name="rc_trim.xml"/>
 </modules>
 
 <!-- HACK: for current use in sim -->

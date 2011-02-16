@@ -367,6 +367,10 @@
     <field name="pitch" type="int8"/>
   </message>
 
+ <message name="MPPT" id="52">
+   <field name="values" type="int16[]" alt_unit_coef="1e-3"/>
+ </message>
+
   <message name="RC_4CH" id="59">
     <field name="ac_id" type="uint8"/>
     <field name="throttle" type="uint8"/>
@@ -374,10 +378,6 @@
     <field name="yaw"  type="int8"/>
     <field name="pitch" type="int8"/>
   </message>
-
- <message name="MPPT" id="52">
-   <field name="values" type="int16[]" alt_unit_coef="1e-3"/>
- </message>
 
  <message name="DEBUG_IR_I2C" id="53">
    <field name="ir1" type="int16" unit="adc"/>
@@ -1883,6 +1883,12 @@
   <field name="value" type="float"/>
  </message>
 
+ <message name="SETTING_MOD" id="232" link="forwarded">
+   <field name="index" type="uint8"/>
+   <field name="ac_id" type="uint8"/>
+   <field name="mod"   type="float"/>
+ </message>
+
  <message name="BLOCK" id="5" link="forwarded">
   <field name="block_id" type="uint8"/>
   <field name="ac_id" type="uint8"/>
@@ -2211,6 +2217,12 @@
   <field name="value" type="float"/>
  </message>
 
+ <message name="DL_SETTING_MOD" id="232">
+   <field name="ac_id" type="string"/>
+   <field name="index" type="uint8"/>
+   <field name="mod"   type="float"/>
+ </message>
+
  <message name="JUMP_TO_BLOCK" id="27">
   <field name="ac_id" type="string"/>
   <field name="block_id" type="uint8"/>
@@ -2258,6 +2270,7 @@
     <field name="longs" type="string" format="csv"/>
     <field name="values" type="string" format="csv"/>
   </message>
+
 </class>
 
 

@@ -491,8 +491,6 @@ let () =
   let xml_descr_full = joystick_conf_dir ^ !xml_descr in
   trim_file_name := String.concat "." [xml_descr_full ; !ac_name ; "trim"];
 
-  printf "%s" !trim_file_name;
-
   let actions = parse_descr xml_descr_full trim_file_name.contents in
 
   if stick_init !device_name <> 0 then
