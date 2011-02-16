@@ -4,6 +4,11 @@
 
 <settings>
   <dl_settings>
+    <dl_settings NAME="manual trims">
+      <dl_setting MAX="2000" MIN="-2000" STEP="1" VAR="rc_pitch_trim" shortname="pitch" />
+      <dl_setting MAX="2000" MIN="-2000" STEP="1" VAR="rc_yaw_trim" shortname="yaw"  />
+      <dl_setting MAX="2000" MIN="-2000" STEP="1" VAR="rc_roll_trim" shortname="roll" />
+    </dl_settings>
     <dl_settings NAME="flight params">
       <dl_setting MAX="1000" MIN="0" STEP="10" VAR="flight_altitude" shortname="altitude"/>
       <dl_setting MAX="10" MIN="-10" STEP="0.5" VAR="wind_east"/>

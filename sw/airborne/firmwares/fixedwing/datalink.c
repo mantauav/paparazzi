@@ -177,7 +177,14 @@ void dl_parse_msg(void) {
     uint8_t i = DL_GET_SETTING_index(dl_buffer);
     float val = settings_get_value(i);
     DOWNLINK_SEND_DL_VALUE(DefaultChannel, &i, &val);
-  } else
+  } else if (msg_id == DL_SETTING_MOD && DL_SETTING_MOD_ac_id(dl_buffer) == AC_ID) {
+    uint8_t i = DL_SETTING_MOD_index(dl_buffer);
+    float mod = DL_SETTING_MOD_mod(dl_buffer);
+    float val = settings_get_value(i) + mod;
+    df2.z = val;
+    DlSetting(i, val);
+    DOWNLINK_SEND_DL_VALUE(DefaultChannel, &i, &val);    
+  } else	
 #endif /** Else there is no dl_settings section in the flight plan */
 #ifdef USE_JOYSTICK
     if (msg_id == DL_JOYSTICK_RAW && DL_JOYSTICK_RAW_ac_id(dl_buffer) == AC_ID) {

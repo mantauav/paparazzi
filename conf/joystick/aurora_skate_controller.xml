@@ -43,7 +43,7 @@ It has 9 buttons.
 
 
   <message class="datalink" name="RC_4CH" send_always="1">
-   <field name="throttle" value="Scale(0-ly,0,255)"/>
+   <field name="throttle" value="Scale(ly,0,127)"/>
    <field name="roll" value="rx"/>
    <field name="yaw" value="lx"/>
    <field name="pitch" value="ry"/>
@@ -51,9 +51,36 @@ It has 9 buttons.
 
 
   <!-- trim commands -->
-<!--  not needed
-  <message class="trim_plus" name="lx" on_event="b9"/>
-  <message class="trim_minus" name="lx" on_event="b8"/>
+  <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b1">
+    <field name="index" value="IndexOfSetting('rc_roll_trim')"/>
+    <field name="mod" value="50"/>
+  </message>
+  <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b0">
+    <field name="index" value="IndexOfSetting('rc_roll_trim')"/>
+    <field name="mod" value="0-50"/>
+  </message>
+
+  <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b3">
+    <field name="index" value="IndexOfSetting('rc_pitch_trim')"/>
+    <field name="mod" value="50"/>
+  </message>
+  <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b2">
+    <field name="index" value="IndexOfSetting('rc_pitch_trim')"/>
+    <field name="mod" value="0-50"/>
+  </message>
+
+  <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b11">
+    <field name="index" value="IndexOfSetting('rc_yaw_trim')"/>
+    <field name="mod" value="50"/>
+  </message>
+  <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b10">
+    <field name="index" value="IndexOfSetting('rc_yaw_trim')"/>
+    <field name="mod" value="0-50"/>
+  </message>
+
+
+<!--
+  <message class="ground" name="lx" on_event="b8"/>
   <message class="trim_plus" name="ly" on_event="b10"/>
   <message class="trim_minus" name="ly" on_event="b11"/>
   <message class="trim_plus" name="rx" on_event="b2"/>
@@ -61,7 +88,7 @@ It has 9 buttons.
   <message class="trim_minus" name="ry" on_event="b3"/> 
   <message class="trim_plus" name="ry" on_event="b1"/>
   <message class="trim_save" name="" on_event="b5"/>
- -->
+-->
 
   <!-- Red Button -->  <!-- AUTO2 mode -->
   <message class="ground" name="DL_SETTING" send_always="0" on_event="b8">
@@ -80,8 +107,6 @@ It has 9 buttons.
     <field name="index" value="IndexOfSetting('pprz_mode')"/>
     <field name="value" value="0"/> 
   </message>
-
-
 
 
 </messages>

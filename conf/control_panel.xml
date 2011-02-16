@@ -44,8 +44,7 @@
       <arg flag="-b" variable="ivy_bus"/>
     </program>
     <program name="Http Server" command="sw/ground_segment/tmtc/boa"/>
-    <program name="Joystick Server" command="sw/ground_segment/joystick/input2iv
-y"/>
+    <program name="Joystick Server" command="sw/ground_segment/joystick/input2ivy"/>
     <program name="On Screen Display" command="sw/ground_segment/bob4_osd/au_osd"/>
   </section>
   <section name="sessions">
@@ -181,7 +180,7 @@ y"/>
     </session>
     <session name="Flight USB1-serial@57600">
       <program name="Data Link">
-        <arg flag="-d" constant="/dev/ttyUSB1"/>
+        <arg flag="-d" constant="/dev/ttyUSB0"/>
         <arg flag="-s" constant="57600"/>
       </program>
       <program name="Server"/>
@@ -189,10 +188,10 @@ y"/>
       <program name="Joystick Server">
 	<arg flag="-ac" constant="MANTA"/>
 	<arg flag="-d" constant="/dev/input/au_js0"/>
-	<arg flag="logitech_dual_action.xml"/>
+	<arg flag="aurora_skate_controller.xml"/>
       </program>
       <program name="On Screen Display">
-	<arg flag="-d" constant="/dev/ttyUSB0"/>
+	<arg flag="-p" constant="/dev/ttyUSB1"/>
       </program>
     </session>
     <session name="Flight USB0-serial@57600">
