@@ -99,10 +99,23 @@ void ins_periodic_task( void ) {
   if (!ins_configure()) return;
 
   // Fill request for QMR
+  if (ins_tare)
+  {
+    last_send_packet.CmdID = VN100_CmdID_Tare;
+    last_send_packet.RegID = 0x00;
+    spi_buffer_length = 4+4;
+    last_send_packet.Data[0].byte[0]=0;
+    last_send_packet.Data[0].byte[0]=1;
+    last_send_packet.Data[0].byte[0]=2;
+    last_send_packet.Data[0].byte[0]=3;
+    ins_tare = 0;
+  }
+  else
+  {
   last_send_packet.CmdID = VN100_CmdID_ReadRegister;
   last_send_packet.RegID = VN100_REG_YMR;
   spi_buffer_length = 4+VN100_REG_YMR_SIZE;
-
+  }
   // Fill request for REF
 /*
   last_send_packet.CmdID = VN100_CmdID_ReadRegister;

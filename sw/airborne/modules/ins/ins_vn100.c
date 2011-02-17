@@ -78,6 +78,8 @@ void adc_buf_channel(void* a __attribute__ ((unused)),
 float ins_roll_neutral=0.0;
 float ins_pitch_neutral=0.0;
 
+bool_t ins_tare=0;
+
 struct FloatEulers ins_eulers;
 struct FloatQuat ins_quat;
 struct FloatRates ins_rates;
