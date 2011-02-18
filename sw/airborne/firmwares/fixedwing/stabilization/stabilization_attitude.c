@@ -69,6 +69,8 @@ float  h_ctl_pitch_loop_setpoint;
 float  h_ctl_pitch_pgain;
 float  h_ctl_pitch_dgain;
 pprz_t h_ctl_elevator_setpoint;
+float h_ctl_pitch_neutral;
+float h_ctl_roll_neutral;
 
 /* inner loop pre-command */
 float h_ctl_aileron_of_throttle;
@@ -114,6 +116,14 @@ static inline void h_ctl_roll_rate_loop( void );
 
 #ifndef H_CTL_ATTITUDE_HOLD_RUDDER_GAIN
 #define H_CTL_ATTITUDE_HOLD_RUDDER_GAIN 0.0
+#endif
+
+#ifndef H_CTL_PITCH_NEUTRAL
+#define H_CTL_PITCH_NEUTRAL 0.0
+#endif
+
+#ifndef H_CTL_ROLL_NEUTRAL
+#define H_CTL_ROLL_NEUTRAL 0.0
 #endif
 
 float h_ctl_roll_attitude_gain;
@@ -176,9 +186,12 @@ void h_ctl_init( void ) {
   h_ctl_roll_rate_gain = H_CTL_ROLL_RATE_GAIN;
 #endif
 
-
+  h_ctl_pitch_neutral=H_CTL_PITCH_NEUTRAL;
+  h_ctl_roll_neutral=H_CTL_ROLL_NEUTRAL;
   h_ctl_attitude_hold_roll_gain=H_CTL_ATTITUDE_HOLD_ROLL_GAIN;
   h_ctl_attitude_hold_rudder_gain=H_CTL_ATTITUDE_HOLD_RUDDER_GAIN;
+
+
 
 #ifdef AGR_CLIMB
 nav_ratio=0;
@@ -330,7 +343,7 @@ void h_ctl_attitude_loop ( void ) {
 
 #ifdef H_CTL_ROLL_ATTITUDE_GAIN
 inline static void h_ctl_roll_loop( void ) {
-  float err = estimator_phi - h_ctl_roll_setpoint;
+  float err = (estimator_phi - h_ctl_roll_neutral) - h_ctl_roll_setpoint;
 #ifdef SITL
   static float last_err = 0;
   estimator_p = (err - last_err)/(1/60.);
@@ -445,7 +458,7 @@ inline static void h_ctl_pitch_loop( void ) {
     h_ctl_pitch_setpoint
     - h_ctl_elevator_of_roll / h_ctl_pitch_pgain * fabs(estimator_phi);
 
-  float err = estimator_theta - h_ctl_pitch_loop_setpoint;
+  float err = (estimator_theta -h_ctl_pitch_neutral) - h_ctl_pitch_loop_setpoint;
   float d_err = err - last_err;
   last_err = err;
   float cmd = h_ctl_pitch_pgain * (err + h_ctl_pitch_dgain * d_err);
