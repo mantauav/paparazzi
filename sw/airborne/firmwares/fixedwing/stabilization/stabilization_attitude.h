@@ -66,6 +66,9 @@ extern float  h_ctl_pitch_loop_setpoint;
 extern float  h_ctl_pitch_pgain;
 extern float  h_ctl_pitch_dgain;
 extern pprz_t h_ctl_elevator_setpoint;
+extern float h_ctl_pitch_neutral;
+extern float h_ctl_roll_neutral;
+
 
 /* inner loop pre-command */
 extern float h_ctl_aileron_of_throttle;

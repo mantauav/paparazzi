@@ -132,7 +132,8 @@
     
     <define name="ATTITUDE_HOLD_ROLL_GAIN"   value="0"/>
     <define name="ATTITUDE_HOLD_RUDDER_GAIN" value="-3600"/> 
-
+    <define name="PITCH_NEUTRAL"             value="0.0"/>
+    <define name="ROLL_NEUTRAL"             value="0.0"/>
     <define name="ROLL_RATE_GAIN" value="-1350"/>
     <define name="ROLL_RATE_MODE_DEFAULT"  value="0"/>
     <define name="ROLL_RATE_SETPOINT_PGAIN"     value="-5"  />
