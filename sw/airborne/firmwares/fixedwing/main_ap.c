@@ -238,7 +238,7 @@ static inline void telecommand_task( void ) {
   if ( mode_changed )
   {
     PERIODIC_SEND_PPRZ_MODE(DefaultChannel);
-    if (pprz_mode == PPRZ_MODE_AUTO2)
+    if ((pprz_mode == PPRZ_MODE_AUTO2) || (pprz_mode == PPRZ_MODE_HOME))
       ap_auto2_init();
   }
 
