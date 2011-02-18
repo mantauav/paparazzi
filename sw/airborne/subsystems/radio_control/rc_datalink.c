@@ -42,14 +42,14 @@ void parse_rc_datalink( uint8_t throttle_mode,
 
   rc_dl_values[RADIO_ROLL] = roll;
   rc_dl_values[RADIO_PITCH] = pitch;
-  rc_dl_values[RADIO_THROTTLE] = (int8_t)throttle << 2;  //bit shifted to scale to 0-256
+  rc_dl_values[RADIO_THROTTLE] = (int8_t)throttle << 1;  //bit shifted to scale to 0-256
   rc_dl_values[RADIO_YAW] = 0;
   rc_dl_values[RADIO_MODE] = (int8_t)mode;
 
   rc_dl_frame_available = TRUE;
 }
 
-void parse_rc_4ch_datalink( uint8_t throttle,
+void parse_rc_4ch_datalink( int8_t throttle,
 			    int8_t roll,
 			    int8_t pitch,
 			    int8_t yaw)

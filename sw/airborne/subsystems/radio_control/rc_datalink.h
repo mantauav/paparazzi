@@ -54,7 +54,7 @@ extern void parse_rc_datalink(
  * Decode datalink message to get rc values (used for 4 channel, no mode control)
  */
 extern void parse_rc_4ch_datalink(
-    uint8_t throttle,
+    int8_t throttle,
     int8_t roll,
     int8_t pitch,
     int8_t yaw);
@@ -70,7 +70,7 @@ extern void parse_rc_4ch_datalink(
   Bound(_out[RADIO_PITCH], MIN_PPRZ, MAX_PPRZ);                   \
   _out[RADIO_YAW] = (MAX_PPRZ/128) * _in[RADIO_YAW];			  \
   Bound(_out[RADIO_YAW], MIN_PPRZ, MAX_PPRZ);                     \
-  _out[RADIO_THROTTLE] = ((MAX_PPRZ/256) * _in[RADIO_THROTTLE]);   \
+  _out[RADIO_THROTTLE] = ((MAX_PPRZ/128) * _in[RADIO_THROTTLE]);   \
   Bound(_out[RADIO_THROTTLE], 0, MAX_PPRZ);                       \
   _out[RADIO_MODE] = MAX_PPRZ * (_in[RADIO_MODE] - 1);            \
   Bound(_out[RADIO_MODE], MIN_PPRZ, MAX_PPRZ);                    \

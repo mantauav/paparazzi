@@ -176,7 +176,7 @@ void periodic_task_fbw( void ) {
   }
 #endif
 if (radio_control.status!=RC_OK)
-   fbw_mode = FBW_MODE_FAILSAFE;
+   fbw_mode = FBW_MODE_AUTO;
 if (radio_control.status==RC_OK)
 {
    if (pprz_mode == PPRZ_MODE_MANUAL)

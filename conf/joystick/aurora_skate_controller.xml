@@ -23,7 +23,7 @@ It has 9 buttons.
  <input>
   <axis index="0" name="rx" limit="1.00" exponent="0.7" trim="0"/>
   <axis index="1" name="ry" limit="1.00" exponent="0.7" trim="0"/>
-  <axis index="2" name="ly" limit="1.00" exponent="0.7" trim="0"/>
+  <axis index="2" name="ly" limit="1.00" exponent="0.0" trim="0"/>
   <axis index="3" name="lx" limit="1.00" exponent="0.7" trim="0"/>
   <button index="0" name="b0"/>
   <button index="1" name="b1"/>
@@ -46,7 +46,7 @@ It has 9 buttons.
    <field name="throttle" value="Scale(ly,0,127)"/>
    <field name="roll" value="rx"/>
    <field name="yaw" value="lx"/>
-   <field name="pitch" value="ry"/>
+   <field name="pitch" value="0-ry"/>
   </message>
 
 
