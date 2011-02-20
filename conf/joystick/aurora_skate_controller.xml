@@ -53,29 +53,29 @@ It has 9 buttons.
   <!-- trim commands -->
   <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b1">
     <field name="index" value="IndexOfSetting('rc_roll_trim')"/>
-    <field name="mod" value="50"/>
+    <field name="mod" value="10"/>
   </message>
   <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b0">
     <field name="index" value="IndexOfSetting('rc_roll_trim')"/>
-    <field name="mod" value="0-50"/>
+    <field name="mod" value="0-10"/>
   </message>
 
   <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b3">
     <field name="index" value="IndexOfSetting('rc_pitch_trim')"/>
-    <field name="mod" value="50"/>
+    <field name="mod" value="10"/>
   </message>
   <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b2">
     <field name="index" value="IndexOfSetting('rc_pitch_trim')"/>
-    <field name="mod" value="0-50"/>
+    <field name="mod" value="0-10"/>
   </message>
 
   <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b11">
     <field name="index" value="IndexOfSetting('rc_yaw_trim')"/>
-    <field name="mod" value="50"/>
+    <field name="mod" value="10"/>
   </message>
   <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="b10">
     <field name="index" value="IndexOfSetting('rc_yaw_trim')"/>
-    <field name="mod" value="0-50"/>
+    <field name="mod" value="0-10"/>
   </message>
 
 
@@ -89,10 +89,14 @@ It has 9 buttons.
   <message class="trim_plus" name="ry" on_event="b1"/>
   <message class="trim_save" name="" on_event="b5"/>
 -->
+
+<!-- Camera switch. Currently uses same buttons as yaw trim -->
+
   <message class="ground" name="DL_SETTING" send_always="0" on_event="b11">
     <field name="index" value="IndexOfSetting('cam_switch')"/>
     <field name="value" value="1"/> 
   </message>
+
   <message class="ground" name="DL_SETTING" send_always="0" on_event="b10">
     <field name="index" value="IndexOfSetting('cam_switch')"/>
     <field name="value" value="0"/> 
