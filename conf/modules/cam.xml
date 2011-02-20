@@ -1,0 +1,14 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="cam" dir="cam_control">
+  <header>
+    <file name="cam.h"/>
+  </header>
+  <init fun="cam_init()"/>
+  <periodic fun="cam_periodic()" freq="10."/>
+  <makefile target="ap">
+    <define name="CAM"/>
+    <define name="MOBILE_CAM"/>
+    <file name="cam.c"/>
+  </makefile>
+</module>
