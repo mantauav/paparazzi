@@ -126,6 +126,7 @@ void cam_periodic( void ) {
   }
 }
 
+
 /** Computes the servo values from cam_pan_c and cam_tilt_c */
 void cam_angles( void ) {
   float cam_pan = 0;

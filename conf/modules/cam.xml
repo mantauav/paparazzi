@@ -5,7 +5,7 @@
     <file name="cam.h"/>
   </header>
   <init fun="cam_init()"/>
-  <periodic fun="cam_periodic()" freq="10."/>
+<!--  <periodic fun="cam_periodic()" freq="10."/> -->
   <makefile target="ap">
     <define name="CAM"/>
     <define name="MOBILE_CAM"/>

@@ -34,7 +34,7 @@
       </dl_setting>
     </dl_settings>
     <dl_settings NAME="camera">
-      <dl_setting MAX="1" MIN="0" STEP="1" VAR="cam_switch"/>
+      <dl_setting MAX="1" MIN="0" STEP="1" VAR="cam_switch" module="modules/cam_control/cam" handler="SetSwitch"/>
     </dl_settings>
     <dl_settings NAME="control">
       <dl_settings NAME="damping">

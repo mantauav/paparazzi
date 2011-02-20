@@ -58,11 +58,12 @@ extern uint8_t cam_target_ac;
 
 void cam_periodic( void );
 void cam_init( void );
-
+void cam_set_switch();
 extern int16_t cam_pan_command;
 #define cam_SetPanCommand(x) { ap_state->commands[COMMAND_CAM_PAN] = cam_pan_command = x;}
 extern int16_t cam_tilt_command;
 #define cam_SetTiltCommand(x) { ap_state->commands[COMMAND_CAM_TILT] = cam_tilt_command = x;}
+#define cam_SetSwitch(x)  {cam_switch=x;ap_state->commands[COMMAND_CAM_SWITCH] = -9600+(pprz_t)cam_switch*19200;}
 
 #ifdef TEST_CAM
 extern float test_cam_estimator_x;
