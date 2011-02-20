@@ -46,7 +46,7 @@ It has 9 buttons.
    <field name="throttle" value="Scale(ly,0,127)"/>
    <field name="roll" value="rx"/>
    <field name="yaw" value="lx"/>
-   <field name="pitch" value="0-ry"/>
+   <field name="pitch" value="ry"/>
   </message>
 
 
@@ -92,12 +92,12 @@ It has 9 buttons.
 
 <!-- Camera switch. Currently uses same buttons as yaw trim -->
 
-  <message class="ground" name="DL_SETTING" send_always="0" on_event="b11">
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b1">
     <field name="index" value="IndexOfSetting('cam_switch')"/>
     <field name="value" value="1"/> 
   </message>
 
-  <message class="ground" name="DL_SETTING" send_always="0" on_event="b10">
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b0">
     <field name="index" value="IndexOfSetting('cam_switch')"/>
     <field name="value" value="0"/> 
   </message>
