@@ -87,6 +87,7 @@ uint8_t cam_target_wp;
 uint8_t cam_target_ac;
 
 uint8_t cam_mode;
+uint8_t cam_switch=0;
 
 int16_t cam_pan_command;
 int16_t cam_tilt_command;
@@ -102,6 +103,8 @@ void cam_init( void ) {
 }
 
 void cam_periodic( void ) {
+  ap_state->commands[COMMAND_CAM_SWITCH] = -9600+(pprz_t)cam_switch*19200;
+  
   switch (cam_mode) {
   case CAM_MODE_OFF:
     break;
@@ -166,10 +169,12 @@ void cam_target( void ) {
      cam_target_x, cam_target_y, cam_target_alt,
      &cam_pan_c, &cam_tilt_c);
 #else
+#ifdef POINT_CAM
   vPoint(estimator_x, estimator_y, estimator_z,
      estimator_phi, estimator_theta, estimator_hspeed_dir,
      cam_target_x, cam_target_y, cam_target_alt,
      &cam_pan_c, &cam_tilt_c);
+#endif
 #endif
   cam_angles();
 }

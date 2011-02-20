@@ -40,7 +40,7 @@
 #define CAM_MODE_AC_TARGET 5   /* Input: ac id */
 
 extern uint8_t cam_mode;
-
+extern uint8_t cam_switch;
 extern float cam_phi_c, cam_theta_c;
 
 extern float cam_pan_c, cam_tilt_c;

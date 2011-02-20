@@ -89,6 +89,15 @@ It has 9 buttons.
   <message class="trim_plus" name="ry" on_event="b1"/>
   <message class="trim_save" name="" on_event="b5"/>
 -->
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b11">
+    <field name="index" value="IndexOfSetting('cam_switch')"/>
+    <field name="value" value="1"/> 
+  </message>
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b10">
+    <field name="index" value="IndexOfSetting('cam_switch')"/>
+    <field name="value" value="0"/> 
+  </message>
+
 
   <!-- Red Button -->  <!-- AUTO2 mode -->
   <message class="ground" name="DL_SETTING" send_always="0" on_event="b8">

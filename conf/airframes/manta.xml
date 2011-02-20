@@ -12,14 +12,16 @@
     <servo name="MOTOR_LEFT"    no="7" min="1000" neutral="1000" max="2000"/>
     <servo name="MOTOR_RIGHT"   no="6" min="1000" neutral="1000" max="2000"/>
     <servo name="AILEVON_LEFT"  no="4" min="2000" neutral="1500" max="1000"/>
-    <servo name="AILEVON_RIGHT" no="3" min="1000" neutral="1500" max="2000"/>  
+    <servo name="AILEVON_RIGHT" no="3" min="1000" neutral="1500" max="2000"/>
+    <servo name="CAM_SWITCH"    no="0" min="1000" neutral="1500" max="2000"/>  
   </servos>
 
   <commands>
-    <axis name="THROTTLE" failsafe_value="0"/>
-    <axis name="ROLL"     failsafe_value="0"/>
-    <axis name="PITCH"    failsafe_value="0"/>
-    <axis name="YAW"      failsafe_value="0"/>
+    <axis name="THROTTLE"        failsafe_value="0"/>
+    <axis name="ROLL"            failsafe_value="0"/>
+    <axis name="PITCH"           failsafe_value="0"/>
+    <axis name="YAW"             failsafe_value="0"/>
+    <axis name="CAM_SWITCH"      failsafe_value="9600"/>
   </commands>
 
 <!--
@@ -30,12 +32,15 @@
     <set command="YAW"      value="@YAW*0.5+rc_yaw_trim"/>
   </rc_commands>
 -->
+  <ap_only_commands>
+    <copy command="CAM_SWITCH"/>
+  </ap_only_commands>
 
   <rc_commands>
-    <set command="THROTTLE" value="@THROTTLE"/>
-    <set command="ROLL"     value="@ROLL + rc_roll_trim"/>
-    <set command="PITCH"    value="@PITCH + rc_pitch_trim"/>
-    <set command="YAW"      value="@YAW*0.5 + rc_yaw_trim"/>
+    <set command="THROTTLE"      value="@THROTTLE"/>
+    <set command="ROLL"          value="@ROLL + rc_roll_trim"/>
+    <set command="PITCH"         value="@PITCH + rc_pitch_trim"/>
+    <set command="YAW"           value="@YAW*0.5 + rc_yaw_trim"/>
   </rc_commands>
 
   <section name="MIXER">
@@ -45,13 +50,14 @@
   </section>
 
   <command_laws>
-    <let var="aileron"  value="@ROLL  * AILEVON_AILERON_RATE"/>
-    <let var="elevator" value="@PITCH * AILEVON_ELEVATOR_RATE"/>
-    <let var="yaw"      value="@YAW * RUDDER_RATE"/>
-    <set servo="MOTOR_LEFT"    value="@THROTTLE + $yaw"/>
-    <set servo="MOTOR_RIGHT"   value="@THROTTLE - $yaw"/>
-    <set servo="AILEVON_LEFT"  value="$elevator - $aileron"/>
-    <set servo="AILEVON_RIGHT" value="$elevator + $aileron"/>
+    <let var="aileron"           value="@ROLL  * AILEVON_AILERON_RATE"/>
+    <let var="elevator"          value="@PITCH * AILEVON_ELEVATOR_RATE"/>
+    <let var="yaw"               value="@YAW * RUDDER_RATE"/>
+    <set servo="MOTOR_LEFT"      value="@THROTTLE + $yaw"/>
+    <set servo="MOTOR_RIGHT"     value="@THROTTLE - $yaw"/>
+    <set servo="AILEVON_LEFT"    value="$elevator - $aileron"/>
+    <set servo="AILEVON_RIGHT"   value="$elevator + $aileron"/>
+    <set servo="CAM_SWITCH"	 value="@CAM_SWITCH"/>
   </command_laws>
 
   <section name="AUTO1" prefix="AUTO1_">
@@ -186,6 +192,7 @@
     <define name="RC_GYRO_PITCH_GAIN"  value="-1000"/>
     <define name="RC_GYRO_YAW_GAIN"  value="-1000"/>
   </load>
+  <load name="cam.xml"/>
   <load name="rc_trim.xml"/>
 </modules>
 
