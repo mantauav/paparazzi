@@ -46,7 +46,7 @@ It has 9 buttons.
    <field name="throttle" value="Scale(ly,0,127)"/>
    <field name="roll" value="rx"/>
    <field name="yaw" value="lx"/>
-   <field name="pitch" value="ry"/>
+   <field name="pitch" value="0-ry"/>
   </message>
 
 

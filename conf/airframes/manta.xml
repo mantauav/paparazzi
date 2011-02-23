@@ -138,7 +138,7 @@
     
     <define name="ATTITUDE_HOLD_ROLL_GAIN"   value="0"/>
     <define name="ATTITUDE_HOLD_RUDDER_GAIN" value="-3600"/> 
-    <define name="PITCH_NEUTRAL"             value="0.0"/>
+    <define name="PITCH_NEUTRAL"             value="0.26"/>
     <define name="ROLL_NEUTRAL"             value="0.0"/>
     <define name="ROLL_RATE_GAIN" value="-1350"/>
     <define name="ROLL_RATE_MODE_DEFAULT"  value="0"/>
@@ -224,7 +224,7 @@
       <define name="ALT_KALMAN" />
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
-      <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_AUTO"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
+      <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_FAILSAFE"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
 <!--    <define name="USE_AIRSPEED"/> -->
 
 <!------------------SUBSYSTEMS--------------->
