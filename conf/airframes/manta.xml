@@ -106,7 +106,7 @@
     <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.35"/>
     <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.0"/>
     <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.95"/>
-    <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
+<!--    <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/> -->
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
     <define name="AUTO_THROTTLE_PGAIN" value="-0.01"/>
@@ -222,7 +222,7 @@
     <target name="ap" 			board="tiny_2.11"           />
       <define name="MANTA_TESTING"/>
 <!--      <define name="AGR_CLIMB" /> -->
-      <define name="LOITER_TRIM" />
+<!--      <define name="LOITER_TRIM" /> -->
       <define name="ALT_KALMAN" />
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
