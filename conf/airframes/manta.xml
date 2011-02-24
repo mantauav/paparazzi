@@ -76,7 +76,6 @@
 
   <section name="BAT">
     <define name="MILLIAMP_AT_FULL_THROTTLE" value="2000"/>
-
     <define name="CATASTROPHIC_BAT_LEVEL" value="9.3" unit="V"/>
   </section>
 
@@ -120,34 +119,35 @@
   </section>
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
+
     <define name="COURSE_PGAIN" value="-0.308"/>
     <define name="COURSE_DGAIN" value="0.012"/>
-    <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
+
+ 
     <define name="PITCH_MAX_SETPOINT" value="0.523" /> <!--  0.523  ~ 30 deg  -->
     <define name="PITCH_MIN_SETPOINT" value="0.03488888888"/> <!-- -0.087 ~ -5 deg   -->
-
+    <define name="PITCH_NEUTRAL"             value="0.2"/>
     <define name="PITCH_PGAIN" value="-12000."/>
     <define name="PITCH_DGAIN" value="1.5"/>
 
-    <define name="ELEVATOR_OF_ROLL" value="1250"/>
-
-    <define name="ROLL_SLEW" value="0.045"/>
-
-    <define name="ROLL_ATTITUDE_GAIN" value="-5300"/>
-    <define name="ROLL_ATTITUDE_RUDDER_GAIN" value="-1800"/>
-    
+    <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
     <define name="ATTITUDE_HOLD_ROLL_GAIN"   value="0"/>
     <define name="ATTITUDE_HOLD_RUDDER_GAIN" value="-3600"/> 
-    <define name="PITCH_NEUTRAL"             value="0.305"/>
+    <define name="ROLL_SLEW" value="0.045"/>
+    <define name="ROLL_ATTITUDE_GAIN" value="-5300"/>
+    <define name="ROLL_ATTITUDE_RUDDER_GAIN" value="-1800"/>
+    <define name="ELEVATOR_OF_ROLL" value="1250"/>
     <define name="ROLL_NEUTRAL"             value="0.0"/>
     <define name="ROLL_RATE_GAIN" value="-1350"/>
     <define name="ROLL_RATE_MODE_DEFAULT"  value="0"/>
     <define name="ROLL_RATE_SETPOINT_PGAIN"     value="-5"  />
+
     <define name="HI_THROTTLE_ROLL_RATE_PGAIN"  value="1000"/>
     <define name="LO_THROTTLE_ROLL_RATE_PGAIN"  value="1000"/>
     <define name="RATE_LOOP"/>
   </section>
 
+<!-- Currently not used -->
   <section name="AGGRESSIVE" prefix="AGR_">
     <define name="BLEND_START" value="20"/><!-- Altitude Error to Initiate Aggressive Climb CANNOT BE ZERO!!-->
     <define name="BLEND_END" value="10"/><!-- Altitude Error to Blend Aggressive to Regular Climb Modes  CANNOT BE ZERO!!-->
@@ -173,11 +173,13 @@
 
 <modules>
   <load name="ins_vn100.xml"/>
+
   <load name="adc_generic.xml">
     <configure name="ADC_CHANNEL_GENERIC1" value="ADC_6"/>
     <configure name="ADC_CHANNEL_GENERIC2" value="ADC_4"/>
     <configure name="ADC_CHANNEL_GENERIC3" value="ADC_3"/>
   </load>
+
   <load name="airspeed_adc.xml">
       <configure name="ADC_AIRSPEED"     value="ADC_6"/> 
       <define name="AIRSPEED_SCALE"      value="1.075"/>      <!-- Correction from wind tunnel testing             -->
