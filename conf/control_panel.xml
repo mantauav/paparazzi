@@ -198,7 +198,9 @@
         <arg flag="-s" constant="57600"/>
       </program>
       <program name="Server"/>
-      <program name="GCS"/>
+      <program name="GCS">
+        <arg flag="-speech"/>
+      </program>
       <program name="Joystick Server">
         <arg flag="-ac" constant="MANTA"/>
         <arg flag="-d" constant="/dev/input/au_js0"/>

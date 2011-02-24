@@ -102,6 +102,7 @@
 
       <dl_settings name="nav">
 	<dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="nav_capture_altitude"  shortname="alt_capture"/>
+      <dl_setting MAX="2"    MIN="1"  STEP="1"   VAR="fbw_rc_really_lost_mode"  shortname="rc_lost_fbw_mode"/>
         <dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="v_ctl_throttle_capture"  shortname="throttle_capture"/>
         <dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="h_ctl_use_rc_course"  shortname="use_rc_course"/>
         <dl_setting MAX="0.1"    MIN="0"  STEP="0.001"   VAR="h_ctl_rc_course_rate"  shortname="rc_course_rate"/>

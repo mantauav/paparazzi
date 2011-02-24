@@ -168,18 +168,21 @@ void periodic_task_fbw( void ) {
 #ifdef RADIO_CONTROL
   radio_control_periodic_task();
   if (radio_control.status == RC_REALLY_LOST)
+  {
     fbw_mode = fbw_rc_really_lost_mode;
+    pprz_mode= PPRZ_MODE_HOME;
+  }
   if (fbw_mode == FBW_MODE_FAILSAFE)
     set_failsafe_mode();
   if (fbw_mode == FBW_MODE_MANUAL && radio_control.status == RC_REALLY_LOST) {
     fbw_mode = FBW_MODE_AUTO;
   }
 #endif
-if (radio_control.status == RC_REALLY_LOST)
+/*if (radio_control.status == RC_REALLY_LOST)
 {
    fbw_mode = FBW_MODE_FAILSAFE;
    set_failsafe_mode();
-}
+}*/
 if (radio_control.status==RC_OK)
 {
    if (pprz_mode == PPRZ_MODE_MANUAL)
@@ -192,7 +195,7 @@ if (radio_control.status==RC_OK)
        fbw_mode = FBW_MODE_AUTO;
    }
 }
-    
+   
 
 #ifdef INTER_MCU
   inter_mcu_periodic_task();

@@ -73,8 +73,8 @@ float circle_bank = 0;
 
 /** Dynamically adjustable, reset to nav_altitude when it is changing */
 float flight_altitude;
-float nav_altitude_at_auto2_switch=0.0;
-bool_t nav_capture_altitude=1;
+float nav_altitude_at_auto2_switch=50;
+bool_t nav_capture_altitude=0;
 
 float nav_glide_pitch_trim;
 #ifndef NAV_GLIDE_PITCH_TRIM
