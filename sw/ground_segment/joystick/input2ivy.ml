@@ -327,6 +327,7 @@ let eval_call = fun f args ->
   | "&&", [a1; a2] -> a1 land a2
   | "||", [a1; a2] -> a1 lor a2
   | "Scale", [x; min; max] -> scale (x) (min) (max)
+  | "JoystickID", [] -> !joystick_id
   | f, args -> failwith (sprintf "eval_call: unknown function '%s'" f)
 
 (** Eval an expression *)

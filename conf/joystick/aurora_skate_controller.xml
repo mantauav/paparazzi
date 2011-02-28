@@ -39,11 +39,11 @@ It has 9 buttons.
   <button index="11" name="b11"/>
 </input>
 
-<messages period="0.017">
+<messages period="0.0333333333">
 
 
   <message class="datalink" name="RC_4CH" send_always="1">
-   <field name="joystick_id" value="joystick_id"/>
+   <field name="joystick_id" value="JoystickID()"/>
    <field name="throttle"    value="Scale(ly,0,127)"/>
    <field name="roll"        value="rx"/>
    <field name="yaw"         value="lx"/>
@@ -124,12 +124,7 @@ It has 9 buttons.
 
  <message class="ground" name="DL_SETTING" send_always="0" on_event="b7 || b8 || b9">
     <field name="index" value="IndexOfSetting('rc_dl_active_joystick')"/>
-    <field name="value" value="0"/> 
-  </message>
-
- <message class="ground" name="DL_SETTING" send_always="0" on_event="b7 && b8 && b9">
-    <field name="index" value="IndexOfSetting('rc_dl_active_joystick')"/>
-    <field name="value" value="joystick_id"/> 
+    <field name="value" value="JoystickID()"/> 
   </message>
 
 </messages>

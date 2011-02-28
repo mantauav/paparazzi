@@ -17,7 +17,7 @@
 
     <dl_settings NAME="mode">
       <dl_setting MAX="2" MIN="0" STEP="1" VAR="pprz_mode" module="autopilot"/>
-      <dl_setting MAX="10" MIN="0" STEP="1" VAR="rc_dl_active_joystick" module="subsystems/radio_control/rc_datalink"/>
+      <dl_setting MAX="255" MIN="0" STEP="1" VAR="rc_dl_active_joystick" module="subsystems/radio_control/rc_datalink"/>
       <dl_setting MAX="1" MIN="0" STEP="1" VAR="alt_kalman_enabled" shortname="alt_kalman" module="estimator"/>
       <dl_setting MAX="0" MIN="0" STEP="1" VAR="estimator_flight_time" shortname="flight time"/>
       <dl_setting MAX="1000" MIN="0" STEP="1" VAR="stage_time"/>
