@@ -37,6 +37,7 @@
 
 open Printf
 open Unix
+open Random
 
 
 let (//) = Filename.concat
@@ -45,6 +46,9 @@ let verbose = ref false (* Command line option *)
 
 (** global trim file name *)
 let trim_file_name = ref ""
+
+(** global joystick id *)
+let joystick_id = ref (Random.int 255)
 
 (** Messages libraries *)
 module DL = Pprz.Messages(struct let name = "datalink" end)
@@ -472,6 +476,7 @@ let () =
       "-ac",  Arg.Set_string ac_name, "<A/C name>";
       "-d",  Arg.Set_string device_name, "<device name>";
       "-v",  Arg.Set verbose, "Verbose mode (useful to identify the channels of an input device)";
+      "-id", Arg.Set_int joystick_id, "Joystick ID, from 0-255.  Each joystick requires a unique ID in a multiple joystick configuration.";
       "-", Arg.String anon_fun, "<xml file of actions>"
     ]
   and usage_msg = "Usage: " in
@@ -487,6 +492,8 @@ let () =
 
   hash_index_of_settings !ac_name;
   hash_index_of_blocks !ac_name;
+
+  Printf.printf "Joystick ID: %u\n" !joystick_id;
 
   let joystick_conf_dir = conf_dir ^ "/joystick/" in
   let xml_descr_full = joystick_conf_dir ^ !xml_descr in
