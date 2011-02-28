@@ -39,6 +39,7 @@
 #define RADIO_THROTTLE  3
 #define RADIO_MODE      4
 
+extern uint8_t rc_dl_active_joystick;
 extern int8_t rc_dl_values[ RC_DL_NB_CHANNEL ];
 extern volatile bool_t rc_dl_frame_available;
 
@@ -54,10 +55,11 @@ extern void parse_rc_datalink(
  * Decode datalink message to get rc values (used for 4 channel, no mode control)
  */
 extern void parse_rc_4ch_datalink(
-    int8_t throttle,
-    int8_t roll,
-    int8_t pitch,
-    int8_t yaw);
+    uint8_t joystick_id,
+    int8_t  throttle,
+    int8_t  roll,
+    int8_t  pitch,
+    int8_t  yaw);
 
 
 /**

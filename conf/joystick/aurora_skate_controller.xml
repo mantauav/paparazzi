@@ -1,5 +1,5 @@
 <!-- Custom Aurora Skate Controller
-
+  joystick_ID:0 (hardcoded)
   Joystick has four axes:
   axis 0: X on right stick
   axis 1: Y on right stick
@@ -43,10 +43,11 @@ It has 9 buttons.
 
 
   <message class="datalink" name="RC_4CH" send_always="1">
-   <field name="throttle" value="Scale(ly,0,127)"/>
-   <field name="roll" value="rx"/>
-   <field name="yaw" value="lx"/>
-   <field name="pitch" value="0-ry"/>
+   <field name="joystick_id" value="joystick_id"/>
+   <field name="throttle"    value="Scale(ly,0,127)"/>
+   <field name="roll"        value="rx"/>
+   <field name="yaw"         value="lx"/>
+   <field name="pitch"       value="0-ry"/>
   </message>
 
 
@@ -108,7 +109,7 @@ It has 9 buttons.
     <field name="index" value="IndexOfSetting('pprz_mode')"/>
     <field name="value" value="2"/> 
   </message>
- 
+
   <!-- Yellow Button -->   <!-- AUTO1 mode -->
   <message class="ground" name="DL_SETTING" send_always="0" on_event="b7">
     <field name="index" value="IndexOfSetting('pprz_mode')"/>
@@ -121,6 +122,15 @@ It has 9 buttons.
     <field name="value" value="0"/> 
   </message>
 
+ <message class="ground" name="DL_SETTING" send_always="0" on_event="b7 || b8 || b9">
+    <field name="index" value="IndexOfSetting('rc_dl_active_joystick')"/>
+    <field name="value" value="0"/> 
+  </message>
+
+ <message class="ground" name="DL_SETTING" send_always="0" on_event="b7 && b8 && b9">
+    <field name="index" value="IndexOfSetting('rc_dl_active_joystick')"/>
+    <field name="value" value="joystick_id"/> 
+  </message>
 
 </messages>
 

@@ -24,6 +24,7 @@
 #include "rc_datalink.h"
 #include "subsystems/radio_control.h"
 
+uint8_t rc_dl_active_joystick=0;
 int8_t rc_dl_values[ RC_DL_NB_CHANNEL ];
 volatile bool_t rc_dl_frame_available;
 
@@ -49,16 +50,20 @@ void parse_rc_datalink( uint8_t throttle_mode,
   rc_dl_frame_available = TRUE;
 }
 
-void parse_rc_4ch_datalink( int8_t throttle,
-			    int8_t roll,
-			    int8_t pitch,
-			    int8_t yaw)
+void parse_rc_4ch_datalink( uint8_t joystick_id,
+                            int8_t  throttle,
+			    int8_t  roll,
+			    int8_t  pitch,
+			    int8_t  yaw)
 {
-  rc_dl_values[RADIO_ROLL] = roll;
-  rc_dl_values[RADIO_PITCH] = pitch;
-  rc_dl_values[RADIO_THROTTLE] = throttle;
-  rc_dl_values[RADIO_YAW] = yaw;
-  rc_dl_values[RADIO_MODE] = -1;
+  if (joystick_id == rc_dl_active_joystick)
+  {
+    rc_dl_values[RADIO_ROLL] = roll;
+    rc_dl_values[RADIO_PITCH] = pitch;
+    rc_dl_values[RADIO_THROTTLE] = throttle;
+    rc_dl_values[RADIO_YAW] = yaw;
+    rc_dl_values[RADIO_MODE] = -1;
 
-  rc_dl_frame_available = TRUE;
+    rc_dl_frame_available = TRUE;
+  }
 }

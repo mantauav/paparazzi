@@ -204,7 +204,7 @@
       <program name="Joystick Server">
         <arg flag="-ac" constant="MANTA"/>
         <arg flag="-d" constant="/dev/input/au_js0"/>
-        <arg flag="aurora_skate_controller.xml"/>
+        <arg flag="aurora_skate_controller0.xml"/>
       </program>
       <program name="On Screen Display">
         <arg flag="-p" constant="/dev/ttyUSB1"/>
