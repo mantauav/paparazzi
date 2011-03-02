@@ -317,16 +317,23 @@ let eval_input = fun buttons axis input ->
 let scale = fun x min max ->
   min + ((x - min_input) * (max - min)) / (max_input - min_input)
 
+(** Scale a value in the given bounds *)
+let bound = fun x min max ->
+  if x < min then min else (if x > max then max else x)
+
 (** Eval a function call (TO BE COMPLETED) *)
 let eval_call = fun f args ->
   match f, args with
-    "-", [a1; a2] -> a1 - a2
-  | "+", [a1; a2] -> a1 + a2
-  | "*", [a1; a2] -> a1 * a2
-  | "%", [a1; a2] -> a1 / a2
+    "-", [a1; a2]  -> a1 - a2
+  | "+", [a1; a2]  -> a1 + a2
+  | "*", [a1; a2]  -> a1 * a2
+  | "%", [a1; a2]  -> a1 / a2
   | "&&", [a1; a2] -> a1 land a2
   | "||", [a1; a2] -> a1 lor a2
+  | "<",  [a1;a2]  ->  if a1 < a2 then 1 else 0
+  | ">",  [a1;a2]  ->  if a1 > a2 then 1 else 0
   | "Scale", [x; min; max] -> scale (x) (min) (max)
+  | "Bound", [x; min; max] -> bound (x) (min) (max)
   | "JoystickID", [] -> !joystick_id
   | f, args -> failwith (sprintf "eval_call: unknown function '%s'" f)
 

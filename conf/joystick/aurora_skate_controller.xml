@@ -1,5 +1,4 @@
 <!-- Custom Aurora Skate Controller
-  joystick_ID:0 (hardcoded)
   Joystick has four axes:
   axis 0: X on right stick
   axis 1: Y on right stick
@@ -79,7 +78,20 @@ It has 9 buttons.
     <field name="mod" value="0-10"/>
   </message>
 
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b10 && b11">
+    <field name="index" value="IndexOfSetting('rc_roll_trim')"/>
+    <field name="value" value="0"/>
+  </message>
 
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b10 && b11">
+    <field name="index" value="IndexOfSetting('rc_pitch_trim')"/>
+    <field name="value" value="0"/>
+  </message>
+
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b10 && b11">
+    <field name="index" value="IndexOfSetting('rc_yaw_trim')"/>
+    <field name="value" value="0-10"/>
+  </message>
 <!--
   <message class="ground" name="lx" on_event="b8"/>
   <message class="trim_plus" name="ly" on_event="b10"/>
