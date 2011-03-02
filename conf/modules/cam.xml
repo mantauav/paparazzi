@@ -11,4 +11,9 @@
     <define name="MOBILE_CAM"/>
     <file name="cam.c"/>
   </makefile>
+  <makefile target="sim">
+    <define name="CAM"/>
+    <define name="MOBILE_CAM"/>
+    <file name="cam.c"/>
+  </makefile>
 </module>

@@ -239,7 +239,9 @@ void estimator_update_state_gps( void ) {
 #endif
 }
 
+#ifdef USE_INFRARED
 #include "subsystems/sensors/infrared.h"
+
 void estimator_update_state_infrared( void ) {
 
   estimator_phi  = atan2(infrared.roll, infrared.top) - infrared.roll_neutral;
@@ -262,3 +264,4 @@ void estimator_update_state_infrared( void ) {
     estimator_theta *= infrared.correction_down;
 
 }
+#endif //USE_INFRARED
