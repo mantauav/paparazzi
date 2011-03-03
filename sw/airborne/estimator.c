@@ -66,9 +66,11 @@ float estimator_hspeed_dir;
 /* wind */
 float wind_east, wind_north;
 float estimator_airspeed;
-
+#ifndef ESTIMATOR_HEADING_SOURCE
+#define ESTIMATOR_HEADING_SOURCE 0
+#endif
 /*heading source*/
-uint8_t estimator_heading_source=1; //0=GPS, 1=ins
+uint8_t estimator_heading_source=ESTIMATOR_HEADING_SOURCE; //0=GPS, 1=ins
 
 #define NORM_RAD_ANGLE2(x) { \
     while (x > 2 * M_PI) x -= 2 * M_PI; \
@@ -239,7 +241,7 @@ void estimator_update_state_gps( void ) {
 #endif
 }
 
-#ifdef USE_INFRARED
+
 #include "subsystems/sensors/infrared.h"
 
 void estimator_update_state_infrared( void ) {

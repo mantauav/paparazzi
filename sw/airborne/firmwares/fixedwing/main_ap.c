@@ -444,9 +444,11 @@ void periodic_task_ap( void ) {
   }
 
   if (!_10Hz) {
-    h_ctl_rc_course_setpoint += (float)radio_control.values[COMMAND_ROLL]/9600*h_ctl_rc_course_rate;
-    NormRadAngle(h_ctl_rc_course_setpoint);
-    df2.z=DegOfRad(h_ctl_rc_course_setpoint);
+    if (h_ctl_use_rc_course)
+    {
+      h_ctl_rc_course_setpoint += (float)radio_control.values[COMMAND_ROLL]/9600*h_ctl_rc_course_rate;
+      NormRadAngle(h_ctl_rc_course_setpoint);
+    }   
   }
   switch(_4Hz) {
   case 0:
@@ -509,7 +511,9 @@ void periodic_task_ap( void ) {
       ap_state->commands[COMMAND_THROTTLE] = v_ctl_throttle_slewed;
       ap_state->commands[COMMAND_ROLL] = h_ctl_aileron_setpoint;
       ap_state->commands[COMMAND_PITCH] = h_ctl_elevator_setpoint;
+#ifdef COMMAND_YAW
       ap_state->commands[COMMAND_YAW] = h_ctl_rudder_setpoint;
+#endif
 #if defined MCU_SPI_LINK
       link_mcu_send();
 #elif defined INTER_MCU && defined SINGLE_MCU

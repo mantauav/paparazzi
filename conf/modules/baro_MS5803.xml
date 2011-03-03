@@ -13,5 +13,6 @@
     <define name="USE_SPI_SLAVE0"/>
     <define name="SPI_MASTER"/>
   </makefile>
+
 </module>
 

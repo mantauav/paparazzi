@@ -183,7 +183,7 @@
       </program>
       <program name="Joystick Server">
         <arg flag="-b" constant="127"/>
-        <arg flag="-d" constant="/dev/input/js1"/>
+        <arg flag="-d" constant="/dev/input/js0"/>
         <arg flag="-ac" constant="MANTA"/>
         <arg flag="-id" constant="7"/>
         <arg flag="logitech_f710.xml"/>

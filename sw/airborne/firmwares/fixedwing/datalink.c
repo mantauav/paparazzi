@@ -181,7 +181,6 @@ void dl_parse_msg(void) {
     uint8_t i = DL_SETTING_MOD_index(dl_buffer);
     float mod = DL_SETTING_MOD_mod(dl_buffer);
     float val = settings_get_value(i) + mod;
-    df2.z = val;
     DlSetting(i, val);
     DOWNLINK_SEND_DL_VALUE(DefaultChannel, &i, &val);    
   } else	

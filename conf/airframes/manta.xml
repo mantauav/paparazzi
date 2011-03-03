@@ -226,6 +226,7 @@
       <define name="ALT_KALMAN" />
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
+      <define name="ESTIMATOR_HEADING_SOURCE"   value="1"/>
       <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_AUTO"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
 <!--    <define name="USE_AIRSPEED"/> -->
 

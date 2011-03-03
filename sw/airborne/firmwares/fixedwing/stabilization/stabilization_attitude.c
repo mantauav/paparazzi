@@ -118,6 +118,11 @@ static inline void h_ctl_roll_rate_loop( void );
 #define H_CTL_ATTITUDE_HOLD_RUDDER_GAIN 0.0
 #endif
 
+#ifndef H_CTL_ROLL_ATTITUDE_RUDDER_GAIN
+#define H_CTL_ROLL_ATTITUDE_RUDDER_GAIN 0.0
+#endif
+
+
 #ifndef H_CTL_PITCH_NEUTRAL
 #define H_CTL_PITCH_NEUTRAL 0.0
 #endif

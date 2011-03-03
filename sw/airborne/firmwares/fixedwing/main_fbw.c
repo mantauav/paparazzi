@@ -57,7 +57,7 @@
 #endif
 
 #ifndef RC_LOST_MODE_FBW
-#define RC_LOST_MODE_FBW FBW_MODE_FAILSAFE
+#define RC_LOST_MODE_FBW FBW_MODE_AUTO
 #endif
 
 uint8_t fbw_mode;
@@ -170,7 +170,7 @@ void periodic_task_fbw( void ) {
   if (radio_control.status == RC_REALLY_LOST)
   {
     fbw_mode = fbw_rc_really_lost_mode;
-    pprz_mode= PPRZ_MODE_HOME;
+//    pprz_mode= PPRZ_MODE_HOME;
   }
   if (fbw_mode == FBW_MODE_FAILSAFE)
     set_failsafe_mode();
