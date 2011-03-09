@@ -230,6 +230,14 @@
         <arg flag="-p" constant="/dev/ttyUSB1"/>
         <arg flag="-g"/>
       </program>
+      <program name="Messages"/>
+      <program name="Joystick Server">
+        <arg flag="-d" constant="/dev/input/js2"/>
+        <arg flag="-b" constant="127"/>
+        <arg flag="-ac" constant="MANTA"/>
+        <arg flag="-id" constant="2"/>
+        <arg flag="aurora_skate_controller.xml"/>
+      </program>
     </session>
   </section>
 </control_panel>

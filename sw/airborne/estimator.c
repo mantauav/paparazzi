@@ -241,7 +241,7 @@ void estimator_update_state_gps( void ) {
 #endif
 }
 
-
+#ifdef USE_INFRARED
 #include "subsystems/sensors/infrared.h"
 
 void estimator_update_state_infrared( void ) {
