@@ -51,4 +51,6 @@ uint8_t nmea_checksum_valid(uint8_t buf[],uint8_t buf_len);
 
 void parse_nmea_char( uint8_t c );
 
+uint8_t get_weekday( uint8_t dd, uint8_t mm, uint8_t yy);
+
 #endif /* GPS_NMEA_H */
