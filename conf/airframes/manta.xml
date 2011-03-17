@@ -232,7 +232,7 @@
 
 <!------------------SUBSYSTEMS--------------->
     <subsystem name="control"                      />
-<!--    <subsystem name="usb_serial"                   /> -->
+    <subsystem name="usb_debug"                   />
     <subsystem name="spi"/> 
     <subsystem name="radio_control" type="datalink"/>
     <define name="RADIO_CONTROL_NO_MODESET"/> 

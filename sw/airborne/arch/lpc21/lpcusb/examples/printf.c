@@ -22,13 +22,15 @@
 	if you have a working putchar, leave it commented out.
 	If not, uncomment the define below and
 	replace outbyte(c) by your own function call.
-
-#define putchar(c) outbyte(c)
 */
+#define putchar(c) outbyte(c)
+
+
+#define outbyte(c) UsbSTransmit(c)
 
 #include <stdarg.h>
 #include "console.h"
-
+#include "mcu_periph/usb_serial.h"
 
 static void printchar(char **str, int c)
 {

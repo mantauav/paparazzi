@@ -53,14 +53,13 @@
 #include "generated/flight_plan.h"
 #include "datalink.h"
 #include "xbee.h"
-
 #include "gpio.h"
 
 #if defined RADIO_CONTROL || defined RADIO_CONTROL_AUTO1
 #include "rc_settings.h"
 #endif
 
-
+#include "print.h"
 
 #ifdef TRAFFIC_INFO
 #include "subsystems/navigation/traffic_info.h"
