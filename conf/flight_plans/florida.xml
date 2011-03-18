@@ -1,7 +1,7 @@
 <!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
 
 <flight_plan alt="35" ground_alt="30" lat0="27.586939" lon0="-81.298086" max_dist_from_home="900" name="Basic" security_height="45"
-magnetic_dec="-15.0">
+magnetic_dec="-15.4">
   <header>
 #include "subsystems/navigation/nav_line.h"
 #include "datalink.h"

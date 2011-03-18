@@ -80,6 +80,7 @@ float ins_roll_neutral=0.0;
 float ins_pitch_neutral=0.0;
 
 bool_t ins_tare=0;
+bool_t ins_save=0;
 
 struct FloatEulers ins_eulers;
 struct FloatQuat ins_quat;

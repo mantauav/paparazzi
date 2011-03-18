@@ -92,7 +92,7 @@
   <aircraft
    name="MANTA"
    ac_id="37"
-   airframe="airframes/manta-bluepilot.xml"
+   airframe="airframes/manta.xml"
    radio="radios/spektrum_dx7.xml"
    telemetry="telemetry/manta.xml"
    flight_plan="flight_plans/florida.xml"
