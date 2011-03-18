@@ -37,6 +37,8 @@
  * 
  *   datasheet for sensor is here:  
  *    MS5803   http://www.meas-spec.com/pressure-sensors/board-level-pressure-sensors/digital-pressure-sensors.aspx#
+ *
+ * By default, chip is hooked to pin P0.07
  */
 
 
@@ -55,10 +57,18 @@
 #include "sys_time.h"
 #include "modules/sensors/baro_MS5803.h"
 
-//#include "usb_debug.h"
+#include "subsystems/nav.h"
+#include "estimator.h"
 
 //--------------------------------------------------
 // defines
+
+//define this if you want datasheet example values instead of real ones
+//
+//  This can be used to test the code
+//    Temperature returned should be 20.07C
+//    Pressure returned should be 1000.09mbar
+//#define MS5803_EXAMPLE_VALUES
 
 //calibration values
 #define CAL_SENS_T1 1
@@ -74,8 +84,6 @@
 #define VAL_TCO ms5803_cal_table[CAL_TCO]
 #define VAL_T_REF ms5803_cal_table[CAL_T_REF]
 #define VAL_TEMPSENS ms5803_cal_table[CAL_TEMPSENS]
-
-#define CAL_NUM_VALUES 8
 
 //commands
 #define COM_RESET 0x1E
@@ -99,14 +107,27 @@
 #define DELAY_OSR4096 9004
 
 #define DELAY_RESET 3000
+#define DELAY_MARGIN 100
 
+//Constants for floating point math
+#define TWO_TOTHE6 64
+#define TWO_TOTHE7 128
+#define TWO_TOTHE8 256
+#define TWO_TOTHE9 512
+#define TWO_TOTHE15 32768
+#define TWO_TOTHE16 65536
+#define TWO_TOTHE17 131072
+#define TWO_TOTHE21 2097152
+#define TWO_TOTHE23 8388608
 
-#define OSR_CONVERSION OSR256
-#define OSR_DELAY DELAY_OSR256
-
-// define these to test for conversion delay errors
-//#define OSR_CONVERSION 0
-//#define OSR_DELAY 0
+//These set the default oversampling used for conversions
+//  They are overridden in the module settings
+#ifndef OSR_CONVERSION
+#define OSR_CONVERSION OSR4096
+#endif
+#ifndef OSR_DELAY
+#define OSR_DELAY DELAY_OSR4096
+#endif
 
 #define SPI_BUSY (SSPSR & 0x0000010)
 
@@ -132,16 +153,21 @@
 
 
 //--------------------------------------------------
-// types
-typedef enum { uninit, reset, calibration, running } ms5803_sensor_state;
-
 
 //--------------------------------------------------
 // globals
-ms5803_sensor_state ms5803_state = uninit;
-uint16_t ms5803_cal_table[CAL_NUM_VALUES];   //calibration constant table, read at startup
+sensor_state_t ms5803_state = uninit;
+uint16_t ms5803_cal_table[MS5803_CAL_NUM_VALUES];   //calibration constant table, read at startup
 int32_t ms5803_dT;
 float baro_MS5803_last_altitude;
+int32_t baro_periodic_state;
+
+float MS5803_last_temperature;
+float MS5803_last_pressure;
+
+float baro_MS5803_sealevel_reference_pressure = 1013;
+float baro_MS5803_calibrate_reference_altitude;
+int baro_MS5803_calibrate_reference_altitude_start = 0;
 //--------------------------------------------------
 // code
 
@@ -186,7 +212,7 @@ void baro_dump_debugging(void) {
 
   #ifdef MS5803_DEBUG
   USB_DEBUG_OUT("%s","MS5803 cal:");
-  for(i=1;i<CAL_NUM_VALUES;i++) {
+  for(i=1;i<MS5803_CAL_NUM_VALUES;i++) {
     USB_DEBUG_OUT(" %d",ms5803_cal_table[i]);
   }
   USB_DEBUG_OUT("%s","\n\r");
@@ -221,7 +247,7 @@ int check_baro_state(void) {
 
   //read calibration table in
   // do not read 0, is a manufacturer reserved value
-    for(i=1;i<CAL_NUM_VALUES;i++) {
+    for(i=0;i<MS5803_CAL_NUM_VALUES;i++) {
 
     sys_time_usleep(100);
     ms5803_select();
@@ -239,6 +265,17 @@ int check_baro_state(void) {
     ms5803_unselect();
 
     } 
+ 
+#ifdef MS5803_EXAMPLE_VALUES
+    ms5803_cal_table[0]=9999;
+    ms5803_cal_table[1]=40127;
+    ms5803_cal_table[2]=36924;
+    ms5803_cal_table[3]=23317;
+    ms5803_cal_table[4]=23282;
+    ms5803_cal_table[5]=33464;
+    ms5803_cal_table[6]=28312;
+    ms5803_cal_table[7]=9999;
+#endif
   
     ms5803_state = running;
     return FALSE;
@@ -272,7 +309,7 @@ void baro_write_byte (unsigned char byte) {
 }
 
 //--------------------------------------------------
-// function to write SPI byte
+// function to read SPI byte
 unsigned char baro_read_byte (void) {
   volatile int g;
 
@@ -306,7 +343,23 @@ void baro_reset () {
   baro_write_byte( COM_RESET );
 
   // WAIT A WHILE
-  sys_time_usleep ( DELAY_RESET +250 );
+  sys_time_usleep ( DELAY_RESET + DELAY_MARGIN );
+
+  ms5803_unselect();
+
+}
+
+// start the pressure conversion process
+void baro_startPressure (void) {
+
+  SpiEnable();
+
+  //initiate conversion
+  ms5803_select();
+  baro_write_byte( COM_CONVERT_D1 | OSR_CONVERSION );
+
+  //we must now wait a little while
+  sys_time_usleep( 10 );
 
   ms5803_unselect();
 
@@ -314,27 +367,15 @@ void baro_reset () {
 
 
 
-//-------------------------
-// function returns pressure in hundredth's of mbar
-// ie  100023 = 1000.23 mbar
-int32_t baro_getPressure (void) {
+//--------------------------------------------------
+// read back the pressure result
+//
+//    returns actual millebars
+float baro_readPressure (void) {
   int i;
   unsigned char temp[3];
   int32_t D1;
-  double OFF,OFF_int1,OFF_int2,SENS,SENS_int1,SENS_int2,PRESSURE;
-  int32_t OFF_int,SENS_int;
-
-  SpiEnable();
-
-  //initiate conversion
-  ms5803_select();
-  baro_write_byte( COM_CONVERT_D1 | OSR_CONVERSION );
-  //we must now wait a little while
-  sys_time_usleep( OSR_DELAY+250 );
-
-  ms5803_unselect();
-
-  sys_time_usleep(10);
+  double OFF,SENS,PRESSURE;
 
   //now read back the 24bit result
   ms5803_select();
@@ -343,6 +384,12 @@ int32_t baro_getPressure (void) {
     temp[i] = baro_read_byte();
   }
   ms5803_unselect();
+
+ #ifdef MS5803_EXAMPLE_VALUES
+  temp[0] = 0x8A;
+  temp[1] = 0xA2;
+  temp[2] = 0x1A;
+ #endif
 
   //store value and return
   D1 = (temp[0] << 16) + (temp[1] << 8) + temp[2];
@@ -355,40 +402,36 @@ int32_t baro_getPressure (void) {
   //VAL_SENS_T1 = 40127; 
   //VAL_TCS = 23317; 
 
-  OFF_int1 = ((double)VAL_OFF_T1 * 0x10000);
-  OFF_int2 = ((double)VAL_TCO * (double)ms5803_dT) / 0x80;
-  OFF = OFF_int1 + OFF_int2;
+  OFF = ((double)VAL_OFF_T1 * 0x10000) + ((double)VAL_TCO * (double)ms5803_dT) / 0x80;
 
-  SENS_int1 = ((double)VAL_SENS_T1 * 0x8000);
-  SENS_int2 = ((double)VAL_TCS * (double)ms5803_dT) / 0x100;
-  SENS = SENS_int1 + SENS_int2;
+  SENS = ((double)VAL_SENS_T1 * 0x8000) + ((double)VAL_TCS * (double)ms5803_dT) / 0x100;
 
   PRESSURE = ( (D1 * SENS / 0x200000) - OFF) / 0x8000;
 
-  return PRESSURE;
+  return (PRESSURE/100);
 }
 
-//-------------------------
-// function returns temperature value
-//  returns temperature in centidegrees C
-//  ie 2007 = 20.07 degrees C
-int32_t baro_getTemperature (void) {
+//--------------------------------------------------
+//  Gets a pressure reading from the sensor
+float baro_getPressure (void) {
 
+  baro_startPressure();
+
+  //wait the conversion delay time
+  sys_time_usleep(OSR_DELAY+DELAY_MARGIN);
+
+  return baro_readPressure();
+
+}
+
+
+//--------------------------------------------------
+// Read back the temperature values from the sensor
+float baro_readTemperature (void) {
   unsigned char temp[3];
   int32_t D2,dT;
-  long long int TEMP;
+  float TEMP;
   int i;
-
-  SpiEnable();
-
-  //initiate conversion
-  ms5803_select();
-  baro_write_byte( COM_CONVERT_D2 | OSR_CONVERSION );
-  //we must now wait a little while
-  sys_time_usleep(OSR_DELAY+250);
-  ms5803_unselect();
-
-  sys_time_usleep(10);
 
   //now read back the 24bit result
   ms5803_select();
@@ -398,22 +441,60 @@ int32_t baro_getTemperature (void) {
   }
   ms5803_unselect();
 
+ #ifdef MS5803_EXAMPLE_VALUES
+  temp[0] = 0x82;
+  temp[1] = 0xC1;
+  temp[2] = 0x3E;
+ #endif
+
   //store value and return
   D2 = (temp[0] << 16) + (temp[1] << 8) + temp[2];
 
   dT = D2 - (VAL_T_REF << 8);
-  TEMP = 2000 + ((dT * VAL_TEMPSENS) >> 23);
+  TEMP = 2000 + (((float)dT * (float)VAL_TEMPSENS) / TWO_TOTHE23);
 
   ms5803_dT = dT; //store for pressure calculation later
 
   return TEMP;
 }
 
+
+//--------------------------------------------------
+// Starts the temperature conversion
+void baro_startTemperature (void) {
+
+  SpiEnable();
+
+  //initiate conversion
+  ms5803_select();
+  baro_write_byte( COM_CONVERT_D2 | OSR_CONVERSION );
+
+  //we must now wait a little while
+  sys_time_usleep(10);
+
+  ms5803_unselect();
+
+}
+
+
+//-------------------------
+// function returns temperature value
+//  returns temperature in degrees C
+float baro_getTemperature (void) {
+  baro_startTemperature();
+
+  sys_time_usleep(OSR_DELAY+DELAY_MARGIN);
+
+  return baro_readTemperature()/100;
+}
+
+
+
 //-------------------------
 // function returns altitude in meters
 float baro_getAltitude (void) {
-  uint32_t pressure;
-  uint32_t altitude_i;
+  float pressure;
+  uint32_t baro_i;
 
   if (check_baro_state() == TRUE) {
 
@@ -422,20 +503,31 @@ float baro_getAltitude (void) {
     #endif
 
     // get temperature (stores temp compensation factor internally)
-    baro_getTemperature();
+    MS5803_last_temperature = baro_getTemperature();
   
     // fetch pressure
     pressure = baro_getPressure();
+    MS5803_last_pressure = pressure;
+
+    if (baro_MS5803_calibrate_reference_altitude_start == 1) {
+      baro_MS5803_calibrate_reference_altitude_start = 0;
+      
+      baro_MS5803_sealevel_reference_pressure = pressure / pow( (1 - ( baro_MS5803_calibrate_reference_altitude / 44307.693)), 5.25588);
+
+    }
+
+    //    pow(1-(altitude/44307),5.25588)=pressure/Pref
 
     //conversion from noaa.gov
     // dont need it to be wholly accurate.  just that the conversion is consistent.
     double altitude;
-    altitude = (1 - pow(((double)pressure/101325),0.190263)) * 44330.762;
+    altitude = (1 - pow(((double)pressure/baro_MS5803_sealevel_reference_pressure),0.190263)) * 44307.693;
 
-    altitude_i = altitude;
+    baro_i = altitude;
     baro_MS5803_last_altitude=(float)altitude;
+
     #ifdef MS5803_DEBUG
-    USB_DEBUG_OUT("alt: %d %d\r\n",altitude_i,pressure);
+    USB_DEBUG_OUT("alt: %d %d\r\n",baro_i,pressure);
     #endif
 
     return altitude;
@@ -447,4 +539,28 @@ float baro_getAltitude (void) {
 }
 
 
+//-------------------------
+// function sets sealevel reference pressure
+void baro_calibrateReferencePressure (float refPressure) {
+
+  baro_MS5803_sealevel_reference_pressure = refPressure;
+
+}
+
+
+
+//-------------------------
+// function calibrates barometer using input reference altitude in meters
+//
+//  returns TRUE on error (which means sensor is not yet calibrated)
+//  returns FALSE on success
+int baro_calibrateReferenceAltitude ( float refAlt ) {
+
+  baro_MS5803_calibrate_reference_altitude = refAlt;
+  baro_MS5803_calibrate_reference_altitude_start = 1;
+
+  return FALSE;
+
+}
+  
 

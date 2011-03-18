@@ -29,6 +29,7 @@
 #include "modules/ins/ins_vn100.h"
 
 #include "generated/airframe.h"
+#include "generated/flight_plan.h"
 #include "led.h"
 
 #include "downlink.h"
@@ -88,6 +89,7 @@ struct FloatVect3 ins_accel;
 struct FloatVect3 ins_mag;
 struct FloatVect3 ins_ref_mag; //Magnetic reference vector for local field.
 struct FloatVect3 ins_ref_grav; //Gravity reference vector for local field.
+
  float  ins_ref_mag_declination=-15.4; //Devens
 //float  ins_ref_mag_declination=-5.166667; //Florida
 

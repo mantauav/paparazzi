@@ -738,7 +738,8 @@ let () =
       Xml2h.define_string "FLIGHT_PLAN_NAME" name;
 
       let get_float = fun x -> float_attrib xml x in
-      let qfu = try get_float "qfu" with Xml.No_attribute "qfu" -> 0.
+      let qfu = try get_float "qfu" with Xml.No_attribute "qfu" -> 0. in
+      let magnetic_dec = try get_float "magnetic_dec" with Xml.No_attribute "magnetic_dec" -> 0.
       and mdfh = get_float "max_dist_from_home"
       and alt = ExtXml.attrib xml "alt" in
       security_height := get_float "security_height";
@@ -755,6 +756,7 @@ let () =
       Xml2h.define "NAV_HMSL0" (sprintf "%.0f /* cm, msl from ellipsoid (EGM96) */" (100. *. Egm96.of_wgs84 wgs84));
 
       Xml2h.define "QFU" (sprintf "%.1f" qfu);
+      Xml2h.define "MAGNETIC_DECLINATION" (sprintf "%.1f" magnetic_dec);
 
       let waypoints = dummy_waypoint :: waypoints in
 

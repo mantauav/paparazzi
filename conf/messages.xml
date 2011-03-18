@@ -485,8 +485,28 @@
     <field name="gnd2"   type="float"/>
   </message>
 
- <!-- 63 is free -->
- <!-- 64 is free -->
+  <message name="MS5701_TESTING" id="63">
+    <field name="ms5701_dT" type="uint32"/>
+    <field name="airspeed_periodic_state" type="int32"/>
+    <field name="ms5701_state" type="int32"/>
+    <field name="last_pressure" type="float"/>
+    <field name="last_temp" type="float"/>
+    <field name="last_airspeed" type="float"/>  
+    <field name="ms5701_zero_reference_pressure" type="float"/>  
+    <field name="ms5701_cal_table" type="uint16[]"/>  
+  </message>
+
+  <message name="MS5803_TESTING" id="64">
+    <field name="ms5803_dT" type="uint32"/>
+    <field name="baro_periodic_state" type="int32"/>
+    <field name="ms5803_state" type="int32"/>
+    <field name="last_pressure" type="float"/>
+    <field name="last_temp" type="float"/>
+    <field name="last_altitude" type="float"/> 
+    <field name="ms5803_sealevel_reference_pressure" type="float"/>  
+    <field name="ms5803_cal_table" type="uint16[]"/>
+  </message>  
+
  <!-- 65 is free -->
  <!-- 66 is free -->
  <!-- 67 is free -->

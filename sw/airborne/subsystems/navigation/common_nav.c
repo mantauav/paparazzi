@@ -27,6 +27,16 @@
 #include "generated/flight_plan.h"
 #include "gps.h"
 
+#ifndef AIRSPEED_SET_ZERO_REFERENCE
+#define AIRSPEED_SET_ZERO_REFERENCE(a) {}
+#warning "No airspeed zero reference"
+#endif
+
+#ifndef BARO_CALIBRATE_REFERENCE_ALTITUDE
+#define BARO_CALIBRATE_REFERENCE_ALTITUDE(a) {}
+#warning "No baro calibration"
+#endif
+
 float dist2_to_home;
 float dist2_to_wp;
 
@@ -65,6 +75,7 @@ void compute_dist2_to_home(void) {
 static float previous_ground_alt;
 
 /** Reset the geographic reference to the current GPS fix */
+/** If barometric pressure is being used, sets reference altitude */
 unit_t nav_reset_reference( void ) {
 #ifdef GPS_USE_LATLONG
   /* Set the real UTM zone */
@@ -82,6 +93,13 @@ unit_t nav_reset_reference( void ) {
 
   previous_ground_alt = ground_alt;
   ground_alt = gps_alt/100;
+
+  // set zero airspeed reference pressure
+  AIRSPEED_SET_ZERO_REFERENCE();
+
+  // set sealevel reference pressure
+  BARO_CALIBRATE_REFERENCE_ALTITUDE( ground_alt );
+
   return 0;
 }
 
