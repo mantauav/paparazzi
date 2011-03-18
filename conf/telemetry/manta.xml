@@ -25,7 +25,9 @@
       <message name="GYRO_RATES"     period="1.1"/>
       <message name="SURVEY"         period="2.1"/>
       <message name="GPS_SOL"        period="2.0"/>
-      <message name="MANTA_TESTING"      period="1"/>
+      <message name="MANTA_TESTING"  period="1.0"/>
+      <message name="MS5701_TESTING" period="1.0"/>
+      <message name="MS5803_TESTING" period="1.0"/>
     </mode>
     <mode name="minimal">
       <message name="ALIVE"          period="5"/>
