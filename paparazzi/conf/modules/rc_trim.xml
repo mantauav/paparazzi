@@ -1,0 +1,10 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="rc_trim" dir="rc_trim">
+  <header>
+    <file name="rc_trim.h"/>	
+  </header>
+  <makefile>
+    <file name="rc_trim.c"/>
+  </makefile>
+</module>

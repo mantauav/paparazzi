@@ -1,0 +1,30 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<!--
+     Gyro rate damping in manual mode
+     @configure ADC_AIRSPEED on which ADC the sensor is connected
+     @define RC_GYRO_ROLL_GAIN
+     @define RC_GYRO_PITCH_GAIN
+     @define RC_GYRO_YAW_GAIN
+     @define 
+     -->
+
+<module name="rc_gyro" dir="sensors">
+
+  <header>
+    <file name="rc_gyro.h"/>
+  </header>
+
+  <init fun="rc_gyro_init()"/>
+
+
+  <makefile target="ap">
+    <file name="rc_gyro.c"/>
+    <define name="USE_RC_GYRO"/>
+  </makefile>
+  <makefile target="sim">
+    <file name="rc_gyro.c"/>
+  </makefile>
+
+</module>
+

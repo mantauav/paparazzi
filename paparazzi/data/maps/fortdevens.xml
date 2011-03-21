@@ -1,0 +1,4 @@
+<map file="fortdevens.png" projection="Mercator">
+  <point x="0" y="0" geo="WGS84 42.496146	-71.685671"/>
+  <point x="2338" y="795" geo="WGS84 42.489852	-71.660585"/>
+</map>
