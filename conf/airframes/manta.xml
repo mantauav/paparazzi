@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE airframe SYSTEM "airframe.dtd">
 
 <!-- Skate
@@ -125,9 +127,9 @@
 
  
     <define name="PITCH_MAX_SETPOINT" value="0.523" /> <!--  0.523  ~ 30 deg  -->
-    <define name="PITCH_MIN_SETPOINT" value="0.03488888888"/> <!-- -0.087 ~ -5 deg   -->
-    <define name="PITCH_NEUTRAL"             value="0.2"/>
-    <define name="PITCH_PGAIN" value="-12000."/>
+    <define name="PITCH_MIN_SETPOINT" value="0.1046667"/> <!-- -0.087 ~ -5 deg   -->
+    <define name="PITCH_NEUTRAL"             value="0.26"/>
+    <define name="PITCH_PGAIN" value="-15500."/>
     <define name="PITCH_DGAIN" value="1.5"/>
 
     <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
@@ -180,14 +182,7 @@
     <configure name="ADC_CHANNEL_GENERIC3" value="ADC_3"/>
   </load>
 
-  <load name="airspeed_adc.xml">
-      <configure name="ADC_AIRSPEED"     value="ADC_6"/> 
-      <define name="AIRSPEED_SCALE"      value="1.075"/>      <!-- Correction from wind tunnel testing             -->
-      <define name="AIRSPEED_BIAS"       value="10.0/1.075"/> <!-- Correction from wind tunnel testing             -->
-      <define name="AIRSPEED_ADC_OFFSET" value="-13"/>        <!-- From previous code. Not sure why this is needed -->
-      <define name="AIRSPEED_ADC_SCALE"  value="0.0091575"/>  <!-- Convert ADC value to millibars                  -->
-      <define name="AIRSPEED_ADC_DELTAPRESSURE"/>             <!-- use the dp2cas function to calculate airspeed   -->
-  </load>
+  <load name="airspeed_MS5701.xml"/>
   <load name="baro_MS5803.xml"/>
   <load name="rc_gyro.xml">
     <define name="RC_GYRO_ROLL_GAIN"  value="-1100"/>
@@ -227,7 +222,7 @@
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
       <define name="ESTIMATOR_HEADING_SOURCE"   value="1"/>
-      <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_AUTO"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
+      <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_FAILSAFE"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
 <!--    <define name="USE_AIRSPEED"/> -->
 
 <!------------------SUBSYSTEMS--------------->

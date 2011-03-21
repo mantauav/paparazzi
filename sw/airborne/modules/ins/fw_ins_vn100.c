@@ -66,18 +66,18 @@ static inline bool_t ins_configure( void ) {
       ins_init_status++;
       break;
     case INS_VN100_SET_MAG_REF :
-      last_send_packet.RegID = VN100_REG_REF;
-      last_send_packet.Data[0].Float=1.92487;   //Devens
-      last_send_packet.Data[1].Float=-0.51819;  //Devens
-      last_send_packet.Data[2].Float=4.88002;   //Devens
+//      last_send_packet.RegID = VN100_REG_REF;
+//      last_send_packet.Data[0].Float=1.92487;   //Devens
+//      last_send_packet.Data[1].Float=-0.51819;  //Devens
+//      last_send_packet.Data[2].Float=4.88002;   //Devens
 //      last_send_packet.Data[0].Float=2.47652;     //Florida
 //      last_send_packet.Data[1].Float=-0.2390;    //Florida
  //     last_send_packet.Data[2].Float=3.86421;     //Florida
 
-      last_send_packet.Data[3].Float=0;
-      last_send_packet.Data[4].Float=0;
-      last_send_packet.Data[5].Float=-9.793746;
-      spi_buffer_length = 4+VN100_REG_REF_SIZE;
+//      last_send_packet.Data[3].Float=0;
+//      last_send_packet.Data[4].Float=0;
+//      last_send_packet.Data[5].Float=-9.793746;
+//      spi_buffer_length = 4+VN100_REG_REF_SIZE;
       ins_init_status++;
       break;
 
@@ -114,6 +114,19 @@ void ins_periodic_task( void ) {
     last_send_packet.Data[0].byte[0]=3;
     ins_tare = 0;
   }
+  else
+  if (ins_save)
+  {
+    last_send_packet.CmdID = VN100_CmdID_WriteSettings;
+    last_send_packet.RegID = 0x00;
+    spi_buffer_length = 4+4;
+    last_send_packet.Data[0].byte[0]=0;
+    last_send_packet.Data[0].byte[0]=0;
+    last_send_packet.Data[0].byte[0]=0;
+    last_send_packet.Data[0].byte[0]=0;
+    ins_save = 0;
+  }
+
   else
   {
   last_send_packet.CmdID = VN100_CmdID_ReadRegister;

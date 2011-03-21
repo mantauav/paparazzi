@@ -42,7 +42,7 @@ extern float ins_roll_neutral; //for testing, may be the wrong spot to put this
 extern float ins_pitch_neutral; //for testing, may be the wrong spot to put this
 
 extern bool_t ins_tare;
-
+extern bool_t ins_save;
 /* state */
 extern struct FloatEulers ins_eulers;
 extern struct FloatQuat ins_quat;
