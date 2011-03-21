@@ -1,0 +1,73 @@
+<control_panel name="paparazzi control panel">
+  <section name="variables">
+    <variable name="downlink_serial_port" value="/dev/ttyUSB0"/>
+    <variable name="fbw_serial_port" value="/dev/ttyS1"/>
+    <variable name="ap_serial_port" value="/dev/ttyS0"/>
+    <variable name="ivy_bus" value="127:2010"/>
+    <variable name="map" value="muret_UTM.xml"/>
+    <variable name="flight_plan" value="flight_plans/muret1.xml"/>
+  </section>
+  <section name="programs">
+    <program name="Server" command="sw/ground_segment/tmtc/server">
+      <arg flag="-b" variable="ivy_bus"/>
+    </program>
+    <program name="Data Link" command="sw/ground_segment/tmtc/link">
+      <arg flag="-b" variable="ivy_bus"/>
+    </program>
+    <program name="GCS" command="sw/ground_segment/cockpit/gcs">
+      <arg flag="-b" variable="ivy_bus"/>
+      <arg flag="-speech"/>
+    </program>
+    <program name="Flight Plan Editor" command="sw/ground_segment/cockpit/gcs -edit"/>
+    <program name="Messages" command="sw/ground_segment/tmtc/messages">
+      <arg flag="-b" variable="ivy_bus"/>
+    </program>
+    <program name="Messages (Python)" command="sw/ground_segment/python/messages_app/messagesapp.py"/>
+    <program name="Settings" command="sw/ground_segment/tmtc/settings">
+      <arg flag="-b" variable="ivy_bus"/>
+    </program>
+    <program name="Settings (Python)" command="sw/ground_segment/python/settings_app/settingsapp.py"/>
+    <program name="GPSd position display" command="sw/ground_segment/tmtc/gpsd2ivy"/>
+    <program name="Log Plotter" command="sw/logalizer/plot"/>
+    <program name="Real-time Plotter" command="sw/logalizer/plotter"/>
+    <program name="Log File Player" command="sw/logalizer/play">
+      <arg flag="-b" variable="ivy_bus"/>
+    </program>
+    <program name="Simulator" command="sw/simulator/launchsitl">
+      <arg flag="-b" variable="ivy_bus"/>
+    </program>
+    <program name="Hardware in the Loop" command="sw/simulator/simhitl">
+      <arg flag="-fbw" variable="fbw_serial_port"/>
+      <arg flag="-ap" variable="ap_serial_port"/>
+    </program>
+    <program name="Environment Simulator" command="sw/simulator/gaia">
+      <arg flag="-b" variable="ivy_bus"/>
+    </program>
+    <program name="Http Server" command="sw/ground_segment/tmtc/boa"/>
+    <program name="Joystick Server" command="sw/ground_segment/joystick/input2ivy"/>
+    <program name="On Screen Display" command="sw/ground_segment/bob4_osd/au_osd"/>
+  </section>
+  <section name="sessions">
+    <session name="Flight - Skate @ 57600">
+      <program name="Data Link">
+        <arg flag="-d" constant="/dev/ttyUSB0"/>
+        <arg flag="-s" constant="57600"/>
+      </program>
+      <program name="Server"/>
+      <program name="GCS">
+        <arg flag="-speech"/>
+      </program>
+      <program name="Joystick Server">
+        <arg flag="-ac" constant="SKATE"/>
+        <arg flag="-d" constant="/dev/input/au_js0"/>
+        <arg flag="-id" constant="1"/>
+        <arg flag="aurora_skate_controller.xml"/>
+      </program>
+      <program name="On Screen Display">
+        <arg flag="-p" constant="/dev/ttyUSB1"/>
+        <arg flag="-g"/>
+      </program>
+      <program name="Messages"/>
+    </session>
+  </section>
+</control_panel>
