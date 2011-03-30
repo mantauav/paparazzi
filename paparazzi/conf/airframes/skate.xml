@@ -123,7 +123,7 @@
 
  
     <define name="PITCH_MAX_SETPOINT" value="0.523" /> <!--  0.523  ~ 30 deg  -->
-    <define name="PITCH_MIN_SETPOINT" value="0.1046667"/> <!-- -0.087 ~ -5 deg   -->
+    <define name="PITCH_MIN_SETPOINT" value="0.1046667"/> <!-- 0.1046667 ~ 6 deg   -->
     <define name="PITCH_NEUTRAL"             value="0.26"/>
     <define name="PITCH_PGAIN" value="-15500."/>
     <define name="PITCH_DGAIN" value="1.5"/>

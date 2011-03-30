@@ -69,5 +69,13 @@
       </program>
       <program name="Messages"/>
     </session>
+    <session name="Joystick Buddy">
+      <program name="Joystick Server">
+        <arg flag="-ac" constant="SKATE"/>
+        <arg flag="-d" constant="/dev/input/js1"/>
+        <arg flag="-id" constant="3"/>
+        <arg flag="logitech_f710.xml"/>
+      </program>
+    </session>
   </section>
 </control_panel>
