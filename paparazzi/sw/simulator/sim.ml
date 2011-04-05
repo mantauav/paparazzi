@@ -61,7 +61,7 @@ module type AIRCRAFT =
     val commands : pprz_t array -> unit
 	(** Called once at init *)
 
-    val infrared : float -> float -> float -> float -> unit
+    val infrared_and_airspeed : float -> float -> float -> float -> unit
 	(** [infrared ir_left ir_front ir_top air_speed] Called on timer *)
 
     val gps : Gps.state -> unit
@@ -77,7 +77,7 @@ external fg_msg : string -> float -> float -> float -> float -> float -> float -
 
 let ac_name = ref "A/C not set"
 
-let ivy_bus = ref "127.255.255.255:2010"
+let ivy_bus = ref Defivybus.default_ivy_bus 
 
 let fg_client = ref ""
 
@@ -86,7 +86,7 @@ let autolaunch = ref false
 let noground = ref false
 
 let common_options = [
-  "-b", Arg.Set_string ivy_bus, "Bus\tDefault is 127.255.255.25:2010";
+  "-b", Arg.Set_string ivy_bus, (sprintf "<ivy bus> Default is %s" !ivy_bus);
   "-boot", Arg.Set autoboot, "Boot the A/C on start";
   "-launch", Arg.Set autolaunch, "Launch the A/C on start";
   "-noground", Arg.Set noground, "Disable ground detection";
@@ -207,7 +207,7 @@ module Make(AircraftItl : AIRCRAFT_ITL) = struct
       let ir_left = sin phi_sensor *. !infrared_contrast
       and ir_front = sin theta_sensor *. !infrared_contrast
       and ir_top = cos phi_sensor *. cos theta_sensor *. !infrared_contrast in
-      Aircraft.infrared ir_left ir_front ir_top (FlightModel.get_air_speed !state)
+      Aircraft.infrared_and_airspeed ir_left ir_front ir_top (FlightModel.get_air_speed !state)
 
     and gps_task = fun () ->
       let (x,y,z) = FlightModel.get_xyz !state in
