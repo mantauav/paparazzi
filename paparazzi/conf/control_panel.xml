@@ -96,5 +96,27 @@
       </program>
       <program name="Messages"/>
     </session>
+    <session name="Simulation - FG">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="Microjet"/>
+        <arg flag="-boot"/>
+        <arg flag="-fg" constant="127.0.0.1"/>
+      </program>
+    </session>
+    <session name="Simulation- Skate / FG">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="SKATE"/>
+        <arg flag="-boot"/>
+        <arg flag="-fg" constant="127.0.0.1"/>
+      </program>
+    </session>
   </section>
 </control_panel>

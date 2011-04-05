@@ -28,6 +28,15 @@ uint8_t rc_dl_active_joystick=0;
 int8_t rc_dl_values[ RC_DL_NB_CHANNEL ];
 volatile bool_t rc_dl_frame_available;
 
+#ifdef SITL
+value send_ppm(value unit) {
+  return unit;
+}
+update_rc_channel(value c __attribute__ ((unused)), value v __attribute__ ((unused))) {
+  return Val_unit;
+}
+
+#endif
 
 void radio_control_impl_init(void) {
   rc_dl_frame_available = FALSE;

@@ -35,7 +35,15 @@
       <set value="0" var="kill_throttle"/>
       <attitude roll="0" throttle="0" vmode="throttle"/>
     </block>
-    <block group="home" key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png">
+    <block group="home" key="t" name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
+      <exception cond="estimator_z > ground_alt+20" deroute="Standby"/>
+      <set value="0" var="kill_throttle"/>
+      <set value="0" var="estimator_flight_time"/>
+<!--      <go from="HOME" pitch="15" throttle="1.0" vmode="throttle" wp="CLIMB"/> -->
+      <attitude roll="0.0" pitch="45.0" throttle="0.50" vmode="throttle"/>
+    </block>
+
+    <block group="home" name="Takeoff_Old" strip_button="TakeoffOLD" strip_icon="takeoff.png">
       <exception cond="estimator_z > ground_alt+10" deroute="Standby"/>
       <set value="0" var="kill_throttle"/>
       <set value="0" var="estimator_flight_time"/>

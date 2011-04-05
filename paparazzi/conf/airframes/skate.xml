@@ -102,8 +102,8 @@
 
     <!-- auto throttle inner loop -->
     <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.35"/>
-    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.0"/>
-    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.95"/>
+    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.15"/>
+    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.50"/>
 <!--    <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/> -->
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
@@ -225,8 +225,8 @@
     <subsystem name="control"                      />
 <!--    <subsystem name="usb_debug"                   /> -->
     <subsystem name="spi"/> 
-    <subsystem name="radio_control" type="datalink"/>
-    <define name="RADIO_CONTROL_NO_MODESET"/> 
+    <subsystem name="radio_control" type="ppm"/>
+<!--    <define name="RADIO_CONTROL_NO_MODESET"/>   -->
 <!--    <subsystem name="attitude" 		type="infrared"/> -->
     <!-- Communication -->
     <subsystem name="telemetry" 	type="transparent">
