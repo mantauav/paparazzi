@@ -167,15 +167,7 @@
     <configure name="ADC_CHANNEL_GENERIC2" value="ADC_4"/>
     <configure name="ADC_CHANNEL_GENERIC3" value="ADC_3"/>
   </load>
-
-  <load name="airspeed_adc.xml">
-      <configure name="ADC_AIRSPEED"     value="ADC_6"/> 
-      <define name="AIRSPEED_SCALE"      value="1.075"/>      <!-- Correction from wind tunnel testing             -->
-      <define name="AIRSPEED_BIAS"       value="10.0/1.075"/> <!-- Correction from wind tunnel testing             -->
-      <define name="AIRSPEED_ADC_OFFSET" value="-13"/>        <!-- From previous code. Not sure why this is needed -->
-      <define name="AIRSPEED_ADC_SCALE"  value="0.0091575"/>  <!-- Convert ADC value to millibars                  -->
-      <define name="AIRSPEED_ADC_DELTAPRESSURE"/>             <!-- use the dp2cas function to calculate airspeed   -->
-  </load>
+  <load name="airspeed_MS5701.xml"/>
   <load name="baro_MS5803.xml"/>
 <!--  <load name="rc_gyro.xml"> -->
 <!--    <define name="RC_GYRO_ROLL_GAIN"  value="-1100"/> -->
