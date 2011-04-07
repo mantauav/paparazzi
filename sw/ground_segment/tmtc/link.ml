@@ -67,6 +67,9 @@ let gen_stat_trafic = ref false
 
 let add_timestamp = ref None
 
+(* Exit on Hangups? *)
+let continue_on_hangup = ref false
+
 let send_message_over_ivy = fun sender name vs ->
   let timestamp =
     match !add_timestamp with
@@ -378,8 +381,13 @@ let parser_of_device = fun device ->
 
 
 let hangup = fun _ ->
-  prerr_endline "Modem hangup. Exiting";
-  exit 1
+  match !continue_on_hangup with
+    false ->
+      prerr_endline "Modem hangup. Exiting";
+      exit 1
+  | true ->
+      printf "Modem hangup. Continuing\n";
+      true
 
 (*************** Sending messages over link ***********************************)
 
@@ -453,6 +461,7 @@ let () =
       "-xbee_addr", Arg.Set_int XB.my_addr, (sprintf "<my_addr> (%d)" !XB.my_addr);
       "-xbee_retries", Arg.Set_int XB.my_addr, (sprintf "<nb retries> (%d)" !XB.nb_retries);
       "-xbee_868", Arg.Set Xbee.mode868, (sprintf "Enables the 868 protocol");
+      "-hangup_continue", Arg.Set continue_on_hangup, (sprintf "Continues after a modem hangup");
     ] in
   Arg.parse options (fun _x -> ()) "Usage: ";
 

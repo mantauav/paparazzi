@@ -37,6 +37,8 @@
  * 
  *   datasheet for sensor is here:  
  *    MS5701  http://www.intersema.ch/index.php?option=com_rubberdoc&view=doc&id=86&format=raw
+ *
+ * By default, chip is hooked with select to pin P1.21
  */
 
 
@@ -62,6 +64,9 @@
 //--------------------------------------------------
 // defines
 
+//define this if you want datasheet example values instead of real ones
+//#define MS5701_EXAMPLE_VALUES
+
 //calibration values
 #define CAL_SENS_T1 1
 #define CAL_OFF_T1 2
@@ -76,9 +81,6 @@
 #define VAL_TCO ms5701_cal_table[CAL_TCO]
 #define VAL_T_REF ms5701_cal_table[CAL_T_REF]
 #define VAL_TEMPSENS ms5701_cal_table[CAL_TEMPSENS]
-
-// Cal PROM has 8 values even though only 6 are used
-#define CAL_NUM_VALUES 8
 
 //commands
 #define COM_RESET 0x1E
@@ -101,13 +103,29 @@
 #define DELAY_OSR2048 4540
 #define DELAY_OSR4096 9004
 
+#define DELAY_MARGIN 1000
+
 #define DELAY_RESET 3000
+
+//Constants for floating point math
+#define TWO_TOTHE6 64
+#define TWO_TOTHE7 128
+#define TWO_TOTHE8 256
+#define TWO_TOTHE9 512
+#define TWO_TOTHE15 32768
+#define TWO_TOTHE16 65536
+#define TWO_TOTHE17 131072
+#define TWO_TOTHE21 2097152
+#define TWO_TOTHE23 8388608
 
 //These set the default oversampling used for conversions
 //  They are overridden in the module settings
+#ifndef OSR_CONVERSION
 #define OSR_CONVERSION OSR4096
+#endif
+#ifndef OSR_DELAY
 #define OSR_DELAY DELAY_OSR4096
-
+#endif
 
 #define SPI_BUSY (SSPSR & 0x0000010)
 
@@ -126,41 +144,45 @@
 #define SSP_MS   0x00 << 2  	/* master slave mode : master                    */
 #define SSP_SOD  0x00 << 3  	/* slave output disable : don't care when master */
 
-#define SS_PIN   7		//20 // 20 is SSEL on the SPI bus   7 is the external button on the USB bus.  this is GPIO Port 0
-#define SS_IODIR IO0DIR
-#define SS_IOSET IO0SET
-#define SS_IOCLR IO0CLR 	// -->  defined in ./arm7/include/LPC21xx.h
-
-
-//--------------------------------------------------
-// types
-typedef enum { uninit, reset, calibration, running } ms5701_sensor_state;
-
+#define AIRSPEED_SS_PIN   21		//20 // 20 is SSEL on the SPI bus   7 is the external button on the USB bus.  this is GPIO Port 0
+#define AIRSPEED_SS_IODIR IO1DIR
+#define AIRSPEED_SS_IOSET IO1SET
+#define AIRSPEED_SS_IOCLR IO1CLR 	// -->  defined in ./arm7/include/LPC21xx.h
 
 //--------------------------------------------------
 // globals
-ms5701_sensor_state ms5701_state = uninit;
-uint16_t ms5701_cal_table[CAL_NUM_VALUES];   //calibration constant table, read at startup
+sensor_state_t ms5701_state = uninit;
+uint16_t ms5701_cal_table[MS5701_CAL_NUM_VALUES];   //calibration constant table, read at startup
 int32_t ms5701_dT;
 float airspeed_MS5701_last_airspeed;
+int32_t airspeed_periodic_state;
+
+float MS5701_last_temperature;
+float MS5701_last_pressure;
+
+// sets reference pressure for 0 airspeed
+float airspeed_MS5701_zero_reference_pressure;
+int airspeed_MS5701_zero_reference_calibrate_start = 0;
+
+float airspeed_MS5701_reference_pressure = 1013.25;
+
 //--------------------------------------------------
 // code
 
 //-------------------------
 // select/deselect functions
 inline void ms5701_select(void) {
-  SetBit(SS_IOCLR,SS_PIN);
+  SetBit(AIRSPEED_SS_IOCLR,AIRSPEED_SS_PIN);
 }
 inline void ms5701_unselect() {
-  SetBit(SS_IOSET,SS_PIN);
+  SetBit(AIRSPEED_SS_IOSET,AIRSPEED_SS_PIN);
 }
+
 
 
 //-------------------------
 //initializes the MS5701 barometric pressure sensor
 void airspeed_MS5701_init (void) {
-  int i;
-  unsigned char temp[2];
 
   //setup SPI
  /* setup pins for SSP (SCK, MISO, MOSI) */
@@ -172,22 +194,25 @@ void airspeed_MS5701_init (void) {
 //  SSPCPSR = 0x20;
 
   /* configure SS pin */
-  SetBit(SS_IODIR, SS_PIN); /* SS pin is output  */
+  SetBit(AIRSPEED_SS_IODIR, AIRSPEED_SS_PIN); /* SS pin is output  */
   ms5701_unselect();
   //done with SPI setup
 
   ms5701_state = reset;
+  airspeed_periodic_state = 0;
   airspeed_MS5701_last_airspeed=-9999;
 }
 
 void airspeed_dump_debugging(void) {
+
+  #ifdef MS5701_DEBUG
+
   int i;
   int32_t temp;
   int32_t pressure;
 
-  #ifdef MS5701_DEBUG
   USB_DEBUG_OUT("%s","MS5701 cal:");
-  for(i=1;i<CAL_NUM_VALUES;i++) {
+  for(i=1;i<MS5701_CAL_NUM_VALUES;i++) {
     USB_DEBUG_OUT(" %d",ms5701_cal_table[i]);
   }
   USB_DEBUG_OUT("%s","\n\r");
@@ -222,7 +247,7 @@ int check_airspeed_state(void) {
 
   //read calibration table in
   // do not read 0, is a manufacturer reserved value
-    for(i=1;i<CAL_NUM_VALUES;i++) {
+    for(i=0;i<MS5701_CAL_NUM_VALUES;i++) {
 
     sys_time_usleep(100);
     ms5701_select();
@@ -240,7 +265,18 @@ int check_airspeed_state(void) {
     ms5701_unselect();
 
     } 
-  
+ 
+#ifdef MS5701_EXAMPLE_VALUES
+    ms5701_cal_table[0]=9999;
+    ms5701_cal_table[1]=30343;
+    ms5701_cal_table[2]=32322;
+    ms5701_cal_table[3]=40838;
+    ms5701_cal_table[4]=39805;
+    ms5701_cal_table[5]=34295;
+    ms5701_cal_table[6]=29546;
+    ms5701_cal_table[7]=9999;
+#endif
+
     ms5701_state = running;
     return FALSE;
 
@@ -307,7 +343,7 @@ void airspeed_reset () {
   airspeed_write_byte( COM_RESET );
 
   // WAIT A WHILE
-  sys_time_usleep ( DELAY_RESET +250 );
+  sys_time_usleep ( DELAY_RESET + DELAY_MARGIN );
 
   ms5701_unselect();
 
@@ -327,12 +363,13 @@ void airspeed_startPressure (void) {
 }
 
 // read back the pressure result
-int32_t airspeed_readPressure (void) {
+//
+//    returns actual millebars
+float airspeed_readPressure (void) {
   int i;
   unsigned char temp[3];
   int32_t D1;
-  double OFF,OFF_int1,OFF_int2,SENS,SENS_int1,SENS_int2,PRESSURE;
-  int32_t OFF_int,SENS_int;
+  double OFF,SENS,PRESSURE;
 
   //now read back the 24bit result
   ms5701_select();
@@ -341,6 +378,12 @@ int32_t airspeed_readPressure (void) {
     temp[i] = airspeed_read_byte();
   }
   ms5701_unselect();
+
+ #ifdef MS5701_EXAMPLE_VALUES
+  temp[0] = 0x8A;
+  temp[1] = 0x4F;
+  temp[2] = 0xFA;
+ #endif
 
   //store value and return
   D1 = (temp[0] << 16) + (temp[1] << 8) + temp[2];
@@ -353,28 +396,27 @@ int32_t airspeed_readPressure (void) {
   //VAL_SENS_T1 = 40127; 
   //VAL_TCS = 23317; 
 
-  OFF_int1 = ((double)VAL_OFF_T1 * 0x10000);
-  OFF_int2 = ((double)VAL_TCO * (double)ms5701_dT) / 0x80;
-  OFF = OFF_int1 + OFF_int2;
+  // coefficients from the datasheet
+  OFF = ((double)VAL_OFF_T1 * (double)TWO_TOTHE17) + (((double)VAL_TCO * (double)ms5701_dT) / (double)TWO_TOTHE7);
+  SENS = ((double)VAL_SENS_T1 * (double)TWO_TOTHE15) + (((double)VAL_TCS * (double)ms5701_dT) / TWO_TOTHE9);
 
-  SENS_int1 = ((double)VAL_SENS_T1 * 0x8000);
-  SENS_int2 = ((double)VAL_TCS * (double)ms5701_dT) / 0x100;
-  SENS = SENS_int1 + SENS_int2;
+/*   // coefficients from the example code */
+/*   OFF = ((double)VAL_OFF_T1 * (double)TWO_TOTHE17) + (((double)VAL_TCO * (double)ms5701_dT) / (double)TWO_TOTHE6); */
+/*   SENS = ((double)VAL_SENS_T1 * (double)TWO_TOTHE16) + (((double)VAL_TCS * (double)ms5701_dT) / TWO_TOTHE7); */
 
-  PRESSURE = ( (D1 * SENS / 0x200000) - OFF) / 0x8000;
+  PRESSURE = ( (D1 * SENS / (double)TWO_TOTHE21) - OFF) / (double)TWO_TOTHE15;
 
-  return PRESSURE;
+  return (PRESSURE/1000);
 }
 
 
 //-------------------------
-// function returns pressure in hundredth's of mbar
-// ie  100023 = 1000.23 mbar
-int32_t airspeed_getPressure (void) {
+// function returns pressure in mbar
+float airspeed_getPressure (void) {
 
   airspeed_startPressure();
 
-  sys_time_usleep( OSR_DELAY+250 );
+  sys_time_usleep( OSR_DELAY+DELAY_MARGIN );
 
   return airspeed_readPressure();
 }
@@ -394,10 +436,10 @@ void airspeed_startTemperature (void) {
 }
 
 //read back the temperature conversion result
-int32_t airspeed_readTemperature (void) {
+float airspeed_readTemperature (void) {
   unsigned char temp[3];
   int32_t D2,dT;
-  long long int TEMP;
+  float TEMP;
   int i;
 
   //now read back the 24bit result
@@ -408,11 +450,17 @@ int32_t airspeed_readTemperature (void) {
   }
   ms5701_unselect();
 
+ #ifdef MS5701_EXAMPLE_VALUES
+  temp[0] = 0x8F;
+  temp[1] = 0x53;
+  temp[2] = 0xE6;
+ #endif
+
   //store value and return
   D2 = (temp[0] << 16) + (temp[1] << 8) + temp[2];
 
   dT = D2 - (VAL_T_REF << 8);
-  TEMP = 2000 + ((dT * VAL_TEMPSENS) >> 23);
+  TEMP = 2000 + (((float)dT * (float)VAL_TEMPSENS) / TWO_TOTHE23);
 
   ms5701_dT = dT; //store for pressure calculation later
 
@@ -425,13 +473,13 @@ int32_t airspeed_readTemperature (void) {
 //  returns temperature in centidegrees C
 //  ie 2007 = 20.07 degrees C
 //  this function blocks until read is complete
-int32_t airspeed_getTemperature (void) {
+float airspeed_getTemperature (void) {
 
   airspeed_startTemperature();
 
-  sys_time_usleep(OSR_DELAY+260);
+  sys_time_usleep(OSR_DELAY+DELAY_MARGIN);
 
-  return airspeed_readTemperature();
+  return airspeed_readTemperature()/100;
 }
 
 
@@ -448,7 +496,7 @@ float dp2cas(float dp, float Pref)
 // function returns airspeed in meters/second
 //   returns negative in the case of invalid reading or sensor not ready
 float airspeed_getAirspeed (void) {
-  uint32_t pressure;
+  float pressure;
   float airspeed;
 
   // the check_airspeed_state handles initialization and 
@@ -462,14 +510,25 @@ float airspeed_getAirspeed (void) {
     #endif
 
     // get temperature (stores temp compensation factor internally)
-    airspeed_getTemperature();
+    MS5701_last_temperature = airspeed_getTemperature();
   
     // fetch pressure - units are .01mbar
     pressure = airspeed_getPressure();
+    MS5701_last_pressure = pressure;
+
+    // calibrate if it is time
+    if ( airspeed_MS5701_zero_reference_calibrate_start == 1) {
+      airspeed_MS5701_zero_reference_calibrate_start = 0;
+      airspeed_MS5701_zero_reference_pressure = pressure;
+    }
+
+    pressure = fabs(pressure - airspeed_MS5701_zero_reference_pressure);
 
     //calculate airspeed using same calc as airspeed_adc.c
     //  probably about as accurate as you can get without temp compensation
-    airspeed = dp2cas( (float)pressure/100, 1013.25 );
+    airspeed = dp2cas( (float)pressure, airspeed_MS5701_reference_pressure );
+
+    airspeed_MS5701_last_airspeed = airspeed;
 
     #ifdef MS5701_DEBUG
     USB_DEBUG_OUT("spd: %f %d\r\n",airspeed,pressure);
@@ -483,6 +542,12 @@ float airspeed_getAirspeed (void) {
 
 }
 
+//----------------------------------------
+// function updates the current airspeed
+void airspeed_MS5701_update (void) {
+  EstimatorSetAirspeed( airspeed_getAirspeed() );
+}
+
 
 //------------------------------
 // periodic function for airspeed module
@@ -490,7 +555,7 @@ float airspeed_getAirspeed (void) {
 void airspeed_MS5701_periodic (void) {
   static int airspeed_getAltitude_periodic = 0;
 
-  uint32_t pressure;
+  float pressure;
   float airspeed;
 #ifndef SITL
   // the check_airspeed_state handles initialization and 
@@ -499,7 +564,7 @@ void airspeed_MS5701_periodic (void) {
   //    calls 
   if (check_airspeed_state() == TRUE) {
 
-    switch airspeed_periodic_state {
+    switch (airspeed_periodic_state) {
       case 0: //start temperature conversion
 	airspeed_startTemperature();
 	break;
@@ -511,7 +576,7 @@ void airspeed_MS5701_periodic (void) {
 	break;
       case 3: //read pressure, do calcs and set airspeed
 	pressure = airspeed_readPressure();
-	airspeed = dp2cas( (float)pressure/100, 1013.25 );
+	airspeed = dp2cas( (float)pressure, airspeed_MS5701_reference_pressure );
 	EstimatorSetAirspeed(airspeed);
 
         #ifdef MS5701_DEBUG
@@ -534,3 +599,15 @@ void airspeed_MS5701_periodic (void) {
 
 
 
+//----------------------------------------------------------------------
+// sets current input pressure to be the zero airspeed reference pressure
+
+
+// sets reference pressure for 0 airspeed
+int airspeed_set_zero_reference() {
+
+  airspeed_MS5701_zero_reference_calibrate_start = 1;
+
+  return FALSE;
+
+}

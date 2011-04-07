@@ -225,4 +225,14 @@
 #define PERIODIC_SEND_MANTA_TESTING(_chan) DOWNLINK_SEND_MANTA_TESTING(_chan,&ins_eulers.phi,&ins_eulers.theta,&ins_eulers.psi,&ins_rates.p,&ins_rates.q,&ins_rates.r,&ins_accel.x,&ins_accel.y,&ins_accel.z,&ins_mag.x,&ins_mag.y,&ins_mag.z,&baro_MS5803_last_altitude,&df1.x,&h_ctl_last_course_error,&df1.z,&df2.x,&df2.y,&df2.z)
 #endif
 
+#ifdef USE_AIRSPEED_MS5701
+#define PERIODIC_SEND_MS5701_TESTING(_chan) DOWNLINK_SEND_MS5701_TESTING(_chan, &ms5701_dT, &airspeed_periodic_state, &ms5701_state, &MS5701_last_pressure, &MS5701_last_temperature, &airspeed_MS5701_last_airspeed, &airspeed_MS5701_zero_reference_pressure, MS5701_CAL_NUM_VALUES, ms5701_cal_table )
+#endif
+
+#ifdef USE_BARO_MS5803
+#define PERIODIC_SEND_MS5803_TESTING(_chan) DOWNLINK_SEND_MS5803_TESTING(_chan, &ms5803_dT, &baro_periodic_state, &ms5803_state, &MS5803_last_pressure, &MS5803_last_temperature, &baro_MS5803_last_altitude, &baro_MS5803_sealevel_reference_pressure, MS5803_CAL_NUM_VALUES, ms5803_cal_table )
+#endif
+
+
+
 #endif /* AP_DOWNLINK_H */

@@ -42,15 +42,27 @@
 #ifndef BARO_MS5803_H
 #define BARO_MS5803_H
 
-//preprocessor definitions
-
 // function prototypes
-
 #ifdef USE_BARO_MS5803
 
+//preprocessor definitions--------------------
+
+
+// Cal PROM has 8 values even though only 6 are used
+#define MS5803_CAL_NUM_VALUES 8
+
+
+// types ----------------------------------------
+
+#ifndef SENSOR_STATE_T
+#define SENSOR_STATE_T
+typedef enum { uninit, reset, calibration, running } sensor_state_t;
+#endif
+
+
 void baro_MS5803_init (void);
-int32_t baro_getPressure (void);
-int32_t baro_getTemperature (void);
+float baro_getPressure (void);
+float baro_getTemperature (void);
 float baro_getAltitude (void);
 void baro_write_byte (unsigned char byte);
 unsigned char baro_read_byte (void);
@@ -58,7 +70,23 @@ void baro_dump_debugging(void);
 void baro_reset(void);
 int check_baro_state(void);
 
+//calibration functions
+int baro_calibrateReferenceAltitude (float refAlt);
+void baro_calibrateReferencePressure (float refPressure);
+
 //external variables
 extern float baro_MS5803_last_altitude;
+
+//external variables for telemetry test message
+extern sensor_state_t ms5803_state;
+extern uint16_t ms5803_cal_table[MS5803_CAL_NUM_VALUES];   //calibration constant table, read at startup
+extern int32_t ms5803_dT;
+extern float MS5803_last_temperature;
+extern float MS5803_last_pressure;
+extern int32_t baro_periodic_state;
+
+extern float baro_MS5803_sealevel_reference_pressure;
+
 #endif //USE_BARO_MS5803
+
 #endif //BARO_MS5803_H

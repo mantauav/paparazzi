@@ -265,7 +265,7 @@ void parse_nmea_GPGSA() {
  * nmea_msg_buf.
  */
 void parse_nmea_GPRMC() {
-  uint8_t i = 7;     // current position in the message
+  uint8_t i = 7; // current position in the message
   char* endptr;  // end of parsed substrings
   
   //USB_DEBUG_OUT("isGPRMC: %s\n\r", nmea_msg_buf);
@@ -273,8 +273,14 @@ void parse_nmea_GPRMC() {
   // attempt to detect and discard empty sentences
   if (isEmptySentence(i)) return;
 
-  // get time
-  // ignored
+  // get UTC time [hhmmss.sss] and convert to ms
+  double dtime  = strtod(&nmea_msg_buf[i],&endptr)*1000;
+  uint32_t time = (uint32_t)(dtime);
+  uint32_t hh   = time/1e7;
+  uint32_t mm   = (time - (hh*1e7))/1e5;
+  uint32_t ms   = time - hh*1e7 - mm*1e5;
+  // Note: these values are used below to calculate gps_itow
+  
   if (!nextField(&i)) return;
 
   // get warning
@@ -310,6 +316,18 @@ void parse_nmea_GPRMC() {
     double course = strtod(&nmea_msg_buf[i], &endptr);
     gps_course = (int16_t)(course * 10);
   }
+
+  if (!nextField(&i)) return;
+
+  // get date
+  uint32_t ddate  = atoi(&nmea_msg_buf[i]);
+  uint32_t DD = ddate/1e4;
+  uint32_t MM = (ddate - DD*1e4)/1e2;
+  uint32_t YY = ddate - DD*1e4 - MM*1e2;
+  
+  // set gps_itow
+  gps_itow = (hh*60 + mm)*60*1e3 + ms +
+    get_weekday(DD, MM, YY)*24*60*60*1000;
 }
 
 
@@ -326,14 +344,9 @@ void parse_nmea_GPGGA() {
 
   // attempt to detect and discard empty sentences
   if (isEmptySentence(i)) return;
-  
-  // get UTC time [hhmmss.sss] and convert to ms
-  double dtime  = strtod(&nmea_msg_buf[i],&endptr)*1000;
-  uint32_t time = (uint32_t)(dtime);
-  uint32_t hh   = time/1e7;
-  uint32_t mm   = (time - (hh*1e7))/1e5;
-  uint32_t ms   = time - hh*1e7 - mm*1e5;
-  gps_itow = (hh*60 + mm)*60*1e3 + ms;
+
+  // get time
+  // ignored - done in RMC message parser
   
   if (!nextField(&i)) return;
 
@@ -396,8 +409,7 @@ void parse_nmea_GPGGA() {
   if (!nextField(&i)) return;
 
   // get horizontal dilution of position
-  //ignored
-   
+  // ignored
   if (!nextField(&i)) return;
   
   // get altitude (in cm)
@@ -521,7 +533,7 @@ void parse_nmea_GPGSV() {
  * set of helper query functions                                                
  */
 bool_t isGPRMC(){
-  return (nmea_msg_len > 5  && !strncmp(nmea_msg_buf, "$GPRMC", 6));
+  return (nmea_msg_len > 5 && !strncmp(nmea_msg_buf, "$GPRMC", 6));
 }
 bool_t isGPGGA(){
   return (nmea_msg_len > 5 && !strncmp(nmea_msg_buf, "$GPGGA", 6));
@@ -585,7 +597,7 @@ uint8_t nmea_checksum_valid(uint8_t buf[],uint8_t buf_len)
 void parse_gps_msg( void ) {
   
   nmea_msg_buf[nmea_msg_len] = 0;
-  if (nmea_checksum_valid(nmea_msg_buf,nmea_msg_len))
+  if (nmea_checksum_valid((uint8_t *)nmea_msg_buf,nmea_msg_len))
   {
     if(isGPRMC()){
       parse_nmea_GPRMC();
@@ -637,4 +649,26 @@ void parse_nmea_char( uint8_t c ) {
   if (nmea_msg_len >= NMEA_MAXLEN - 1){
     gps_msg_received = TRUE;
   }
+}
+
+/**
+ * Converts date to index of the corresponding weekday (0-6). 
+ * Sunday is 0, Monday is 1, ..., Saturday is 6.
+ */
+
+uint8_t get_weekday(uint8_t DD, uint8_t MM, uint8_t YY){
+  uint8_t CC = 20; // assume 21'st century (20xx) - GPS does not provide this info
+                   // CC will need to be updated at the boundary of the 22nd century
+
+  uint8_t months[12] = {0,3,3,6,1,4,6,2,5,0,3,5}; // month lookup table, see 
+  // http://en.wikipedia.org/wiki/Calculating_the_day_of_the_week
+
+  uint8_t c = 2 * (3 - (CC % 4));
+  uint8_t y = YY + (YY/4);
+  uint8_t m = months[MM-1];
+  
+  // correct for leap year when MM is Jan or Feb
+  if (((YY % 4) == 0) && ((MM == 1 || MM == 2))) m -= 1;
+
+  return (DD + c + y + m) % 7;
 }
