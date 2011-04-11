@@ -772,7 +772,8 @@ let get_wind_msg = fun (geomap:G.widget) _sender vs ->
 let get_fbw_msg = fun _sender vs ->
   let ac = get_ac vs in
   let status = Pprz.string_assoc "rc_status" vs
-  and rate = (Pprz.int_assoc "rc_rate" vs) / 5 in
+  and rate = (Pprz.int_assoc "rc_rate" vs) / 3 in
+  (* AD change to makedivide by 3*)
   (* divide by 5 to have normal values between 0 and 10 *)
   (* RC rate max approx. 50 Hz *)
   ac.strip#set_rc rate status
