@@ -172,6 +172,7 @@ float airspeed_MS5701_reference_pressure = 1013.25;
 //-------------------------
 // select/deselect functions
 inline void ms5701_select(void) {
+  SpiEnable();
   SetBit(AIRSPEED_SS_IOCLR,AIRSPEED_SS_PIN);
 }
 inline void ms5701_unselect() {
@@ -299,7 +300,7 @@ int check_airspeed_state(void) {
 // function to write SPI byte
 void airspeed_write_byte (unsigned char byte) {
   volatile int g;
-
+   
   // wait for SPI to be free
   while (SPI_BUSY) {g=g;}
   // write out command to read prom
@@ -370,10 +371,12 @@ float airspeed_readPressure (void) {
   unsigned char temp[3];
   int32_t D1;
   double OFF,SENS,PRESSURE;
-
+  
+  SpiEnable();
   //now read back the 24bit result
   ms5701_select();
   airspeed_write_byte( COM_ADC_READ );
+  sys_time_usleep( 10 );
   for(i=0;i<3;i++) {
     temp[i] = airspeed_read_byte();
   }
@@ -441,7 +444,7 @@ float airspeed_readTemperature (void) {
   int32_t D2,dT;
   float TEMP;
   int i;
-
+  SpiEnable();
   //now read back the 24bit result
   ms5701_select();
   airspeed_write_byte( COM_ADC_READ );
@@ -569,14 +572,21 @@ void airspeed_MS5701_periodic (void) {
 	airspeed_startTemperature();
 	break;
       case 1: //read temperature
-	airspeed_readTemperature();
+	MS5701_last_temperature = airspeed_readTemperature();
 	break;
       case 2: //start pressure conversion
 	airspeed_startPressure();
 	break;
       case 3: //read pressure, do calcs and set airspeed
-	pressure = airspeed_readPressure();
+        pressure = airspeed_readPressure();
+	MS5701_last_pressure = pressure;
+        if ( airspeed_MS5701_zero_reference_calibrate_start == 1) {
+          airspeed_MS5701_zero_reference_calibrate_start = 0;
+          airspeed_MS5701_zero_reference_pressure = pressure;
+        }
+        pressure = fabs(pressure - airspeed_MS5701_zero_reference_pressure);
 	airspeed = dp2cas( (float)pressure, airspeed_MS5701_reference_pressure );
+        airspeed_MS5701_last_airspeed = airspeed;
 	EstimatorSetAirspeed(airspeed);
 
         #ifdef MS5701_DEBUG
@@ -596,8 +606,6 @@ void airspeed_MS5701_periodic (void) {
   EstimatorSetAirspeed(sim_air_speed);
 #endif
 }
-
-
 
 //----------------------------------------------------------------------
 // sets current input pressure to be the zero airspeed reference pressure

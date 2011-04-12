@@ -4,8 +4,9 @@
   <header>
     <file name="airspeed_MS5701.h"/>
   </header>
-  <init fun="airspeed_MS5701_init()"/> 
-  <periodic fun="airspeed_MS5701_update()" freq="10"/> 
+  <init fun="airspeed_MS5701_init()"/>
+<!--  <periodic fun="airspeed_MS5701_update()" freq="10"/> -->
+	  <periodic fun="airspeed_MS5701_periodic()" freq="60"/>
   <makefile target="ap">
     <file name="airspeed_MS5701.c"/>
     <define name="OSR_CONVERSION" value="OSR1024"/>
@@ -13,7 +14,6 @@
     <define name="USE_SPI_SLAVE0"/>
     <define name="SPI_MASTER"/>
     <define name="USE_AIRSPEED_MS5701"/>
-    <define name="BARO_CALIBRATE_REFERENCE_ALTITUDE" value="baro_calibrateReferenceAltitude"/>
-  </makefile>
+    <define name="BARO_CALIBRATE_REFERENCE_ALTITUDE" value="baro_calibrateReferenceAltitude"/>   </makefile>
 </module>
 

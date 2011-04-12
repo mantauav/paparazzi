@@ -178,7 +178,7 @@
     <configure name="ADC_CHANNEL_GENERIC3" value="ADC_3"/>
   </load>
 
-  <load name="airspeed_MS5701.xml"/>
+    <load name="airspeed_MS5701.xml"/>
   <load name="baro_MS5803.xml"/>
   <load name="rc_gyro.xml">
     <define name="RC_GYRO_ROLL_GAIN"  value="-1100"/>

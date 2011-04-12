@@ -89,6 +89,9 @@ static inline bool_t ins_configure( void ) {
   spi_buffer_output = (uint8_t*)&last_send_packet;
   SpiSelectSlave0();
   SpiStart();
+  while (!SpiCheckAvailable()) {
+    SpiOverRun();
+  }
   #endif
   return FALSE;
 }
@@ -145,6 +148,9 @@ void ins_periodic_task( void ) {
 
   SpiSelectSlave0();
   SpiStart();
+  while (!SpiCheckAvailable()) {
+    SpiOverRun();
+  }
   #endif
 }
 
