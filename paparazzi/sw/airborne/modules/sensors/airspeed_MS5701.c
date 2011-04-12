@@ -51,7 +51,9 @@
    ---------------------------------------------------------------------- */
 
 #include "std.h"
+#ifndef SITL
 #include "LPC21xx.h"
+#endif
 #include "mcu_periph/spi.h"
 #include "sys_time.h"
 #include "modules/sensors/airspeed_MS5701.h"
@@ -172,11 +174,15 @@ float airspeed_MS5701_reference_pressure = 1013.25;
 //-------------------------
 // select/deselect functions
 inline void ms5701_select(void) {
+#ifndef SITL
   SpiEnable();
   SetBit(AIRSPEED_SS_IOCLR,AIRSPEED_SS_PIN);
+#endif
 }
 inline void ms5701_unselect() {
+#ifndef SITL
   SetBit(AIRSPEED_SS_IOSET,AIRSPEED_SS_PIN);
+#endif
 }
 
 
@@ -184,7 +190,7 @@ inline void ms5701_unselect() {
 //-------------------------
 //initializes the MS5701 barometric pressure sensor
 void airspeed_MS5701_init (void) {
-
+#ifndef SITL
   //setup SPI
  /* setup pins for SSP (SCK, MISO, MOSI) */
 //  PINSEL1 |= 2 << 2 | 2 << 4 | 2 << 6;
@@ -197,6 +203,7 @@ void airspeed_MS5701_init (void) {
   /* configure SS pin */
   SetBit(AIRSPEED_SS_IODIR, AIRSPEED_SS_PIN); /* SS pin is output  */
   ms5701_unselect();
+#endif
   //done with SPI setup
 
   ms5701_state = reset;
@@ -243,9 +250,9 @@ int check_airspeed_state(void) {
     return FALSE;
 
   } else if (ms5701_state == calibration) {
-    
+#ifndef SITL    
     SpiEnable();
-
+#endif
   //read calibration table in
   // do not read 0, is a manufacturer reserved value
     for(i=0;i<MS5701_CAL_NUM_VALUES;i++) {
@@ -299,19 +306,21 @@ int check_airspeed_state(void) {
 //--------------------------------------------------
 // function to write SPI byte
 void airspeed_write_byte (unsigned char byte) {
+#ifndef SITL
   volatile int g;
-   
   // wait for SPI to be free
   while (SPI_BUSY) {g=g;}
   // write out command to read prom
   SSPDR= byte;
   while (SPI_BUSY) {g=g;}
   g = SSPDR;
+#endif
 }
 
 //--------------------------------------------------
 // function to write SPI byte
 unsigned char airspeed_read_byte (void) {
+#ifndef SITL
   volatile int g;
 
   // wait for SPI to be free
@@ -320,6 +329,9 @@ unsigned char airspeed_read_byte (void) {
   SSPDR= 0;
   while (SPI_BUSY) {g=g;}
   return SSPDR;
+#else
+  return 0;
+#endif
 }
 
 
@@ -336,7 +348,7 @@ typedef union {
 
 //reset the ms5701
 void airspeed_reset () {
-
+#ifndef SITL
   SpiEnable();
 
   ms5701_select();
@@ -347,7 +359,7 @@ void airspeed_reset () {
   sys_time_usleep ( DELAY_RESET + DELAY_MARGIN );
 
   ms5701_unselect();
-
+#endif
 }
 
 // start the pressure conversion process

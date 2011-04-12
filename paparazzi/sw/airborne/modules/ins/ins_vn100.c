@@ -44,7 +44,7 @@
 #ifdef SITL
 float baro_MS5803_last_altitude=0.0;
 #include <inttypes.h>
-#include "subsystems/sensors/infrared.h"
+//#include "subsystems/sensors/infrared.h"
 #include "generated/airframe.h"
 
 #include <caml/mlvalues.h>
@@ -65,8 +65,8 @@ value set_ir_and_airspeed(value roll __attribute__ ((unused)),
   infrared.roll = Int_val(roll);
   infrared.pitch = Int_val(front);
   infrared.top = Int_val(top);
-#endif
-  sim_air_speed = Double_val(air_speed);*/
+#endif*/
+  sim_air_speed = Double_val(air_speed);
 
   estimator_phi = atan2(Int_val(roll), Int_val(top)) - ins_roll_neutral;
   estimator_theta = atan2(Int_val(front), Int_val(top)) - ins_pitch_neutral;

@@ -1920,6 +1920,16 @@
    <field name="mod"   type="float"/>
  </message>
 
+  <message name="RC_4CH" id="233" link="forwarded">
+    <field name="ac_id"       type="uint8"/>
+    <field name="joystick_id" type="uint8"/>
+    <field name="throttle"    type="uint8"/>
+    <field name="roll"        type="int8"/>
+    <field name="yaw"         type="int8"/>
+    <field name="pitch"       type="int8"/>
+  </message>
+
+
  <message name="BLOCK" id="5" link="forwarded">
   <field name="block_id" type="uint8"/>
   <field name="ac_id" type="uint8"/>
@@ -1998,7 +2008,7 @@
     <field name="pitch" type="int8"/>
   </message>
 
-  <message name="RC_4CH" id="59" link="broadcasted">
+  <message name="RC_f" id="59" link="broadcasted">
     <field name="ac_id"       type="uint8"/>
     <field name="joystick_id" type="uint8"/>
     <field name="throttle"    type="uint8"/>
@@ -2254,6 +2264,16 @@
    <field name="index" type="uint8"/>
    <field name="mod"   type="float"/>
  </message>
+
+  <message name="RC_4CH" id="59" link="broadcasted">
+    <field name="ac_id"       type="uint8"/>
+    <field name="joystick_id" type="uint8"/>
+    <field name="throttle"    type="uint8"/>
+    <field name="roll"        type="int8"/>
+    <field name="yaw"         type="int8"/>
+    <field name="pitch"       type="int8"/>
+  </message>
+
 
  <message name="JUMP_TO_BLOCK" id="27">
   <field name="ac_id" type="string"/>

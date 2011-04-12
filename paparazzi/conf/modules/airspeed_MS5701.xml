@@ -15,5 +15,14 @@
     <define name="SPI_MASTER"/>
     <define name="USE_AIRSPEED_MS5701"/>
     <define name="BARO_CALIBRATE_REFERENCE_ALTITUDE" value="baro_calibrateReferenceAltitude"/>   </makefile>
+  <makefile target="sim">
+    <file_arch name="airspeed_MS5701.c"/>
+    <define name="OSR_CONVERSION" value="OSR1024"/>
+    <define name="OSR_DELAY" value="DELAY_OSR1024"/>
+    <define name="USE_SPI_SLAVE0"/>
+    <define name="SPI_MASTER"/>
+    <define name="USE_AIRSPEED_MS5701"/>
+    <define name="BARO_CALIBRATE_REFERENCE_ALTITUDE" value="baro_calibrateReferenceAltitude"/> 
+  </makefile>
 </module>
 
