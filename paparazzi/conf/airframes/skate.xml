@@ -215,6 +215,7 @@
 <!--      <define name="AGR_CLIMB" /> -->
 <!--      <define name="LOITER_TRIM" /> -->
       <define name="ALT_KALMAN" />
+<!--      <define name="USE_BARO_ALT"/> -->
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
       <define name="ESTIMATOR_HEADING_SOURCE"   value="1"/>

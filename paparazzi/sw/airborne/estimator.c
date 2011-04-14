@@ -218,9 +218,14 @@ void estimator_update_state_gps( void ) {
   gps_north -= nav_utm_north0;
 
   EstimatorSetPosXY(gps_east, gps_north);
+#ifdef USE_BARO_ALT
+#warning USING THE FUCKING BARO
+  EstimatorSetAlt(baro_MS5803_last_altitude);
+#else
 #ifndef USE_BARO_ETS
   float falt = gps_alt / 100.;
   EstimatorSetAlt(falt);
+#endif
 #endif
   float fspeed = gps_gspeed / 100.;
   float fclimb = gps_climb / 100.;

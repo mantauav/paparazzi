@@ -40,11 +40,11 @@
       <set value="0" var="kill_throttle"/>
       <set value="0" var="estimator_flight_time"/>
 <!--      <go from="HOME" pitch="15" throttle="1.0" vmode="throttle" wp="CLIMB"/> -->
-      <attitude roll="0.0" pitch="45.0" throttle="0.50" vmode="throttle"/>
+      <attitude roll="0.0" pitch="45.0" throttle="0.40" vmode="throttle"/>
     </block>
 
     <block group="home" name="Dongzalez Land">
-      <exception cond="ground_alt+5 > estimator_z" deroute="DZ Kill"/>
+<!--      <exception cond="ground_alt+5 > estimator_z" deroute="DZ Kill"/> -->
       <attitude roll="0.0" pitch="10" throttle="0.10" vmode="throttle"/>
     </block>
     <block group="home" name="DZ Kill">
