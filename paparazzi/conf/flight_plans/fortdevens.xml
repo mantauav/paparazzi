@@ -43,6 +43,14 @@
       <attitude roll="0.0" pitch="45.0" throttle="0.50" vmode="throttle"/>
     </block>
 
+    <block group="home" name="Dongzalez Land">
+      <exception cond="ground_alt+5 > estimator_z" deroute="DZ Kill"/>
+      <attitude roll="0.0" pitch="10" throttle="0.10" vmode="throttle"/>
+    </block>
+    <block group="home" name="DZ Kill">
+      <attitude roll="0.0" pitch="10" throttle="0.0" vmode="throttle"/>
+    </block>
+
     <block group="home" name="Takeoff_Old" strip_button="TakeoffOLD" strip_icon="takeoff.png">
       <exception cond="estimator_z > ground_alt+10" deroute="Standby"/>
       <set value="0" var="kill_throttle"/>
