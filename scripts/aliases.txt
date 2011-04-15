@@ -1,0 +1,11 @@
+alias setpap='export PAPARAZZI_HOME=$(pwd);export PAPARAZZ_SRC=$(pwd)'
+alias skrec='mencoder rtsp://192.168.0.90/axis-media/media.amp -ovc copy -oac copy -o `date +%m_%d_%Y_%H:%M:%S.avi`'
+alias skplay='mplayer rtsp://192.168.0.90/axis-media/media.amp -zoom -nocache'
+alias skifup='sudo ifconfig eth1 192.168.0.2/24 up'
+alias skatec='make AIRCRAFT=SKATE clean_ac'
+alias skatem='make AIRCRAFT=SKATE ap.upload'
+alias skatecm='skatec;skatem;'
+alias skateca='make AIRCRAFT=SKATE clean_ac;make clean'
+alias g='grep * -ERn -A2 -B2 -e'
+alias skaterb="skateca;make;skatem"
+alias skates='make AIRCRAFT=SKATE sim'
