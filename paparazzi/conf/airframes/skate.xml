@@ -225,8 +225,8 @@
     <subsystem name="control"                      />
 <!--    <subsystem name="usb_debug"                   /> -->
     <subsystem name="spi"/> 
-    <subsystem name="radio_control" type="ppm"/>
-<!--      <define name="RADIO_CONTROL_NO_MODESET"/>  -->
+    <subsystem name="radio_control" type="datalink"/>
+      <define name="RADIO_CONTROL_NO_MODESET"/>  
 <!--    <subsystem name="attitude" 		type="infrared"/> -->
     <!-- Communication -->
     <subsystem name="telemetry" 	type="transparent">
