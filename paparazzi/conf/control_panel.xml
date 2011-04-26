@@ -48,27 +48,6 @@
     <program name="On Screen Display" command="sw/ground_segment/bob4_osd/au_osd"/>
   </section>
   <section name="sessions">
-    <session name="Flight - Skate @ 57600">
-      <program name="Data Link">
-        <arg flag="-d" constant="/dev/ttyUSB0"/>
-        <arg flag="-s" constant="57600"/>
-      </program>
-      <program name="Server"/>
-      <program name="GCS">
-        <arg flag="-speech"/>
-      </program>
-      <program name="Joystick Server">
-        <arg flag="-ac" constant="SKATE"/>
-        <arg flag="-d" constant="/dev/input/au_js0"/>
-        <arg flag="-id" constant="1"/>
-        <arg flag="aurora_skate_controller.xml"/>
-      </program>
-      <program name="On Screen Display">
-        <arg flag="-p" constant="/dev/ttyUSB1"/>
-        <arg flag="-g"/>
-      </program>
-      <program name="Messages"/>
-    </session>
     <session name="Joystick Buddy">
       <program name="Joystick Server">
         <arg flag="-ac" constant="SKATE"/>
@@ -95,6 +74,85 @@
         <arg flag="logitech_dual_action.xml"/>
       </program>
       <program name="Messages"/>
+    </session>
+    <session name="Simulation - FG">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="Microjet"/>
+        <arg flag="-boot"/>
+        <arg flag="-fg" constant="127.0.0.1"/>
+      </program>
+    </session>
+    <session name="Flight - Skate @ 57600">
+      <program name="Data Link">
+        <arg flag="-d" constant="/dev/ttyUSB1"/>
+        <arg flag="-s" constant="57600"/>
+      </program>
+      <program name="Server"/>
+      <program name="GCS">
+        <arg flag="-speech"/>
+        <arg flag="-layout left_col.xml"/>
+        <arg flag="-mplayer 'rtsp://192.168.0.90/axis-media/media.amp -zoom -nocache'"/>
+      </program>
+      <program name="Joystick Server">
+        <arg flag="-ac" constant="SKATE"/>
+        <arg flag="-d" constant="/dev/input/au_js0"/>
+        <arg flag="-id" constant="1"/>
+        <arg flag="aurora_skate_controller.xml"/>
+      </program>
+      <program name="On Screen Display">
+        <arg flag="-p" constant="/dev/ttyUSB2"/>
+        <arg flag="-g"/>
+      </program>
+      <program name="Messages"/>
+    </session>
+    <session name="Simulation- Skate / FG">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="SKATE"/>
+        <arg flag="-boot"/>
+        <arg flag="-fg" constant="127.0.0.1"/>
+      </program>
+    </session>
+    <session name="Skate Sim with Logitech F710">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="SKATE"/>
+        <arg flag="-boot"/>
+        <arg flag="-norc"/>
+      </program>
+      <program name="Joystick Server">
+        <arg flag="-ac" constant="SKATE"/>
+        <arg flag="-d" constant="/dev/input/js0"/>
+        <arg flag="-id" constant="3"/>
+        <arg flag="logitech_f710.xml"/>
+      </program>
+    </session>
+    <session name="Skate - debug">
+      <program name="Data Link">
+        <arg flag="-d" constant="/dev/ttyUSB0"/>
+        <arg flag="-s" constant="57600"/>
+      </program>
+      <program name="Server"/>
+      <program name="GCS">
+        <arg flag="-speech"/>
+      </program>
+      <program name="Messages"/>
+      <program name="Joystick Server">
+        <arg flag="-ac" constant="SKATE"/>
+        <arg flag="-d" constant="/dev/input/js1"/>
+        <arg flag="-id" constant="3"/>
+        <arg flag="logitech_f710.xml"/>
+      </program>
     </session>
   </section>
 </control_panel>
