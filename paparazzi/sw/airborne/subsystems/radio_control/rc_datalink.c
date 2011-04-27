@@ -16,7 +16,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with paparazzi; see the file COPYING.  If not, write to
+ * along with paparazzi; see the file COPYINPaparazzi joystick sent  'RC_4CH 37 3 1 0 0 0'
+G.  If not, write to
  * the Free Software Foundation, 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
@@ -28,6 +29,17 @@ uint8_t rc_dl_active_joystick=0;
 int8_t rc_dl_values[ RC_DL_NB_CHANNEL ];
 volatile bool_t rc_dl_frame_available;
 
+#ifdef SITL
+value send_ppm(value unit) {
+  rc_dl_frame_available = TRUE;
+  return unit;
+}
+update_rc_channel(value c __attribute__ ((unused)), value v __attribute__ ((unused))) {
+//  ppm_pulses[Int_val(c)] = Double_val(v);
+  return Val_unit;
+}
+
+#endif
 
 void radio_control_impl_init(void) {
   rc_dl_frame_available = FALSE;

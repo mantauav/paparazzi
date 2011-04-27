@@ -102,9 +102,9 @@
 
     <!-- auto throttle inner loop -->
     <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.35"/>
-    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.0"/>
-    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.95"/>
-<!--    <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/> -->
+    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.15"/>
+    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.50"/>
+    <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
     <define name="AUTO_THROTTLE_PGAIN" value="-0.01"/>
@@ -178,7 +178,7 @@
     <configure name="ADC_CHANNEL_GENERIC3" value="ADC_3"/>
   </load>
 
-  <load name="airspeed_MS5701.xml"/>
+    <load name="airspeed_MS5701.xml"/>
   <load name="baro_MS5803.xml"/>
   <load name="rc_gyro.xml">
     <define name="RC_GYRO_ROLL_GAIN"  value="-1100"/>
@@ -190,43 +190,29 @@
 </modules>
 
 <!-- HACK: for current use in sim -->
-  <section name="INFRARED" prefix="IR_">
-    <define name="ADC_IR1_NEUTRAL" value="512"/>
-    <define name="ADC_IR2_NEUTRAL" value="512"/>
-    <define name="ADC_TOP_NEUTRAL" value="512"/>
 
-    <define name="LATERAL_CORRECTION" value="-1"/>
-    <define name="LONGITUDINAL_CORRECTION" value="1"/>
-    <define name="VERTICAL_CORRECTION" value="1.5"/>
-
-    <define name="HORIZ_SENSOR_TILTED" value="1"/>
-    <define name="IR1_SIGN" value="1"/>
-    <define name="IR2_SIGN" value="-1"/>
-    <define name="TOP_SIGN" value="-1"/>
-
-    <define name="ROLL_NEUTRAL_DEFAULT" value="0" unit="deg"/>
-    <define name="PITCH_NEUTRAL_DEFAULT" value="0" unit="deg"/>
-  </section>
 <!-- HACKEND -->
   <firmware name="fixedwing">
     <target name="sim" 			board="pc"                   />
     <target name="ap" 			board="tiny_2.11"           />
       <define name="SKATE_TESTING"/>
 <!--      <define name="AGR_CLIMB" /> -->
-<!--      <define name="LOITER_TRIM" /> -->
+      <define name="LOITER_TRIM" />
       <define name="ALT_KALMAN" />
+<!--      <define name="USE_BARO_ALT"/> -->
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
       <define name="ESTIMATOR_HEADING_SOURCE"   value="1"/>
       <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_FAILSAFE"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
-<!--    <define name="USE_AIRSPEED"/> -->
 
 <!------------------SUBSYSTEMS--------------->
     <subsystem name="control"                      />
 <!--    <subsystem name="usb_debug"                   /> -->
     <subsystem name="spi"/> 
-    <subsystem name="radio_control" type="datalink"/>
-    <define name="RADIO_CONTROL_NO_MODESET"/> 
+    <subsystem name="radio_control" type="ppm"/>
+
+<!--      <define name="RADIO_CONTROL_NO_MODESET"/>  -->
+      <define name="NAV_CAPTURE_ALTITUDE" value="1"/>
 <!--    <subsystem name="attitude" 		type="infrared"/> -->
     <!-- Communication -->
     <subsystem name="telemetry" 	type="transparent">
