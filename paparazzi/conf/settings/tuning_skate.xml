@@ -117,6 +117,9 @@
         <dl_setting MAX="1" MIN="0.02" STEP="0.01" VAR="h_ctl_roll_slew" shortname="roll slew"/>
         <dl_setting MAX="500" MIN="-500" STEP="5" VAR="nav_radius"/>
         <dl_setting MAX="359" MIN="0" STEP="5" VAR="nav_course"/>
+        <dl_setting MAX="1000" MIN="0" STEP="10" VAR="nav_alt"/>
+        <dl_setting MAX="180" MIN="-180" STEP="0.01" VAR="nav_roll"/>
+        <dl_setting MAX="90" MIN="-90" STEP="0.01" VAR="nav_pitch"/>
         <dl_setting MAX="2" MIN="1" STEP="1" VAR="nav_mode"/>
         <dl_setting MAX="5" MIN="-5" STEP="0.5" VAR="nav_climb"/>
         <dl_setting MAX="15" MIN="-15" STEP="1" VAR="fp_pitch"/>

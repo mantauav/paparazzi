@@ -7,6 +7,9 @@
     <dl_settings NAME="flight params">
       <dl_setting MAX="1000" MIN="0" STEP="10" VAR="flight_altitude" shortname="altitude"/>
       <dl_setting MAX="360" MIN="0" STEP="1" VAR="nav_course"/>
+      <dl_setting MAX="1000" MIN="0" STEP="10" VAR="nav_alt"/>	
+      <dl_setting MAX="180.0" MIN="-180.0" STEP="0.01" VAR="nav_roll"/>
+      <dl_setting MAX="90.0" MIN="-90.0" STEP="0.01" VAR="nav_pitch"/>
       <dl_setting MAX="10" MIN="-10" STEP="5" VAR="nav_shift" module="subsystems/nav" handler="IncreaseShift" shortname="inc. shift"/>
       <dl_setting MAX="0" MIN="0" STEP="1" VAR="estimator_flight_time" shortname="flight time" module="autopilot" handler="ResetFlightTimeAndLaunch"/>
       <dl_setting MAX="200" MIN="-200" STEP="10" VAR="nav_radius" module="subsystems/nav" handler="SetNavRadius">

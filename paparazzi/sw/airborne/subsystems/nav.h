@@ -87,8 +87,10 @@ extern uint8_t nav_oval_count;
 
 extern float nav_radius; /* m */
 extern float nav_course; /* degrees, clockwise, 0.0 = N */
-extern float nav_climb; /* m/s */
-extern float nav_shift; /* Lateral shift along a route. In meters */
+extern float nav_alt;    /* m */
+extern float nav_roll;   /* degrees */
+extern float nav_climb;  /* m/s */
+extern float nav_shift;  /* Lateral shift along a route. In meters */
 
 extern float nav_ground_speed_pgain, nav_ground_speed_setpoint;
 
