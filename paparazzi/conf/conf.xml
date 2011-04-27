@@ -35,7 +35,7 @@
    airframe="airframes/skate.xml"
    radio="radios/spektrum_dx7.xml"
    telemetry="telemetry/skate.xml"
-   flight_plan="flight_plans/fortdevens.xml"
+   flight_plan="flight_plans/basic-olivier.xml"
    settings=" settings/tuning_skate.xml"
    gui_color="#6233ba"
   />
