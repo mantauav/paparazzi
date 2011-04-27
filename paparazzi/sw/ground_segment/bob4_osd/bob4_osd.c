@@ -683,7 +683,7 @@ main (int argc, char**argv)
 	}
 
 	/* main loop */
-	IvyMainLoop();
+	IvyMainLoop(NULL,NULL);
 }
 
 

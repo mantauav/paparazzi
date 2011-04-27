@@ -17,7 +17,7 @@
 
     <dl_settings NAME="mode">
       <dl_setting MAX="2" MIN="0" STEP="1" VAR="pprz_mode" module="autopilot"/>
-      <dl_setting MAX="255" MIN="0" STEP="1" VAR="rc_dl_active_joystick" module="subsystems/radio_control/rc_datalink"/>
+<!--      <dl_setting MAX="255" MIN="0" STEP="1" VAR="rc_dl_active_joystick" module="subsystems/radio_control/rc_datalink"/> -->
       <dl_setting MAX="1" MIN="0" STEP="1" VAR="alt_kalman_enabled" shortname="alt_kalman" module="estimator"/>
       <dl_setting MAX="0" MIN="0" STEP="1" VAR="estimator_flight_time" shortname="flight time"/>
       <dl_setting MAX="1000" MIN="0" STEP="1" VAR="stage_time"/>
@@ -103,6 +103,7 @@
       </dl_settings>
 
       <dl_settings name="nav">
+	<dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="nav_altitude"  shortname="nav_alt" module="subsystems/nav"/>
 	<dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="nav_capture_altitude"  shortname="alt_capture"/>
       <dl_setting MAX="2"    MIN="1"  STEP="1"   VAR="fbw_rc_really_lost_mode"  shortname="rc_lost_fbw_mode"/>
         <dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="v_ctl_throttle_capture"  shortname="throttle_capture"/>
