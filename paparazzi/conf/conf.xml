@@ -39,7 +39,7 @@
    settings=" settings/tuning_skate.xml"
    gui_color="#6233ba"
   />
-  <aircraft
+<!--  <aircraft
    name="SKATE_ROTORCRAFT"
    ac_id="137"
    airframe="airframes/Poine/skate_booz.xml"
@@ -48,5 +48,5 @@
    flight_plan="flight_plans/dummy.xml"
    settings=" settings/settings_booz2.xml settings/settings_booz2_ahrs_cmpl.xml"
    gui_color="white"
-  />
+  /> -->
 </conf>
