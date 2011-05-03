@@ -209,9 +209,9 @@
     <subsystem name="control"                      />
 <!--    <subsystem name="usb_debug"                   /> -->
     <subsystem name="spi"/> 
-    <subsystem name="radio_control" type="ppm"/>
+    <subsystem name="radio_control" type="datalink"/>
 
-<!--      <define name="RADIO_CONTROL_NO_MODESET"/>  -->
+	      <define name="RADIO_CONTROL_NO_MODESET"/> 
       <define name="NAV_CAPTURE_ALTITUDE" value="1"/>
 <!--    <subsystem name="attitude" 		type="infrared"/> -->
     <!-- Communication -->
