@@ -40,6 +40,7 @@ static inline void main_periodic( void );
 static inline void main_event( void );
 
 static inline void on_gyro_accel_event(void);
+static inline void on_accel_event(void);
 static inline void on_mag_event(void);
 
 static inline void main_on_overo_msg_received(void);
@@ -114,7 +115,7 @@ static inline void main_periodic( void ) {
 }
 
 static inline void main_event( void ) {
-  ImuEvent(on_gyro_accel_event, on_mag_event);
+  ImuEvent(on_gyro_accel_event, on_accel_event, on_mag_event);
   OveroLinkEvent(main_on_overo_msg_received,main_on_overo_link_error);
 }
 
@@ -150,6 +151,10 @@ static inline void main_on_overo_link_lost(void) {
 }
 
 
+static inline void on_accel_event(void) {
+
+}
+
 static inline void on_gyro_accel_event(void) {
   ImuScaleGyro(imu);
   ImuScaleAccel(imu);
@@ -171,12 +176,12 @@ static inline void on_gyro_accel_event(void) {
                 &imu.accel_unscaled.z);
   }
   else if (cnt == 7) {
-    DOWNLINK_SEND_BOOZ2_GYRO(DefaultChannel,
+    DOWNLINK_SEND_IMU_GYRO_SCALED(DefaultChannel,
                  &imu.gyro.p,
                  &imu.gyro.q,
                  &imu.gyro.r);
 
-    DOWNLINK_SEND_BOOZ2_ACCEL(DefaultChannel,
+    DOWNLINK_SEND_IMU_ACCEL_SCALED(DefaultChannel,
                   &imu.accel.x,
                   &imu.accel.y,
                   &imu.accel.z);
@@ -191,7 +196,7 @@ static inline void on_mag_event(void) {
   if (cnt > 1) cnt = 0;
 
   if (cnt%2) {
-    DOWNLINK_SEND_BOOZ2_MAG(DefaultChannel,
+    DOWNLINK_SEND_IMU_MAG_SCALED(DefaultChannel,
                 &imu.mag.x,
                 &imu.mag.y,
                 &imu.mag.z);

@@ -23,6 +23,9 @@
 
 #include <inttypes.h>
 
+#ifdef BOARD_CONFIG
+#include BOARD_CONFIG
+#endif
 #include "std.h"
 #include "mcu.h"
 #include "sys_time.h"
@@ -42,6 +45,7 @@ static inline void main_periodic_task( void );
 static inline void main_event_task( void );
 
 static inline void on_gyro_accel_event(void);
+static inline void on_accel_event(void);
 static inline void on_mag_event(void);
 
 int main( void ) {
@@ -60,16 +64,20 @@ static inline void main_init( void ) {
   sys_time_init();
   imu_init();
 
-  DEBUG_SERVO1_INIT();
-  DEBUG_SERVO2_INIT();
-
 
   mcu_int_enable();
 }
 
+static inline void led_toggle ( void ) {
+
+#ifdef BOARD_LISA_L
+      LED_TOGGLE(3);
+#endif
+}
+
 static inline void main_periodic_task( void ) {
   RunOnceEvery(100, {
-      LED_TOGGLE(3);
+      led_toggle();
       DOWNLINK_SEND_ALIVE(DefaultChannel, 16, MD5SUM);
     });
 #ifdef USE_I2C2
@@ -92,13 +100,33 @@ static inline void main_periodic_task( void ) {
 
 static inline void main_event_task( void ) {
 
-  ImuEvent(on_gyro_accel_event, on_mag_event);
+  ImuEvent(on_gyro_accel_event, on_accel_event, on_mag_event);
 
+
+}
+
+static inline void on_accel_event(void) {
+  ImuScaleAccel(imu);
+
+  static uint8_t cnt;
+  cnt++;
+  if (cnt > 15) cnt = 0;
+  if (cnt == 0) {
+    DOWNLINK_SEND_IMU_ACCEL_RAW(DefaultChannel,
+                &imu.accel_unscaled.x,
+                &imu.accel_unscaled.y,
+                &imu.accel_unscaled.z);
+  }
+  else if (cnt == 7) {
+    DOWNLINK_SEND_IMU_ACCEL_SCALED(DefaultChannel,
+                  &imu.accel.x,
+                  &imu.accel.y,
+                  &imu.accel.z);
+  }
 }
 
 static inline void on_gyro_accel_event(void) {
   ImuScaleGyro(imu);
-  ImuScaleAccel(imu);
 
   LED_TOGGLE(2);
   static uint8_t cnt;
@@ -110,22 +138,12 @@ static inline void on_gyro_accel_event(void) {
                    &imu.gyro_unscaled.p,
                    &imu.gyro_unscaled.q,
                    &imu.gyro_unscaled.r);
-
-    DOWNLINK_SEND_IMU_ACCEL_RAW(DefaultChannel,
-                &imu.accel_unscaled.x,
-                &imu.accel_unscaled.y,
-                &imu.accel_unscaled.z);
   }
   else if (cnt == 7) {
-    DOWNLINK_SEND_BOOZ2_GYRO(DefaultChannel,
+    DOWNLINK_SEND_IMU_GYRO_SCALED(DefaultChannel,
                  &imu.gyro.p,
                  &imu.gyro.q,
                  &imu.gyro.r);
-
-    DOWNLINK_SEND_BOOZ2_ACCEL(DefaultChannel,
-                  &imu.accel.x,
-                  &imu.accel.y,
-                  &imu.accel.z);
   }
 }
 
@@ -137,7 +155,7 @@ static inline void on_mag_event(void) {
   if (cnt > 10) cnt = 0;
 
   if (cnt == 0) {
-    DOWNLINK_SEND_BOOZ2_MAG(DefaultChannel,
+    DOWNLINK_SEND_IMU_MAG_SCALED(DefaultChannel,
                 &imu.mag.x,
                 &imu.mag.y,
                 &imu.mag.z);

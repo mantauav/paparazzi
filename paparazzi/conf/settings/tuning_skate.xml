@@ -17,7 +17,7 @@
 
     <dl_settings NAME="mode">
       <dl_setting MAX="2" MIN="0" STEP="1" VAR="pprz_mode" module="autopilot"/>
-      <dl_setting MAX="255" MIN="0" STEP="1" VAR="rc_dl_active_joystick" module="subsystems/radio_control/rc_datalink"/>
+<!--      <dl_setting MAX="255" MIN="0" STEP="1" VAR="rc_dl_active_joystick" module="subsystems/radio_control/rc_datalink"/> -->
       <dl_setting MAX="1" MIN="0" STEP="1" VAR="alt_kalman_enabled" shortname="alt_kalman" module="estimator"/>
       <dl_setting MAX="0" MIN="0" STEP="1" VAR="estimator_flight_time" shortname="flight time"/>
       <dl_setting MAX="1000" MIN="0" STEP="1" VAR="stage_time"/>
@@ -103,6 +103,7 @@
       </dl_settings>
 
       <dl_settings name="nav">
+	<dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="nav_altitude"  shortname="nav_alt" module="subsystems/nav"/>
 	<dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="nav_capture_altitude"  shortname="alt_capture"/>
       <dl_setting MAX="2"    MIN="1"  STEP="1"   VAR="fbw_rc_really_lost_mode"  shortname="rc_lost_fbw_mode"/>
         <dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="v_ctl_throttle_capture"  shortname="throttle_capture"/>
@@ -117,6 +118,9 @@
         <dl_setting MAX="1" MIN="0.02" STEP="0.01" VAR="h_ctl_roll_slew" shortname="roll slew"/>
         <dl_setting MAX="500" MIN="-500" STEP="5" VAR="nav_radius"/>
         <dl_setting MAX="359" MIN="0" STEP="5" VAR="nav_course"/>
+        <dl_setting MAX="1000" MIN="0" STEP="10" VAR="nav_alt"/>
+        <dl_setting MAX="180" MIN="-180" STEP="0.01" VAR="nav_roll"/>
+        <dl_setting MAX="90" MIN="-90" STEP="0.01" VAR="nav_pitch"/>
         <dl_setting MAX="2" MIN="1" STEP="1" VAR="nav_mode"/>
         <dl_setting MAX="5" MIN="-5" STEP="0.5" VAR="nav_climb"/>
         <dl_setting MAX="15" MIN="-15" STEP="1" VAR="fp_pitch"/>

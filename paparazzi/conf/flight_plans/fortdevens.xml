@@ -35,7 +35,14 @@
       <set value="0" var="kill_throttle"/>
       <attitude roll="0" throttle="0" vmode="throttle"/>
     </block>
-    <block group="home" key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png">
+    <block group="home" key="t" name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
+      <exception cond="estimator_z > ground_alt+20" deroute="Standby"/>
+      <set value="0" var="kill_throttle"/>
+      <set value="0" var="estimator_flight_time"/>
+<!--      <go from="HOME" pitch="15" throttle="1.0" vmode="throttle" wp="CLIMB"/> -->
+      <attitude roll="0.0" pitch="45.0" throttle="0.40" vmode="throttle"/>
+    </block>
+    <block group="home" name="Takeoff_Old" strip_button="TakeoffOLD" strip_icon="takeoff.png">
       <exception cond="estimator_z > ground_alt+10" deroute="Standby"/>
       <set value="0" var="kill_throttle"/>
       <set value="0" var="estimator_flight_time"/>
@@ -76,6 +83,10 @@
       <set value="DEFAULT_CIRCLE_RADIUS" var="nav_radius"/>
       <deroute block="land"/>
     </block>
+    <block group="home" name="Glide Land">
+<!--      <exception cond="ground_alt+5 > estimator_z" deroute="DZ Kill"/> -->
+      <attitude roll="0.0" pitch="10" throttle="0.10" vmode="throttle"/>
+    </block>
     <block group="land" name="Land Left AF-TD" strip_button="Land left (wp AF-TD)" strip_icon="land-left.png">
       <set value="-DEFAULT_CIRCLE_RADIUS" var="nav_radius"/>
       <deroute block="land"/>
@@ -88,6 +99,9 @@
     <block name="final">
       <exception cond="ground_alt + 10 > estimator_z" deroute="flare"/>
       <go from="AF" hmode="route" vmode="glide" wp="TD"/>
+    </block>
+    <block group="home" name="DZ Kill">
+      <attitude roll="0.0" pitch="10" throttle="0.0" vmode="throttle"/>
     </block>
     <block name="flare">
       <go approaching_time="0" from="AF" hmode="route" throttle="0.0" vmode="throttle" wp="TD"/>

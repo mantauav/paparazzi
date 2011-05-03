@@ -58,6 +58,13 @@ It has 8 buttons.
    <field name="pitch"       value="ry"/>
   </message>
 
+  <message class="ground" name="RC_4CH" send_always="1">
+   <field name="joystick_id" value="JoystickID()"/>
+   <field name="throttle"    value="Bound(0-ly,0,127)"/>
+   <field name="roll"        value="rx"/>
+   <field name="yaw"         value="lx"/>
+   <field name="pitch"       value="ry"/>
+  </message>
 
   <!-- trim commands -->
   <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="dx > 100">

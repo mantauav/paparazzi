@@ -5,7 +5,7 @@
     <file name="baro_MS5803.h"/>
   </header>
   <init fun="baro_MS5803_init()"/> 
-  <periodic fun="baro_getAltitude()" freq="10"/> 
+  <periodic fun="baro_getAltitude()" freq="60"/>
   <makefile target="ap">
     <file name="baro_MS5803.c"/>
     <define name="USE_BARO_MS5803"/>
@@ -15,6 +15,12 @@
     <define name="OSR_CONVERSION" value="OSR1024"/>
     <define name="OSR_DELAY" value="DELAY_OSR1024"/>
   </makefile>
-
+  <makefile target="sim">
+    <file_arch name="baro_MS5803.c"/>
+    <define name="USE_BARO_MS5803"/>
+    <define name="AIRSPEED_SET_ZERO_REFERENCE" value="airspeed_set_zero_reference"/>
+    <define name="OSR_CONVERSION" value="OSR1024"/>
+    <define name="OSR_DELAY" value="DELAY_OSR1024"/>
+  </makefile>
 </module>
 

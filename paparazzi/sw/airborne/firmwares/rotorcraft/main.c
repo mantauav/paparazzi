@@ -32,6 +32,8 @@
 #include "downlink.h"
 #include "firmwares/rotorcraft/telemetry.h"
 #include "datalink.h"
+#include "subsystems/settings.h"
+#include "xbee.h"
 
 #include "booz2_commands.h"
 #include "firmwares/rotorcraft/actuators.h"
@@ -40,13 +42,11 @@
 #include "subsystems/imu.h"
 #include "booz_gps.h"
 
-#include "booz/booz2_analog.h"
 #include "subsystems/sensors/baro.h"
 #include "baro_board.h"
 
-#include "firmwares/rotorcraft/battery.h"
+#include "subsystems/electrical.h"
 
-// #include "booz_fms.h"  // FIXME
 #include "firmwares/rotorcraft/autopilot.h"
 
 #include "firmwares/rotorcraft/stabilization.h"
@@ -63,7 +63,8 @@
 
 #include "generated/modules.h"
 
-static inline void on_gyro_accel_event( void );
+static inline void on_gyro_event( void );
+static inline void on_accel_event( void );
 static inline void on_baro_abs_event( void );
 static inline void on_baro_dif_event( void );
 static inline void on_gps_event( void );
@@ -96,17 +97,17 @@ STATIC_INLINE void main_init( void ) {
   mcu_init();
 
   sys_time_init();
+  electrical_init();
 
   actuators_init();
   radio_control_init();
 
-  booz2_analog_init();
+#if DATALINK == XBEE
+  xbee_init();
+#endif
+
   baro_init();
-
-  battery_init();
   imu_init();
-
-  //  booz_fms_init(); // FIXME
   autopilot_init();
   nav_init();
   guidance_h_init();
@@ -123,6 +124,8 @@ STATIC_INLINE void main_init( void ) {
 #endif
 
   modules_init();
+
+  settings_init();
 
   mcu_int_enable();
 
@@ -150,7 +153,7 @@ STATIC_INLINE void main_periodic( void ) {
       /* booz_fms_periodic(); FIXME */                      \
     },                                                      \
     {                                                       \
-      /*BoozControlSurfacesSetFromCommands();*/             \
+      electrical_periodic();				    \
     },                                                      \
     {                                                       \
       LED_PERIODIC();                                       \
@@ -166,14 +169,10 @@ STATIC_INLINE void main_periodic( void ) {
     } );
 
 #ifdef USE_GPS
-  if (radio_control.status != RC_OK &&			\
+  if (radio_control.status != RC_OK &&				\
       autopilot_mode == AP_MODE_NAV && GpsIsLost())		\
     autopilot_set_mode(AP_MODE_FAILSAFE);			\
   booz_gps_periodic();
-#endif
-
-#ifdef USE_EXTRA_ADC
-  booz2_analog_periodic();
 #endif
 
   modules_periodic_task();
@@ -192,7 +191,7 @@ STATIC_INLINE void main_event( void ) {
     RadioControlEvent(autopilot_on_rc_frame);
   }
 
-  ImuEvent(on_gyro_accel_event, on_mag_event);
+  ImuEvent(on_gyro_event, on_accel_event, on_mag_event);
 
   BaroEvent(on_baro_abs_event, on_baro_dif_event);
 
@@ -208,10 +207,17 @@ STATIC_INLINE void main_event( void ) {
 
 }
 
-static inline void on_gyro_accel_event( void ) {
+static inline void on_accel_event( void ) {
+  ImuScaleAccel(imu);
+
+  if (ahrs.status != AHRS_UNINIT) {
+    ahrs_update_accel();
+  }
+}
+
+static inline void on_gyro_event( void ) {
 
   ImuScaleGyro(imu);
-  ImuScaleAccel(imu);
 
   if (ahrs.status == AHRS_UNINIT) {
     ahrs_aligner_run();
@@ -220,7 +226,6 @@ static inline void on_gyro_accel_event( void ) {
   }
   else {
     ahrs_propagate();
-    ahrs_update_accel();
 #ifdef SITL
     if (nps_bypass_ahrs) sim_overwrite_ahrs();
 #endif

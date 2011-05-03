@@ -1,5 +1,25 @@
 <conf>
   <aircraft
+   name="BOOZ2_A1"
+   ac_id="150"
+   airframe="airframes/Poine/booz2_a1.xml"
+   radio="radios/cockpitSX.xml"
+   telemetry="telemetry/telemetry_booz2.xml"
+   flight_plan="flight_plans/dummy.xml"
+   settings=" settings/settings_booz2.xml settings/settings_booz2_ahrs_cmpl.xml"
+   gui_color="white"
+  />
+  <aircraft
+   name="BOOZ2_A2"
+   ac_id="151"
+   airframe="airframes/Poine/booz2_a2.xml"
+   radio="radios/cockpitSX.xml"
+   telemetry="telemetry/telemetry_booz2.xml"
+   flight_plan="flight_plans/dummy.xml"
+   settings=" settings/settings_booz2.xml settings/settings_booz2_fms_ts.xml"
+   gui_color="white"
+  />
+  <aircraft
    name="Microjet"
    ac_id="5"
    airframe="airframes/microjet_example.xml"
@@ -15,8 +35,18 @@
    airframe="airframes/skate.xml"
    radio="radios/spektrum_dx7.xml"
    telemetry="telemetry/skate.xml"
-   flight_plan="flight_plans/fortdevens.xml"
+   flight_plan="flight_plans/basic-olivier.xml"
    settings=" settings/tuning_skate.xml"
    gui_color="#6233ba"
+  />
+  <aircraft
+   name="SKATE_ROTORCRAFT"
+   ac_id="137"
+   airframe="airframes/Poine/skate_booz.xml"
+   radio="radios/cockpitSX.xml"
+   telemetry="telemetry/telemetry_booz2.xml"
+   flight_plan="flight_plans/dummy.xml"
+   settings=" settings/settings_booz2.xml settings/settings_booz2_ahrs_cmpl.xml"
+   gui_color="white"
   />
 </conf>

@@ -55,7 +55,7 @@ float carrot_x, carrot_y;
 /** Status on the current circle */
 float nav_circle_radians; /* Cumulated */
 float nav_circle_trigo_qdr; /* Angle from center to mobile */
-float nav_radius, nav_course, nav_climb, nav_shift;
+float nav_radius, nav_course, nav_alt, nav_roll, nav_climb, nav_shift;
 
 
 /** Status on the current leg (percentage, 0. < < 1.) in route mode */
@@ -74,7 +74,10 @@ float circle_bank = 0;
 /** Dynamically adjustable, reset to nav_altitude when it is changing */
 float flight_altitude;
 float nav_altitude_at_auto2_switch=50;
-bool_t nav_capture_altitude=1;
+#ifndef NAV_CAPTURE_ALTITUDE
+#define NAV_CAPTURE_ALTITUDE 0
+#endif
+bool_t nav_capture_altitude=NAV_CAPTURE_ALTITUDE;
 
 float nav_glide_pitch_trim;
 #ifndef NAV_GLIDE_PITCH_TRIM

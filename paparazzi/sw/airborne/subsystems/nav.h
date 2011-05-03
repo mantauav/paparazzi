@@ -87,8 +87,10 @@ extern uint8_t nav_oval_count;
 
 extern float nav_radius; /* m */
 extern float nav_course; /* degrees, clockwise, 0.0 = N */
-extern float nav_climb; /* m/s */
-extern float nav_shift; /* Lateral shift along a route. In meters */
+extern float nav_alt;    /* m */
+extern float nav_roll;   /* degrees */
+extern float nav_climb;  /* m/s */
+extern float nav_shift;  /* Lateral shift along a route. In meters */
 
 extern float nav_ground_speed_pgain, nav_ground_speed_setpoint;
 
@@ -104,7 +106,7 @@ void nav_without_gps(void);
 
 extern float nav_circle_trigo_qdr; /** Angle from center to mobile */
 extern void nav_circle_XY(float x, float y, float radius);
-extern bool_t fly_to_xy_from_rc();
+
 #define NavCircleWaypoint(wp, radius) \
   nav_circle_XY(waypoints[wp].x, waypoints[wp].y, radius)
 

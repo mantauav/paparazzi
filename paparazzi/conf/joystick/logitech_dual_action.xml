@@ -39,8 +39,8 @@ The "mode" button swaps the axes on the left stick and the d pad.
 
 
   <message class="datalink" name="RC_4CH" send_always="1">
-   <field name="joystick_id" value="0"/>
-   <field name="throttle" value="Scale(0-ly-127,0,255)"/>
+   <field name="joystick_id" value="JoystickID()"/>
+   <field name="throttle" value="Scale(ly-127,0,255)"/>
    <field name="roll" value="rx"/>
    <field name="yaw" value="lx"/>
    <field name="pitch" value="ry"/>
@@ -60,17 +60,29 @@ The "mode" button swaps the axes on the left stick and the d pad.
   <message class="trim_save" name="" on_event="b5"/>
  -->
 
-  <!-- Button 5 top left bumper) -->  <!-- AUTO1 mode -->
-  <message class="ground" name="DL_SETTING" send_always="0" on_event="b4">
+  <!-- Button 1 -->  <!-- MANUAL mode -->
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b0">
+    <field name="index" value="5"/>
+    <field name="value" value="0"/> 
+  </message>
+
+  <!-- Button 2 -->  <!-- AUTO1 mode -->
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b1">
     <field name="index" value="5"/>
     <field name="value" value="1"/> 
   </message>
  
-  <!-- Button 7 bottom left bumper -->   <!-- AUTO2 mode -->
-  <message class="ground" name="DL_SETTING" send_always="0" on_event="b6">
+  <!-- Button 3 -->   <!-- AUTO2 mode -->
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b2">
     <field name="index" value="5"/>
     <field name="value" value="2"/>
   </message>
+
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b0 || b1 || b2">
+    <field name="index" value="IndexOfSetting('rc_dl_active_joystick')"/>
+    <field name="value" value="JoystickID()"/>
+  </message>
+
 
   <!-- Buttons 6+8 (right pad) -->  <!-- KILL mode -->
   <message class="ground" name="DL_SETTING" send_always="0" on_event="b5">

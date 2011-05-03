@@ -44,10 +44,6 @@
 #include "fbw_downlink.h"
 #include "paparazzi.h"
 
-#ifdef USE_RC_GYRO
-//#include "modules/sensors/rc_gyro.h"
-#endif
-
 #ifdef MCU_SPI_LINK
 #include "link_mcu.h"
 #endif
