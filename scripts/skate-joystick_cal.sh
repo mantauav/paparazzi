@@ -1,4 +1,4 @@
-#!/bin/bash
+js#!/bin/bash
 # Calibrate skate mini and 4-axis joystick.
 # Script works for both as jscal only applys calibration for joysticks with correct number of axes
 # mini joystick has 5 axes, 4-axis mapped as a 6 axis. . 
@@ -18,7 +18,7 @@ case $SERIAL in
 	;;
 	"14549" )
 		echo "calibrating $SERIAL"
-		jscal -s 6,1,0,2041,2041,1142244,1109204,1,0,2029,2029,1080190,1007232,1,0,1967,1967,1359125,983250,1,0,2038,2038,1113806,1137404,1,0,0,0,-2147483648,-2147483648,1,0,0,0,-2147483648,-2147483648 /dev/input/au_js0
+		jscal -s 6,1,0,2041,2041,1127846,1095621,1,0,2056,2056,-1030431,-1001594,1,0,2023,2023,1662088,1080190,1,0,2027,2027,1130220,1095621,1,0,0,0,-2147483648,-2147483648,1,0,0,0,-2147483648,-2147483648 /dev/input/au_js0
 	;;
 	"14553" )
 		echo "calibrating $SERIAL"
