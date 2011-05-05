@@ -38,7 +38,7 @@ It has 9 buttons.
   <button index="11" name="b11"/>
 </input>
 
-<messages period="0.0333333333">
+<messages period="0.02">
 
 
   <message class="datalink" name="RC_4CH" send_always="1">
