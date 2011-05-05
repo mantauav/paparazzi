@@ -46,6 +46,7 @@
     <program name="Http Server" command="sw/ground_segment/tmtc/boa"/>
     <program name="Joystick Server" command="sw/ground_segment/joystick/input2ivy"/>
     <program name="On Screen Display" command="sw/ground_segment/bob4_osd/au_osd"/>
+    <program name="Weather Station" command="sw/ground_segment/misc/kestrel2ivy -i 37 -s 10"/>
   </section>
   <section name="sessions">
     <session name="Joystick Buddy">
