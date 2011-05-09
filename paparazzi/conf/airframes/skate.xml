@@ -102,8 +102,8 @@
 
     <!-- auto throttle inner loop -->
     <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.35"/>
-    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.15"/>
-    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.50"/>
+    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.0"/>
+    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.95"/>
     <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
@@ -125,7 +125,7 @@
     <define name="PITCH_MAX_SETPOINT" value="0.523" /> <!--  0.523  ~ 30 deg  -->
     <define name="PITCH_MIN_SETPOINT" value="0.1046667"/> <!-- 0.1046667 ~ 6 deg   -->
     <define name="PITCH_NEUTRAL"             value="0.26"/>
-    <define name="PITCH_PGAIN" value="-15500."/>
+    <define name="PITCH_PGAIN" value="-12000."/>
     <define name="PITCH_DGAIN" value="1.5"/>
 
     <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
