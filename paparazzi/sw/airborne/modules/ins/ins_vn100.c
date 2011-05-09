@@ -95,7 +95,8 @@ struct FloatVect3 ins_mag;
 struct FloatVect3 ins_ref_mag; //Magnetic reference vector for local field.
 struct FloatVect3 ins_ref_grav; //Gravity reference vector for local field.
 
- float  ins_ref_mag_declination=-15.4; //Devens
+ float  ins_ref_mag_declination=13.447; //Devens
+// float  ins_ref_mag_declination=-15.4; //Devens
 //float  ins_ref_mag_declination=-5.166667; //Florida
 
 
