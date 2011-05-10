@@ -96,14 +96,14 @@
   <section name="VERTICAL CONTROL" prefix="V_CTL_">
     <define name="POWER_CTL_BAT_NOMINAL" value="11.1" unit="volt"/>
     <!-- outer loop proportional gain -->
-    <define name="ALTITUDE_PGAIN" value="-0.03"/>
+    <define name="ALTITUDE_PGAIN" value="-0.04"/>
     <!-- outer loop saturation -->
     <define name="ALTITUDE_MAX_CLIMB" value="2."/>
 
     <!-- auto throttle inner loop -->
-    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.35"/>
+    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.50"/>
     <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.15"/>
-    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.50"/>
+    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.70"/>
     <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
@@ -118,20 +118,20 @@
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
 
-    <define name="COURSE_PGAIN" value="-0.308"/>
-    <define name="COURSE_DGAIN" value="0.012"/>
+    <define name="COURSE_PGAIN" value="-0.438"/>
+    <define name="COURSE_DGAIN" value="0.310"/>
 
  
     <define name="PITCH_MAX_SETPOINT" value="0.523" /> <!--  0.523  ~ 30 deg  -->
     <define name="PITCH_MIN_SETPOINT" value="0.1046667"/> <!-- 0.1046667 ~ 6 deg   -->
     <define name="PITCH_NEUTRAL"             value="0.26"/>
     <define name="PITCH_PGAIN" value="-15500."/>
-    <define name="PITCH_DGAIN" value="1.5"/>
+    <define name="PITCH_DGAIN" value="0"/>
 
     <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
     <define name="ATTITUDE_HOLD_ROLL_GAIN"   value="0"/>
     <define name="ATTITUDE_HOLD_RUDDER_GAIN" value="-3600"/> 
-    <define name="ROLL_SLEW" value="0.045"/>
+    <define name="ROLL_SLEW" value="0.148"/>
     <define name="ROLL_ATTITUDE_GAIN" value="-5300"/>
     <define name="ROLL_ATTITUDE_RUDDER_GAIN" value="-1800"/>
     <define name="ELEVATOR_OF_ROLL" value="1250"/>
