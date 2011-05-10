@@ -6,7 +6,7 @@
   </header>
   <init fun="airspeed_MS5701_init()"/>
 <!--  <periodic fun="airspeed_MS5701_update()" freq="10"/> -->
-	  <periodic fun="airspeed_MS5701_periodic()" freq="60"/>
+	  <periodic fun="airspeed_MS5701_periodic()" freq="6"/>
   <makefile target="ap">
     <file name="airspeed_MS5701.c"/>
     <define name="OSR_CONVERSION" value="OSR1024"/>
