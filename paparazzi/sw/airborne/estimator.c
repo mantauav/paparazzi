@@ -229,7 +229,13 @@ void estimator_update_state_gps( void ) {
 #endif
   float fspeed = gps_gspeed / 100.;
   float fclimb = gps_climb / 100.;
-  float fcourse = RadOfDeg(gps_course / 10.);
+  float fcourse;
+  if (estimator_heading_source == 0)
+    fcourse = RadOfDeg(gps_course / 10.);
+  else 
+    fcourse = estimator_psi;
+  if (fcourse < 0.)
+    fcourse += 2 * M_PI;
   EstimatorSetSpeedPol(fspeed, fcourse, fclimb);
 
   // Heading estimator from wind-information, usually computed with -DWIND_INFO
