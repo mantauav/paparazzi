@@ -6,4 +6,4 @@ export PAPARAZZI_SRC=/home/skate/skate/paparazzi
 #sudo ifconfig eth1 192.168.0.2/24 up
 #skifup
 #setpap
-./paparazzi -session "Flight - Skate @ 57600"
+./paparazzi -session "Skate"
