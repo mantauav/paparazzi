@@ -51,6 +51,10 @@
     <block group="home" key="<Control>a" name="Standby" strip_button="Standby" strip_icon="home.png">
       <circle radius="nav_radius" wp="STDBY"/>
     </block>
+    <block name="TNT Skytruck">
+      <attitude roll="nav_roll" climb="0.0" vmode="alt" alt="nav_alt" until="FALSE"/>
+      <deroute block="Standby"/>
+    </block>
     <block name="Heading" group="extra_pattern">
       <heading course="nav_course" alt="nav_alt" vmode="alt" until="FALSE"/>
       <deroute block="Standby"/>

@@ -49,7 +49,7 @@ extern float cur_pos_y;
 extern float last_x, last_y;
 
 extern float desired_x, desired_y, nav_altitude, flight_altitude, nav_glide_pitch_trim;
-extern float nav_altitude_at_auto2_switch;
+
 extern bool_t nav_capture_altitude;
 extern pprz_t nav_throttle_setpoint;
 extern float nav_pitch; /* Rad */
@@ -91,6 +91,7 @@ extern float nav_alt;    /* m */
 extern float nav_roll;   /* degrees */
 extern float nav_climb;  /* m/s */
 extern float nav_shift;  /* Lateral shift along a route. In meters */
+extern float nav_altitude_at_auto2_switch;
 
 extern float nav_ground_speed_pgain, nav_ground_speed_setpoint;
 

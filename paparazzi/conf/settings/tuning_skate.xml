@@ -104,6 +104,7 @@
 
       <dl_settings name="nav">
 	<dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="nav_altitude"  shortname="nav_alt" module="subsystems/nav"/>
+      <dl_setting MAX="1000" MIN="0" STEP="10" VAR="nav_altitude_at_auto2_switch"/>
 	<dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="nav_capture_altitude"  shortname="alt_capture"/>
       <dl_setting MAX="2"    MIN="1"  STEP="1"   VAR="fbw_rc_really_lost_mode"  shortname="rc_lost_fbw_mode"/>
         <dl_setting MAX="1"    MIN="0"  STEP="1"   VAR="v_ctl_throttle_capture"  shortname="throttle_capture"/>

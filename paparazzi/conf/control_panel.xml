@@ -110,6 +110,17 @@
       </program>
       <program name="Messages"/>
     </session>
+    <session name="Simulation - FG">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="Microjet"/>
+        <arg flag="-boot"/>
+        <arg flag="-fg" constant="127.0.0.1"/>
+      </program>
+    </session>
     <session name="Simulation- Skate / FG">
       <program name="GCS"/>
       <program name="Server">
@@ -119,6 +130,61 @@
         <arg flag="-a" constant="SKATE"/>
         <arg flag="-boot"/>
         <arg flag="-fg" constant="127.0.0.1"/>
+      </program>
+    </session>
+    <session name="Simulation- Skate / FG">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="SKATE"/>
+        <arg flag="-boot"/>
+        <arg flag="-fg" constant="127.0.0.1"/>
+      </program>
+    </session>
+    <session name="Simulation - TNT Skytruck">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="SKATE"/>
+        <arg flag="-boot"/>
+        <arg flag="-norc"/>
+      </program>
+      <program name="Messages"/>
+      <program name="Joystick Server">
+        <arg flag="-ac" constant="SKATE"/>
+        <arg flag="-id" constant="5"/>
+        <arg flag="-b" constant="127"/>
+        <arg flag="-d" constant="/dev/input/js0"/>
+        <arg flag="logitech_tnt.xml"/>
+      </program>
+      <program name="Joystick Server">
+        <arg flag="-ac" constant="SKATE"/>
+        <arg flag="-id" constant="3"/>
+        <arg flag="-b" constant="127"/>
+        <arg flag="-d" constant="/dev/input/js0"/>
+        <arg flag="logitech_f710.xml"/>
+      </program>
+      <program name="Messages"/>
+    </session>
+    <session name="Skate Sim with Logitech F710">
+      <program name="GCS"/>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="Simulator">
+        <arg flag="-a" constant="SKATE"/>
+        <arg flag="-boot"/>
+        <arg flag="-norc"/>
+      </program>
+      <program name="Joystick Server">
+        <arg flag="-ac" constant="SKATE"/>
+        <arg flag="-d" constant="/dev/input/js0"/>
+        <arg flag="-id" constant="3"/>
+        <arg flag="logitech_f710.xml"/>
       </program>
     </session>
     <session name="Skate Sim with Logitech F710">
@@ -151,45 +217,6 @@
       <program name="Joystick Server">
         <arg flag="-ac" constant="SKATE"/>
         <arg flag="-d" constant="/dev/input/js1"/>
-        <arg flag="-id" constant="3"/>
-        <arg flag="logitech_f710.xml"/>
-      </program>
-    </session>
-    <session name="Simulation - FG">
-      <program name="GCS"/>
-      <program name="Server">
-        <arg flag="-n"/>
-      </program>
-      <program name="Simulator">
-        <arg flag="-a" constant="Microjet"/>
-        <arg flag="-boot"/>
-        <arg flag="-fg" constant="127.0.0.1"/>
-      </program>
-    </session>
-    <session name="Simulation- Skate / FG">
-      <program name="GCS"/>
-      <program name="Server">
-        <arg flag="-n"/>
-      </program>
-      <program name="Simulator">
-        <arg flag="-a" constant="SKATE"/>
-        <arg flag="-boot"/>
-        <arg flag="-fg" constant="127.0.0.1"/>
-      </program>
-    </session>
-    <session name="Skate Sim with Logitech F710">
-      <program name="GCS"/>
-      <program name="Server">
-        <arg flag="-n"/>
-      </program>
-      <program name="Simulator">
-        <arg flag="-a" constant="SKATE"/>
-        <arg flag="-boot"/>
-        <arg flag="-norc"/>
-      </program>
-      <program name="Joystick Server">
-        <arg flag="-ac" constant="SKATE"/>
-        <arg flag="-d" constant="/dev/input/js0"/>
         <arg flag="-id" constant="3"/>
         <arg flag="logitech_f710.xml"/>
       </program>
