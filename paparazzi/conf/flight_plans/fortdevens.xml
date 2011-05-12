@@ -2,6 +2,7 @@
 
 <flight_plan alt="140" ground_alt="100" lat0="42.494966" lon0="-71.680976" max_dist_from_home="900" name="Basic" security_height="25">
   <header>
+<!-- camp roberts 35.716429	-120.764792 -->
 #include "subsystems/navigation/nav_line.h"
 #include "datalink.h"
 </header>

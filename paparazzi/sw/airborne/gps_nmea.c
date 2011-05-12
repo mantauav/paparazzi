@@ -606,7 +606,8 @@ void parse_gps_msg( void ) {
     } else if (isGPGSA()){
       parse_nmea_GPGSA();
     } else if (isGPGSV()){
-      parse_nmea_GPGSV();
+      //parse_nmea_GPGSV();
+      ;;
     } else {
       // nothing to do, ignore unsupported message
     }
