@@ -1,0 +1,4 @@
+#!/bin/bash
+# Launch cotd server
+java -cp cotc.jar:cotc_lib com.maxcht.cotc.cotc
+

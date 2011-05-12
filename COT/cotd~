@@ -1,0 +1,13 @@
+#!/bin/bash
+# Launch cotd server
+
+# Use a list of clients from a file:
+#java -cp cotd.jar:cotd_libs cotd clients.dat
+
+# Specify a single client and an update period (ms)
+#java -cp cotd.jar:cotd_libs cotd localhost 8087 500
+
+# Specify a single client and update rate via cmd line args
+java -cp cotd.jar:cotd_libs:/usr/share/java/ cotd $1 $2 $3
+
+
