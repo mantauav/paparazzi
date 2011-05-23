@@ -88,6 +88,13 @@ It has 8 buttons.
     <field name="value" value="1"/>
 </message>
 
+<!-- Flight Plan Blocks -->
+<message class="datalink" name="JUMP_TO_BLOCK" send_always="0" on_event="b_green" />
+  <field name="index" value="" />
+  <field name="block_id" value="IndexOfBlock('TNT Skytruck')"/>
+</message>
+
+
 </messages>
 
 </joystick>
