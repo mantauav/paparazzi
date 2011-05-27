@@ -26,7 +26,17 @@
       now kills the process in the event of a read error (joystick unplugs)
 */
 
+/*  5/27/2011 - jpeverill
+ * Fixed startup value when using joystick interface
+ * Added aborts for unknown joystick events when received
+ * Added limits for large amounts of events per loop (to eliminate flood errors)
+ * Some testing support in code for LED support, but so far does not work yet (limited hardware to test with)
+ * Buttons do not seem to work with old event* interface, only joystick
+ */
+
+// Define this variable to get extra debug output (for development)
 //#define STICK_DBG 1
+
 
 #include "usb_stick.h"
 
@@ -52,8 +62,12 @@
 #define dbgprintf(x ...)
 #endif
 
-#define MIN_BUTTON_CODE   BTN_JOYSTICK
-#define MAX_BUTTON_CODE   BTN_THUMBR+1
+//#define MIN_BUTTON_CODE   BTN_MISC
+//#define MAX_BUTTON_CODE   BTN_TRIGGER_HAPPY40
+
+#define MIN_BUTTON_CODE   0
+#define MAX_BUTTON_CODE   255
+
 #define MIN_ABS_CODE      ABS_X
 #define MAX_ABS_CODE      ABS_MAX+1
 
@@ -62,6 +76,8 @@
 
 #define BUTTON_COUNT      STICK_BUTTON_COUNT
 #define AXIS_COUNT        STICK_AXIS_COUNT
+
+#define EVENT_COUNT_MAX   128  //maximum number of events before loop aborts and issues error
 
 /* Helper for testing large bit masks */
 #define TEST_BIT(bit,bits) (((bits[bit>>5]>>(bit&0x1f))&1)!=0)
@@ -90,12 +106,15 @@ struct stick_code_param_ stick_init_param = {
 
 //struct ff_effect effect;
 
-
+//--------------------------------------------------
+//  LED test function, does not seem to work (for testing only)
+//--------------------------------------------------
 void led_test( void ) {
   
   struct input_event ev; /* the event */
 
   int lednum;
+  int returnval;
 
   /* we turn off all the LEDs to start */
   ev.type = EV_LED;
@@ -104,15 +123,15 @@ void led_test( void ) {
     for (lednum=0;lednum<32;lednum++) {
       ev.code = lednum;
       ev.value = 1;
-      write(stick_device_handle, &ev, sizeof(struct input_event));
+      returnval = write(stick_device_handle, &ev, sizeof(struct input_event));
     }
 
-    usleep(1000000);
+    usleep(100000);
 
     for (lednum=0;lednum<32;lednum++) {
       ev.code = lednum;
       ev.value = 0;
-      write(stick_device_handle, &ev, sizeof(struct input_event));
+      returnval = write(stick_device_handle, &ev, sizeof(struct input_event));
     }
   }
 
@@ -128,6 +147,8 @@ int init_hid_device(char* device_name)
   //	unsigned long ff_bits[32];
   int valbuf[16];
   char name[MAX_NAME_LENGTH] = "Unknown";
+
+  int evtype_b[4],yalv;
 
   stick_button_count = 0;
   stick_axis_count = 0;
@@ -151,25 +172,87 @@ int init_hid_device(char* device_name)
 
   /* LED testing */
   
-//  led_test( );
+  //led_test( );
+
+  /* read event device capabilities */
+  if( event_mode == STICK_MODE_EVENT ) {
+    memset(evtype_b, 0, sizeof(evtype_b));
+    if (ioctl(stick_device_handle, EVIOCGBIT(0, EV_MAX), evtype_b) < 0) {
+      perror("evdev ioctl");
+    }
+
+    dbgprintf(stderr,"Supported event types:\n");
+  
+    for (yalv = 0; yalv < EV_MAX; yalv++) {
+      if (TEST_BIT(yalv, evtype_b)) {
+	/* the bit is set in the event types list */
+	dbgprintf(stderr,"  Event type 0x%02x ", yalv);
+	switch ( yalv)
+	  {
+	  case EV_SYN :
+	    dbgprintf(stderr," (Sync Events)\n");
+	    break;
+	  case EV_KEY :
+	    dbgprintf(stderr," (Keys or Buttons)\n");
+	    break;
+	  case EV_REL :
+	    dbgprintf(stderr," (Relative Axes)\n");
+	    break;
+	  case EV_ABS :
+	    dbgprintf(stderr," (Absolute Axes)\n");
+	    break;
+	  case EV_MSC :
+	    dbgprintf(stderr," (Miscellaneous)\n");
+	    break;
+	  case EV_LED :
+	    dbgprintf(stderr," (LEDs)\n");
+	    break;
+	  case EV_SND :
+	    dbgprintf(stderr," (Sounds)\n");
+	    break;
+	  case EV_REP :
+	    dbgprintf(stderr," (Repeat)\n");
+	    break;
+	  case EV_FF :
+	  case EV_FF_STATUS:
+	    dbgprintf(stderr," (Force Feedback)\n");
+	    break;
+	  case EV_PWR:
+	    dbgprintf(stderr," (Power Management)\n");
+	    break;
+	  default:
+	    dbgprintf(stderr," (Unknown: 0x%04hx)\n",yalv);
+	  }
+      }
+    }
+  }
 
 
   /* Which buttons has the device? */
   memset(key_bits,0,32*sizeof(unsigned long));
   memset(led_bits,0,32*sizeof(unsigned long));
   if (event_mode == STICK_MODE_EVENT ) {
+    //read button mask
     if (ioctl(stick_device_handle,EVIOCGBIT(EV_KEY,32*sizeof(unsigned long)),key_bits)<0) {
       dbgprintf(stderr,"ERROR: can not get key bits (%s) [%s:%d]\n",
 		strerror(errno),__FILE__,__LINE__);
       return(1);
     }
-    //read LED count
-    if (ioctl(stick_device_handle,EVIOCGLED(32*sizeof(led_bits)),led_bits)<0) {
+
+    //read LED mask
+    if (ioctl(stick_device_handle,EVIOCGBIT(EV_LED,32*sizeof(unsigned long)),led_bits)<0) {
       dbgprintf(stderr,"ERROR: can not get LED bits (%s) [%s:%d]\n",
 		strerror(errno),__FILE__,__LINE__);
       return(1);
     }
-    dbgprintf(stderr,"LEDs: %X",*led_bits);
+   
+    //count LEDs
+    for (cnt = 0 ;cnt<EV_CNT;cnt++ ) {
+      if (TEST_BIT(cnt, key_bits)) {
+	hid_led_count++;
+      }
+    }
+    dbgprintf(stderr,"LEDs found: %d\n",hid_led_count);
     
 
   } else {
@@ -371,12 +454,22 @@ int stick_read( void ) {
   int cnt;
   struct input_event event;
   struct js_event jsevent;
+  int unknownabort = 0;
+  int eventcount = 0;
 
   if (event_mode == STICK_MODE_EVENT ) {
   /* Get events */
-    while (read(stick_device_handle,&event,sizeof(event))==sizeof(event)) {
+    while (unknownabort == 0 && read(stick_device_handle,&event,sizeof(event))==sizeof(event) && eventcount < EVENT_COUNT_MAX) {
+      
+      eventcount++;
 
       switch (event.type) {
+      case EV_SYN:
+	//do nothing
+	break;
+      case EV_MSC:
+	//do nothing
+	break;
       case EV_KEY:
 	for (cnt = 0; cnt < stick_button_count; cnt++) {
 	  if (event.code == button_code[cnt]) {
@@ -394,15 +487,28 @@ int stick_read( void ) {
 	  }
         }
         break;
-      default: break;
+      default: 
+	unknownabort = 1;
+	break;
       }
+    }
+
+    if (unknownabort == 1) {
+      printf("Unknown joystick event: %d\n",event.type);
     }
 
   } else {
 
     /* Get joystick events */
-    while (read(stick_device_handle,&jsevent,sizeof(jsevent))==sizeof(jsevent)) {
+    while (unknownabort == 0 && read(stick_device_handle,&jsevent,sizeof(jsevent))==sizeof(jsevent) && eventcount < EVENT_COUNT_MAX) {
+
+      eventcount++;
     
+      if(jsevent.type & JS_EVENT_INIT) {
+	//init event, we handle them the same
+	jsevent.type ^= JS_EVENT_INIT;
+      }
+
       switch (jsevent.type) {
       case JS_EVENT_BUTTON:
         for (cnt = 0; cnt < stick_button_count; cnt++) {
@@ -421,10 +527,20 @@ int stick_read( void ) {
           }
         }
         break;
-      default: break;
+      default:
+	unknownabort = 1;
+	break;
       }
     }
 
+    if (unknownabort == 1) {
+      printf("Unknown joystick event: %d\n",jsevent.type);
+    }
+
+  }
+
+  if (eventcount >= EVENT_COUNT_MAX) {
+    printf("Too many events on joystick!\n");
   }
 
   if (errno != EAGAIN) {

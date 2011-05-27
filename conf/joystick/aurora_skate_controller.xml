@@ -43,7 +43,7 @@ It has 9 buttons.
 
   <message class="datalink" name="RC_4CH" send_always="1">
    <field name="joystick_id" value="JoystickID()"/>
-   <field name="throttle"    value="Scale(ly,-10,127)"/>
+   <field name="throttle"    value="Scale(ly,0-10,127)"/>
    <field name="roll"        value="rx"/>
    <field name="yaw"         value="lx"/>
    <field name="pitch"       value="0-ry"/>
