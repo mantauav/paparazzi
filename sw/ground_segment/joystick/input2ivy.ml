@@ -38,11 +38,13 @@
 open Printf
 open Unix
 open Random
+open Sys
 
 
 let (//) = Filename.concat
 let conf_dir = Env.paparazzi_home // "conf"
 let verbose = ref false (* Command line option *)
+let keyboard_trim_mode = ref false (* Command line option *)
 
 (** global trim file name *)
 let trim_file_name = ref ""
@@ -478,6 +480,10 @@ let () =
   and ac_name = ref "MYAC"
   and xml_descr = ref "" in
 
+  (** Ignore SIGTTOU *)
+  let sigset = [Sys.sigttou ; Sys.sigttin] in
+  ignore (Unix.sigprocmask Unix.SIG_BLOCK sigset);
+
   let anon_fun = (fun x -> xml_descr := x) in
   let speclist =  
     [ "-b", Arg.String (fun x -> ivy_bus := x), "Bus\tDefault is 127.255.255.255:2010";
@@ -485,6 +491,7 @@ let () =
       "-d",  Arg.Set_string device_name, "<device name>";
       "-v",  Arg.Set verbose, "Verbose mode (useful to identify the channels of an input device)";
       "-id", Arg.Set_int joystick_id, "Joystick ID, from 0-255.  Each joystick requires a unique ID in a multiple joystick configuration.";
+      "-keys", Arg.Set keyboard_trim_mode, "Turn on keyboard trim mode, for using trim with no joystick buttons.";
       "-", Arg.String anon_fun, "<xml file of actions>"
     ]
   and usage_msg = "Usage: " in
@@ -522,7 +529,8 @@ let () =
   Unix.tcsetattr Unix.stdin Unix.TCSANOW tstatus;
 
   ignore (Glib.Timeout.add actions.period_ms (fun () -> execute_actions actions ac_id; true));
-  ignore (Glib.Io.add_watch ~cond:[`IN] ~callback:(fun x -> execute_kb_action actions x) (Glib.Io.channel_of_descr Unix.stdin));
+  if !keyboard_trim_mode then						  
+    ignore (Glib.Io.add_watch ~cond:[`IN] ~callback:(fun x -> execute_kb_action actions x) (Glib.Io.channel_of_descr Unix.stdin));  
   
   (** Start the main loop *)
   let loop = Glib.Main.create true in
