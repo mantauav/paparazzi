@@ -67,13 +67,13 @@ static inline bool_t ins_configure( void ) {
       break;
     case INS_VN100_SET_MAG_REF :
       last_send_packet.RegID = VN100_REG_REF;
-      last_send_packet.Data[0].Float=23462.5;
-      last_send_packet.Data[1].Float=5611.9;
-      last_send_packet.Data[2].Float=41526.8;
+//      last_send_packet.Data[0].Float=23462.5;
+//      last_send_packet.Data[1].Float=5611.9;
+//      last_send_packet.Data[2].Float=41526.8;
 
-//      last_send_packet.Data[0].Float=1.92487;   //Devens
-//      last_send_packet.Data[1].Float=-0.51819;  //Devens
-//      last_send_packet.Data[2].Float=4.88002;   //Devens
+      last_send_packet.Data[0].Float=1.92487;   //Devens
+      last_send_packet.Data[1].Float=-0.51819;  //Devens
+      last_send_packet.Data[2].Float=4.88002;   //Devens
 //      last_send_packet.Data[0].Float=2.47652;     //Florida
 //      last_send_packet.Data[1].Float=-0.2390;    //Florida
 //      last_send_packet.Data[2].Float=3.86421;     //Florida
