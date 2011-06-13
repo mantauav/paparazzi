@@ -110,6 +110,7 @@
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
     <define name="AUTO_THROTTLE_PGAIN" value="-0.01"/>
     <define name="AUTO_THROTTLE_IGAIN" value="0.1"/>
+    <define name="AUTO_THROTTLE_DGAIN" value="0.04"/>
     <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.0"/>
 
 
@@ -119,15 +120,15 @@
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
 
-    <define name="COURSE_PGAIN" value="-0.309"/>
-    <define name="COURSE_DGAIN" value="0.114"/>
-
+    <define name="COURSE_PGAIN" value="-0.514"/>
+    <define name="COURSE_DGAIN" value="0.24"/>
+    <define name="COURSE_PRE_BANK_CORRECTION" value="0.116"/>
  
     <define name="PITCH_MAX_SETPOINT" value="0.523" /> <!--  0.523  ~ 30 deg  -->
     <define name="PITCH_MIN_SETPOINT" value="0.1046667"/> <!-- 0.1046667 ~ 6 deg   -->
     <define name="PITCH_NEUTRAL"             value="0.22"/>
-    <define name="PITCH_PGAIN" value="-15500."/>
-    <define name="PITCH_DGAIN" value="0.421"/>
+    <define name="PITCH_PGAIN" value="-11785."/>
+    <define name="PITCH_DGAIN" value="0.0"/>
 
     <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
     <define name="ATTITUDE_HOLD_ROLL_GAIN"   value="0"/>
