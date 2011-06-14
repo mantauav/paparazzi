@@ -39,4 +39,14 @@
    settings=" settings/tuning_skate.xml"
    gui_color="#6233ba"
   />
+  <aircraft
+   name="SKATE-S"
+   ac_id="38"
+   airframe="airframes/skate-s.xml"
+   radio="radios/spektrum_dx7.xml"
+   telemetry="telemetry/skate.xml"
+   flight_plan="flight_plans/fortdevens.xml"
+   settings=" settings/skate-s.xml"
+   gui_color="#6233ba"
+  />
 </conf>
