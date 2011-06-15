@@ -9,18 +9,15 @@
   <waypoints>
     <waypoint name="HOME" x="0" y="0"/>
     <waypoint name="STDBY" x="112.2" y="-10.2"/>
-    <waypoint name="1" x="46.3" y="-15.8"/>
-    <waypoint name="2" x="122.5" y="-71.4"/>
+    <waypoint name="A" x="-46.3" y="-15.8"/>
+    <waypoint name="B" x="122.5" y="-71.4"/>
     <waypoint name="MOB" x="165.4" y="193.3"/>
-    <waypoint name="S1" x="177.1" y="-9.6"/>
-    <waypoint name="S2" x="103.6" y="48.3"/>
+    <waypoint name="C" x="177.1" y="-9.6"/>
+    <waypoint name="D" x="103.6" y="48.3"/>
     <waypoint alt="110.0" name="AF" x="191.3" y="-136.1"/>
     <waypoint alt="100" name="TD" x="163.3" y="-120.7"/>
     <waypoint name="_BASELEG" x="222.9" y="-155.2"/>
     <waypoint name="CLIMB" x="178.3" y="-127.8"/>
-    <waypoint name="wp1" x="-423.1" y="540.9"/>
-    <waypoint name="wp3" x="-482.6" y="526.1"/>
-    <waypoint name="wp4" x="-574.4" y="509.0"/>
   </waypoints>
   <exceptions/>
   <blocks>
@@ -46,41 +43,44 @@
     <block group="home" key="<Control>a" name="Standby" strip_button="Standby" strip_icon="home.png">
       <circle radius="nav_radius" wp="STDBY"/>
     </block>
-    <block name="Skytruck">
+    <block name="Skytruck - Roll">
       <attitude roll="nav_roll" climb="0.0" vmode="alt" alt="nav_alt" until="FALSE"/>
       <deroute block="Standby"/>
     </block>
-    <block name="Heading" group="extra_pattern">
+    <block name="Skytruck - Heading" group="extra_pattern">
       <heading course="nav_course" alt="nav_alt" vmode="alt" until="FALSE"/>
       <deroute block="Standby"/>
     </block>
-    <block group="base_pattern" key="F8" name="Figure 8 around wp 1" strip_button="Figure 8 (wp 1-2)" strip_icon="eight.png">
-      <eight center="1" radius="nav_radius" turn_around="2"/>
+    <block group="base_pattern" key="F8" name="Figure 8 WP A,B" strip_button="Figure 8 (wp A,B)" strip_icon="eight.png">
+      <eight center="A" radius="nav_radius" turn_around="B"/>
     </block>
-    <block group="base_pattern" name="Oval 1-2" strip_button="Oval (wp 1-2)" strip_icon="oval.png">
-      <oval p1="1" p2="2" radius="nav_radius"/>
+    <block group="base_pattern" name="Oval A-B" strip_button="Oval (wp A-B)" strip_icon="oval.png">
+      <oval p1="A" p2="B" radius="nav_radius"/>
     </block>
     <block group="base_pattern" name="MOB" strip_button="Turn around here" strip_icon="mob.png">
       <call fun="NavSetWaypointHere(WP_MOB)"/>
       <set value="DEFAULT_CIRCLE_RADIUS" var="nav_radius"/>
       <circle radius="nav_radius" wp="MOB"/>
     </block>
-    <block group="extra_pattern" name="Line 1-2" strip_button="Line (wp 1-2)" strip_icon="line.png">
+    <block group="extra_pattern" name="Line A-B" strip_button="Line (wp A-B)" strip_icon="line.png">
       <call fun="nav_line_init()"/>
-      <call fun="nav_line(WP_1, WP_2, nav_radius)"/>
+      <call fun="nav_line(WP_A, WP_B, nav_radius)"/>
     </block>
-    <block group="extra_pattern" name="Survey S1-S2" strip_button="Survey (wp S1-S2)" strip_icon="survey.png">
-      <survey_rectangle grid="150" wp1="S1" wp2="S2"/>
+    <block group="extra_pattern" name="Survey A-D" strip_button="Survey (wp A-D)" strip_icon="survey.png">
+      <survey_rectangle grid="150" wp1="A" wp2="D"/>
     </block>
-    <block group="extra_pattern" name="Path 1,2,S1,S2" strip_button="Path (1,2,S1,S2)" strip_icon="path.png">
-      <path wpts="1,2 S1"/>
-      <path approaching_time="1" pitch="auto" throttle="0.4" wpts="S1, S2 1"/>
-      <deroute block="Path 1,2,S1,S2"/>
+    <block group="extra_pattern" name="Path A,B,C,D" strip_button="Path (A,B,C,D)" strip_icon="path.png">
+      <path wpts="A,B C"/>
+      <path approaching_time="1" pitch="auto" throttle="0.4" wpts="C, D A"/>
+      <deroute block="Path A,B,C,D"/>
     </block>
-    <block group="extra_pattern" name="Path 1,S2,S1,2" strip_icon="path.png">
-      <path wpts="1,S2 S1"/>
-      <path approaching_time="1" pitch="auto" throttle="0.4" wpts="S1, 2 1"/>
-      <deroute block="Path 1,S2,S1,2"/>
+    <block group="extra_pattern" name="Path A,D,C,B" strip_icon="path.png">
+      <path wpts="A,D C"/>
+      <path approaching_time="1" pitch="auto" throttle="0.4" wpts="C, B A"/>
+      <deroute block="Path A,D,C,B"/>
+    </block>
+    <block NAME="Follow Skate-S">
+      <follow AC_ID="38" DISTANCE="10" HEIGHT="25"/>
     </block>
     <block group="land" name="Land Right AF-TD" strip_button="Land right (wp AF-TD)" strip_icon="land-right.png">
       <set value="DEFAULT_CIRCLE_RADIUS" var="nav_radius"/>
@@ -105,6 +105,7 @@
     </block>
     <block group="home" name="Kill">
       <attitude roll="0.0" pitch="10" throttle="0.0" vmode="throttle"/>
+      <set value="1" var="kill_throttle"/>
     </block>
     <block name="flare">
       <go approaching_time="0" from="AF" hmode="route" throttle="0.0" vmode="throttle" wp="TD"/>
