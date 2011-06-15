@@ -61,10 +61,11 @@ It has 8 buttons.
     <field name="index" value="IndexOfSetting('nav_roll')"/>
     <field name="value" value="Scale(rx,0-35,35)"/>
 </message>
-<message class="ground" name="DL_SETTING" send_always="1">
+<!-- <message class="ground" name="DL_SETTING" send_always="1">
     <field name="index" value="IndexOfSetting('nav_course')"/>
     <field name="value" value="Scale(rx,0-179,179)+180"/>
 </message>
+-->
   <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="dy > 100">
     <field name="index" value="IndexOfSetting('nav_altitude_at_auto2_switch')"/>
     <field name="mod" value="0-5"/>
@@ -93,12 +94,30 @@ It has 8 buttons.
 </message>
 
 <!-- Flight Plan Blocks -->
-<message class="datalink" name="JUMP_TO_BLOCK" send_always="0" on_event="b_green" />
-  <field name="index" value="" />
-  <field name="block_id" value="IndexOfBlock('TNT Skytruck')"/>
+<message class="ground" name="DL_SETTING" send_always="0" on_event="b_yellow">
+    <field name="index" value="IndexOfSetting('nav_course')"/>
+    <field name="value" value="0"/>
 </message>
-
-
+<message class="ground" name="DL_SETTING" send_always="0" on_event="b_red">
+    <field name="index" value="IndexOfSetting('nav_course')"/>
+    <field name="value" value="90"/>
+</message>
+<message class="ground" name="DL_SETTING" send_always="0" on_event="b_green">
+    <field name="index" value="IndexOfSetting('nav_course')"/>
+    <field name="value" value="180"/>
+</message>
+<message class="ground" name="DL_SETTING" send_always="0" on_event="b_blue">
+    <field name="index" value="IndexOfSetting('nav_course')"/>
+    <field name="value" value="270"/>
+</message>
+  <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="dx > 100">
+    <field name="index" value="IndexOfSetting('nav_course')"/>
+    <field name="mod" value="5"/>
+  </message>
+  <message class="ground" name="DL_SETTING_MOD" send_always="0" on_event="0-100 > dx">
+    <field name="index" value="IndexOfSetting('nav_course')"/>
+    <field name="mod" value="0-5"/>
+  </message>
 </messages>
 
 </joystick>
