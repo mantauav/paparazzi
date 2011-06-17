@@ -71,7 +71,7 @@ OCAMLRUN=$(shell which ocamlrun)
 
 all: commands static conf
 
-static : lib center tools cockpit multimon tmtc logalizer lpc21iap sim_static static_h usb_lib
+static : lib center tools cockpit multimon tmtc logalizer lpc21iap sim_static static_h usb_lib bob4_osd joystick
 
 conf: conf/conf.xml conf/control_panel.xml
 

@@ -17,7 +17,7 @@
   <commands>
     <axis name="THROTTLE"        failsafe_value="0"/>
     <axis name="ROLL"            failsafe_value="0"/>
-    <axis name="PITCH"           failsafe_value="0"/>
+    <axis name="PITCH"           failsafe_value="7000"/>
     <axis name="YAW"             failsafe_value="0"/>
     <axis name="CAM_SWITCH"      failsafe_value="9600"/>
   </commands>
