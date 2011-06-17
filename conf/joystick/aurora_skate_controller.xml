@@ -129,9 +129,20 @@ It has 9 buttons.
   </message>
 
   <!-- Green Button -->  <!-- MANUAL mode -->
+
   <message class="ground" name="DL_SETTING" send_always="0" on_event="b9">
     <field name="index" value="IndexOfSetting('pprz_mode')"/>
     <field name="value" value="0"/> 
+  </message>
+
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b8 || b7 || b9">
+    <field name="index" value="IndexOfSetting('kill_throttle')"/>
+    <field name="value" value="0"/> 
+  </message>
+
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b1 && b10">
+    <field name="index" value="IndexOfSetting('kill_throttle')"/>
+    <field name="value" value="1"/> 
   </message>
 
  <message class="ground" name="DL_SETTING" send_always="0" on_event="b7 || b8 || b9">
