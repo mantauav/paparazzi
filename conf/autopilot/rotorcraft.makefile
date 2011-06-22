@@ -23,13 +23,6 @@
 #
 #
 
-#
-# Expected from board file or overriden as xml param :
-#
-# MODEM_PORT
-# MODEM_BAUD
-#
-
 CFG_SHARED=$(PAPARAZZI_SRC)/conf/autopilot/subsystems/shared
 CFG_ROTORCRAFT=$(PAPARAZZI_SRC)/conf/autopilot/subsystems/rotorcraft
 
@@ -79,12 +72,16 @@ ifeq ($(ARCH), stm32)
 ap.srcs += $(SRC_ARCH)/led_hw.c
 endif
 
+# frequency of main periodic
+ifndef PERIODIC_FREQUENCY
+PERIODIC_FREQUENCY = 512
+endif
+$(TARGET).CFLAGS += -DPERIODIC_TASK_PERIOD='SYS_TICS_OF_SEC((1./$(PERIODIC_FREQUENCY).))' -DPERIODIC_FREQUENCY=$(PERIODIC_FREQUENCY)
 #
 # Systime
 #
 ap.CFLAGS += -DUSE_SYS_TIME
 ap.srcs += sys_time.c $(SRC_ARCH)/sys_time_hw.c
-ap.CFLAGS += -DPERIODIC_TASK_PERIOD='SYS_TICS_OF_SEC((1./512.))'
 ifeq ($(ARCH), stm32)
 ap.CFLAGS += -DSYS_TIME_LED=$(SYS_TIME_LED)
 endif
@@ -92,21 +89,17 @@ endif
 #
 # Telemetry/Datalink
 #
+# include subsystems/rotorcraft/telemetry_transparent.makefile
+# or
+# include subsystems/rotorcraft/telemetry_xbee_api.makefile
+#
+ap.srcs += subsystems/settings.c
+ap.srcs += $(SRC_ARCH)/subsystems/settings_arch.c
 ap.srcs += $(SRC_ARCH)/mcu_periph/uart_arch.c
-ap.CFLAGS += -DDOWNLINK -DDOWNLINK_TRANSPORT=PprzTransport
-ap.CFLAGS += -DDOWNLINK_DEVICE=$(MODEM_PORT)
-ap.srcs   += $(SRC_FIRMWARE)/telemetry.c
-ap.srcs   += downlink.c
-ap.srcs   += pprz_transport.c
-ap.CFLAGS += -DDATALINK=PPRZ
-ap.CFLAGS += -DPPRZ_UART=$(MODEM_PORT)
-ap.srcs   += $(SRC_FIRMWARE)/datalink.c
-ap.CFLAGS += -DUSE_$(MODEM_PORT) -D$(MODEM_PORT)_BAUD=$(MODEM_BAUD)
 
-ifeq ($(ARCH), lpc21)
-ap.CFLAGS += -D$(MODEM_PORT)_VIC_SLOT=6
-endif
-
+# I2C is needed for speed controllers and barometers on lisa
+ap.srcs += mcu_periph/i2c.c
+ap.srcs += $(SRC_ARCH)/mcu_periph/i2c_arch.c
 
 ap.srcs += $(SRC_BOOZ)/booz2_commands.c
 
@@ -143,7 +136,7 @@ ap.srcs += $(SRC_BOOZ)/booz2_commands.c
 #
 ap.srcs += $(SRC_BOARD)/baro_board.c
 ifeq ($(BOARD), booz)
-ap.CFLAGS += -DROTORCRAFT_BARO_LED=$(BARO_LED) -DBOOZ2_ANALOG_BARO_PERIOD='SYS_TICS_OF_SEC((1./100.))'
+ap.CFLAGS += -DROTORCRAFT_BARO_LED=$(BARO_LED)
 else ifeq ($(BOARD), lisa_l)
 ap.CFLAGS += -DUSE_I2C2
 endif
@@ -151,16 +144,24 @@ endif
 #
 # Analog Backend
 #
+
 ifeq ($(ARCH), lpc21)
-ap.CFLAGS += -DBOOZ2_ANALOG_BATTERY_PERIOD='SYS_TICS_OF_SEC((1./10.))'
-ap.srcs += $(SRC_FIRMWARE)/battery.c
 ap.CFLAGS += -DADC0_VIC_SLOT=2
 ap.CFLAGS += -DADC1_VIC_SLOT=3
-ap.srcs += $(SRC_BOOZ)/booz2_analog.c \
-		   $(SRC_BOOZ_ARCH)/booz2_analog_hw.c
+ap.CFLAGS += -DUSE_ADC
+ap.srcs   += $(SRC_ARCH)/mcu_periph/adc_arch.c
+ap.srcs   += subsystems/electrical.c
+# baro has variable offset amplifier on booz board
+ap.CFLAGS += -DUSE_DAC
+ap.srcs   += $(SRC_ARCH)/mcu_periph/dac_arch.c
 else ifeq ($(ARCH), stm32)
-ap.srcs += lisa/lisa_analog_plug.c
+ap.CFLAGS += -DUSE_ADC
+ap.CFLAGS += -DUSE_AD1 -DUSE_AD1_1 -DUSE_AD1_2 -DUSE_AD1_3 -DUSE_AD1_4
+ap.CFLAGS += -DUSE_ADC1_2_IRQ_HANDLER
+ap.srcs   += $(SRC_ARCH)/mcu_periph/adc_arch.c
+ap.srcs   += subsystems/electrical.c
 endif
+
 
 
 #
@@ -212,7 +213,7 @@ ap.srcs += math/pprz_geodetic_int.c math/pprz_geodetic_float.c math/pprz_geodeti
 
 #  vertical filter float version
 ap.srcs += $(SRC_SUBSYSTEMS)/ins/vf_float.c
-ap.CFLAGS += -DUSE_VFF -DDT_VFILTER='(1./512.)'
+ap.CFLAGS += -DUSE_VFF -DDT_VFILTER='(1./$(PERIODIC_FREQUENCY).)'
 
 ap.srcs += $(SRC_FIRMWARE)/navigation.c
 

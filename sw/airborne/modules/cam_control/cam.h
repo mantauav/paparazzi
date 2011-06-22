@@ -58,7 +58,7 @@ extern uint8_t cam_target_ac;
 
 void cam_periodic( void );
 void cam_init( void );
-void cam_set_switch();
+void cam_set_switch(void);
 extern int16_t cam_pan_command;
 #define cam_SetPanCommand(x) { ap_state->commands[COMMAND_CAM_PAN] = cam_pan_command = x;}
 extern int16_t cam_tilt_command;

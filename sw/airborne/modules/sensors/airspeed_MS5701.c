@@ -51,7 +51,9 @@
    ---------------------------------------------------------------------- */
 
 #include "std.h"
+#ifndef SITL
 #include "LPC21xx.h"
+#endif
 #include "mcu_periph/spi.h"
 #include "sys_time.h"
 #include "modules/sensors/airspeed_MS5701.h"
@@ -172,10 +174,15 @@ float airspeed_MS5701_reference_pressure = 1013.25;
 //-------------------------
 // select/deselect functions
 inline void ms5701_select(void) {
+#ifndef SITL
+  SpiEnable();
   SetBit(AIRSPEED_SS_IOCLR,AIRSPEED_SS_PIN);
+#endif
 }
 inline void ms5701_unselect() {
+#ifndef SITL
   SetBit(AIRSPEED_SS_IOSET,AIRSPEED_SS_PIN);
+#endif
 }
 
 
@@ -183,7 +190,7 @@ inline void ms5701_unselect() {
 //-------------------------
 //initializes the MS5701 barometric pressure sensor
 void airspeed_MS5701_init (void) {
-
+#ifndef SITL
   //setup SPI
  /* setup pins for SSP (SCK, MISO, MOSI) */
 //  PINSEL1 |= 2 << 2 | 2 << 4 | 2 << 6;
@@ -196,6 +203,7 @@ void airspeed_MS5701_init (void) {
   /* configure SS pin */
   SetBit(AIRSPEED_SS_IODIR, AIRSPEED_SS_PIN); /* SS pin is output  */
   ms5701_unselect();
+#endif
   //done with SPI setup
 
   ms5701_state = reset;
@@ -242,9 +250,9 @@ int check_airspeed_state(void) {
     return FALSE;
 
   } else if (ms5701_state == calibration) {
-    
+#ifndef SITL    
     SpiEnable();
-
+#endif
   //read calibration table in
   // do not read 0, is a manufacturer reserved value
     for(i=0;i<MS5701_CAL_NUM_VALUES;i++) {
@@ -298,19 +306,21 @@ int check_airspeed_state(void) {
 //--------------------------------------------------
 // function to write SPI byte
 void airspeed_write_byte (unsigned char byte) {
+#ifndef SITL
   volatile int g;
-
   // wait for SPI to be free
   while (SPI_BUSY) {g=g;}
   // write out command to read prom
   SSPDR= byte;
   while (SPI_BUSY) {g=g;}
   g = SSPDR;
+#endif
 }
 
 //--------------------------------------------------
 // function to write SPI byte
 unsigned char airspeed_read_byte (void) {
+#ifndef SITL
   volatile int g;
 
   // wait for SPI to be free
@@ -319,6 +329,9 @@ unsigned char airspeed_read_byte (void) {
   SSPDR= 0;
   while (SPI_BUSY) {g=g;}
   return SSPDR;
+#else
+  return 0;
+#endif
 }
 
 
@@ -335,7 +348,7 @@ typedef union {
 
 //reset the ms5701
 void airspeed_reset () {
-
+#ifndef SITL
   SpiEnable();
 
   ms5701_select();
@@ -346,7 +359,7 @@ void airspeed_reset () {
   sys_time_usleep ( DELAY_RESET + DELAY_MARGIN );
 
   ms5701_unselect();
-
+#endif
 }
 
 // start the pressure conversion process
@@ -370,10 +383,12 @@ float airspeed_readPressure (void) {
   unsigned char temp[3];
   int32_t D1;
   double OFF,SENS,PRESSURE;
-
+  
+  SpiEnable();
   //now read back the 24bit result
   ms5701_select();
   airspeed_write_byte( COM_ADC_READ );
+  sys_time_usleep( 10 );
   for(i=0;i<3;i++) {
     temp[i] = airspeed_read_byte();
   }
@@ -441,7 +456,7 @@ float airspeed_readTemperature (void) {
   int32_t D2,dT;
   float TEMP;
   int i;
-
+  SpiEnable();
   //now read back the 24bit result
   ms5701_select();
   airspeed_write_byte( COM_ADC_READ );
@@ -553,7 +568,7 @@ void airspeed_MS5701_update (void) {
 // periodic function for airspeed module
 //  should be called at 60hz, and will update airspeed at 10Hz 
 void airspeed_MS5701_periodic (void) {
-  static int airspeed_getAltitude_periodic = 0;
+//  static int airspeed_getAltitude_periodic = 0;
 
   float pressure;
   float airspeed;
@@ -569,14 +584,21 @@ void airspeed_MS5701_periodic (void) {
 	airspeed_startTemperature();
 	break;
       case 1: //read temperature
-	airspeed_readTemperature();
+	MS5701_last_temperature = airspeed_readTemperature();
 	break;
       case 2: //start pressure conversion
 	airspeed_startPressure();
 	break;
       case 3: //read pressure, do calcs and set airspeed
-	pressure = airspeed_readPressure();
+        pressure = airspeed_readPressure();
+	MS5701_last_pressure = pressure;
+        if ( airspeed_MS5701_zero_reference_calibrate_start == 1) {
+          airspeed_MS5701_zero_reference_calibrate_start = 0;
+          airspeed_MS5701_zero_reference_pressure = pressure;
+        }
+        pressure = fabs(pressure - airspeed_MS5701_zero_reference_pressure);
 	airspeed = dp2cas( (float)pressure, airspeed_MS5701_reference_pressure );
+        airspeed_MS5701_last_airspeed = airspeed;
 	EstimatorSetAirspeed(airspeed);
 
         #ifdef MS5701_DEBUG
@@ -596,8 +618,6 @@ void airspeed_MS5701_periodic (void) {
   EstimatorSetAirspeed(sim_air_speed);
 #endif
 }
-
-
 
 //----------------------------------------------------------------------
 // sets current input pressure to be the zero airspeed reference pressure

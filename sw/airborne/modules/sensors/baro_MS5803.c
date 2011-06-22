@@ -184,8 +184,7 @@ inline void ms5803_unselect() {
 //-------------------------
 //initializes the MS5803 barometric pressure sensor
 void baro_MS5803_init (void) {
-  int i;
-  unsigned char temp[2];
+  //unsigned char temp[2];
 
   //setup SPI
  /* setup pins for SSP (SCK, MISO, MOSI) */
@@ -206,11 +205,11 @@ void baro_MS5803_init (void) {
 }
 
 void baro_dump_debugging(void) {
-  int i;
-  int32_t temp;
-  int32_t pressure;
-
+  
+  //int32_t temp;
   #ifdef MS5803_DEBUG
+  int i;
+  int32_t pressure;
   USB_DEBUG_OUT("%s","MS5803 cal:");
   for(i=1;i<MS5803_CAL_NUM_VALUES;i++) {
     USB_DEBUG_OUT(" %d",ms5803_cal_table[i]);

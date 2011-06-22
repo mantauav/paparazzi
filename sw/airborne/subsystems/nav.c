@@ -55,7 +55,7 @@ float carrot_x, carrot_y;
 /** Status on the current circle */
 float nav_circle_radians; /* Cumulated */
 float nav_circle_trigo_qdr; /* Angle from center to mobile */
-float nav_radius, nav_course, nav_climb, nav_shift;
+float nav_radius, nav_course, nav_alt, nav_roll, nav_climb, nav_shift;
 
 
 /** Status on the current leg (percentage, 0. < < 1.) in route mode */
@@ -74,7 +74,10 @@ float circle_bank = 0;
 /** Dynamically adjustable, reset to nav_altitude when it is changing */
 float flight_altitude;
 float nav_altitude_at_auto2_switch=50;
-bool_t nav_capture_altitude=0;
+#ifndef NAV_CAPTURE_ALTITUDE
+#define NAV_CAPTURE_ALTITUDE 0
+#endif
+bool_t nav_capture_altitude=NAV_CAPTURE_ALTITUDE;
 
 float nav_glide_pitch_trim;
 #ifndef NAV_GLIDE_PITCH_TRIM
@@ -343,17 +346,17 @@ void fly_to_xy(float x, float y) {
 
 float rc_target_N=10.0;
 float rc_target_E=0.0;
-bool_t fly_to_xy_from_rc()
-{
+//bool_t fly_to_xy_from_rc()
+//{
 //  if (  (fabs(radio_control.values[RADIO_ROLL]/100) > 10) || (fabs(radio_control.values[RADIO_PITCH]/100) > 10))
 // || ( fabs(((float)radio_control.values[RADIO_PITCH]/100) > 10) )
 //  {
-    rc_target_N = -(float)radio_control.values[RADIO_PITCH]/100;
-    rc_target_E = (float)radio_control.values[RADIO_ROLL]/100;
+//    rc_target_N = -(float)radio_control.values[RADIO_PITCH]/100;
+//    rc_target_E = (float)radio_control.values[RADIO_ROLL]/100;
 //  }
-  fly_to_xy(estimator_x+rc_target_E,estimator_y+rc_target_N);
-  return FALSE;
-}
+//  fly_to_xy(estimator_x+rc_target_E,estimator_y+rc_target_N);
+//  return FALSE;
+//}
 
 /**
  *  \brief Computes the carrot position along the desired segment.

@@ -65,6 +65,10 @@ void airspeed_MS5701_init (void);
 float airspeed_getPressure (void);
 float airspeed_getTemperature (void);
 float airspeed_getAirspeed (void);
+void airspeed_startPressure (void);
+float airspeed_readPressure (void);
+void airspeed_startTemperature (void);
+float airspeed_readTemperature (void);
 void airspeed_write_byte (unsigned char byte);
 unsigned char airspeed_read_byte (void);
 void airspeed_dump_debugging(void);
@@ -74,6 +78,7 @@ void airspeed_MS5701_update( void );
 
 //calibration function
 int airspeed_set_zero_reference( void );
+float dp2cas(float dp, float Pref);
 
 // periodic function, runs state machine and updates airspeed when value is available
 //  called at 10x update rate

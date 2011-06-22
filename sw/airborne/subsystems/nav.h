@@ -49,7 +49,7 @@ extern float cur_pos_y;
 extern float last_x, last_y;
 
 extern float desired_x, desired_y, nav_altitude, flight_altitude, nav_glide_pitch_trim;
-extern float nav_altitude_at_auto2_switch;
+
 extern bool_t nav_capture_altitude;
 extern pprz_t nav_throttle_setpoint;
 extern float nav_pitch; /* Rad */
@@ -87,8 +87,11 @@ extern uint8_t nav_oval_count;
 
 extern float nav_radius; /* m */
 extern float nav_course; /* degrees, clockwise, 0.0 = N */
-extern float nav_climb; /* m/s */
-extern float nav_shift; /* Lateral shift along a route. In meters */
+extern float nav_alt;    /* m */
+extern float nav_roll;   /* degrees */
+extern float nav_climb;  /* m/s */
+extern float nav_shift;  /* Lateral shift along a route. In meters */
+extern float nav_altitude_at_auto2_switch;
 
 extern float nav_ground_speed_pgain, nav_ground_speed_setpoint;
 
@@ -104,7 +107,7 @@ void nav_without_gps(void);
 
 extern float nav_circle_trigo_qdr; /** Angle from center to mobile */
 extern void nav_circle_XY(float x, float y, float radius);
-extern bool_t fly_to_xy_from_rc();
+
 #define NavCircleWaypoint(wp, radius) \
   nav_circle_XY(waypoints[wp].x, waypoints[wp].y, radius)
 

@@ -185,13 +185,12 @@ void dl_parse_msg(void) {
     DOWNLINK_SEND_DL_VALUE(DefaultChannel, &i, &val);    
   } else	
 #endif /** Else there is no dl_settings section in the flight plan */
-
 #ifdef USE_JOYSTICK
-//    if (msg_id == DL_JOYSTICK_RAW && DL_JOYSTICK_RAW_ac_id(dl_buffer) == AC_ID) {
-//      JoystickHandeDatalink(DL_JOYSTICK_RAW_roll(dl_buffer),
-//			    DL_JOYSTICK_RAW_pitch(dl_buffer),
-//			    DL_JOYSTICK_RAW_throttle(dl_buffer));
-//    } else
+    if (msg_id == DL_JOYSTICK_RAW && DL_JOYSTICK_RAW_ac_id(dl_buffer) == AC_ID) {
+      JoystickHandeDatalink(DL_JOYSTICK_RAW_roll(dl_buffer),
+			    DL_JOYSTICK_RAW_pitch(dl_buffer),
+			    DL_JOYSTICK_RAW_throttle(dl_buffer));
+    } else
 #endif // USE_JOYSTICK
 #if defined RADIO_CONTROL && defined RADIO_CONTROL_TYPE_DATALINK
     if (msg_id == DL_RC_3CH /*&& DL_RC_3CH_ac_id(dl_buffer) == TX_ID*/) {

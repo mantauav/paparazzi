@@ -53,4 +53,7 @@ void parse_nmea_char( uint8_t c );
 
 uint8_t get_weekday( uint8_t dd, uint8_t mm, uint8_t yy);
 
+void gpsSend(uint8_t msg[]);
+uint8_t isValidSentence(uint8_t current_idx);
+
 #endif /* GPS_NMEA_H */

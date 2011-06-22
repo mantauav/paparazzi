@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include <ivy.h>
 #include <ivyloop.h>
+#include <Ivy/version.h>
 #include <timer.h>
 
 #include <termios.h>
@@ -682,8 +683,14 @@ main (int argc, char**argv)
 	  SetGenlockOff();
 	}
 
+
 	/* main loop */
-	IvyMainLoop();
+#if IVYMINOR_VERSION == 8
+        IvyMainLoop (NULL,NULL);
+#else
+        IvyMainLoop ();
+#endif
+
 }
 
 

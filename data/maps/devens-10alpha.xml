@@ -1,0 +1,4 @@
+<map file="devens-10alpha.png" projection="Mercator">
+  <point x="0" y="0" geo="WGS84 42.508510	-71.679105"/>
+  <point x="2869" y="1100" geo="WGS84 42.499805	-71.648320"/>
+</map>

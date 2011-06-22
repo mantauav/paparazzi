@@ -44,10 +44,6 @@
 #include "fbw_downlink.h"
 #include "paparazzi.h"
 
-#ifdef USE_RC_GYRO
-//#include "modules/sensors/rc_gyro.h"
-#endif
-
 #ifdef MCU_SPI_LINK
 #include "link_mcu.h"
 #endif
@@ -172,6 +168,8 @@ void periodic_task_fbw( void ) {
     fbw_mode = fbw_rc_really_lost_mode;
 //    pprz_mode= PPRZ_MODE_HOME;
   }
+  if (kill_throttle)
+     fbw_mode = FBW_MODE_FAILSAFE;
   if (fbw_mode == FBW_MODE_FAILSAFE)
     set_failsafe_mode();
   if (fbw_mode == FBW_MODE_MANUAL && radio_control.status == RC_REALLY_LOST) {
@@ -183,7 +181,7 @@ void periodic_task_fbw( void ) {
    fbw_mode = FBW_MODE_FAILSAFE;
    set_failsafe_mode();
 }*/
-if (radio_control.status==RC_OK)
+if ((radio_control.status==RC_OK) && !kill_throttle)
 {
    if (pprz_mode == PPRZ_MODE_MANUAL)
    {

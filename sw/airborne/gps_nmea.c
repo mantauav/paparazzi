@@ -111,8 +111,8 @@ void gps_init( void ) {
 #endif
 }
 
-void ubxsend_cfg_rst(uint16_t bbr , uint8_t reset_mode) {
-}
+//void ubxsend_cfg_rst(uint16_t bbr , uint8_t reset_mode) {
+//}
 
 
 #ifdef GPS_CONFIGURE
@@ -197,7 +197,7 @@ uint8_t nextField(uint8_t* current_idx){
  * Return 1 if sentence is valid, 0 otherwise.
  */
 uint8_t isValidSentence(uint8_t current_idx){
-  
+  return 0;
 }
 
 /**
@@ -241,7 +241,7 @@ void parse_nmea_GPGSA() {
 
   // get active satellite info
   //ignored
-  for (activesv = 3;activesv++;activesv <=14){
+  for (activesv = 3;activesv <=14;activesv++){
     if (!nextField(&i)) return;
   }
   
@@ -256,7 +256,7 @@ void parse_nmea_GPGSA() {
   if (!nextField(&i)) return;
   //get VDOP
   //ignored
-
+  return;
   
 }
 
@@ -606,7 +606,8 @@ void parse_gps_msg( void ) {
     } else if (isGPGSA()){
       parse_nmea_GPGSA();
     } else if (isGPGSV()){
-      parse_nmea_GPGSV();
+      //parse_nmea_GPGSV();
+      ;;
     } else {
       // nothing to do, ignore unsupported message
     }

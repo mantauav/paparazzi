@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE airframe SYSTEM "airframe.dtd">
 
 <!-- Skate
@@ -14,35 +12,21 @@
     <servo name="MOTOR_LEFT"    no="7" min="1000" neutral="1000" max="2000"/>
     <servo name="MOTOR_RIGHT"   no="6" min="1000" neutral="1000" max="2000"/>
     <servo name="AILEVON_LEFT"  no="4" min="2000" neutral="1500" max="1000"/>
-    <servo name="AILEVON_RIGHT" no="3" min="1000" neutral="1500" max="2000"/>
-    <servo name="CAM_SWITCH"    no="0" min="1000" neutral="1500" max="2000"/>  
+    <servo name="AILEVON_RIGHT" no="3" min="1000" neutral="1500" max="2000"/>  
   </servos>
 
   <commands>
-    <axis name="THROTTLE"        failsafe_value="0"/>
-    <axis name="ROLL"            failsafe_value="0"/>
-    <axis name="PITCH"           failsafe_value="0"/>
-    <axis name="YAW"             failsafe_value="0"/>
-    <axis name="CAM_SWITCH"      failsafe_value="9600"/>
+    <axis name="THROTTLE" failsafe_value="0"/>
+    <axis name="ROLL"     failsafe_value="0"/>
+    <axis name="PITCH"    failsafe_value="0"/>
+    <axis name="YAW"      failsafe_value="0"/>
   </commands>
 
-<!--
   <rc_commands>
     <set command="THROTTLE" value="@THROTTLE"/>
-    <set command="ROLL"     value="@ROLL+rc_roll_trim"/>
-    <set command="PITCH"    value="@PITCH+rc_pitch_trim"/>
-    <set command="YAW"      value="@YAW*0.5+rc_yaw_trim"/>
-  </rc_commands>
--->
-  <ap_only_commands>
-    <copy command="CAM_SWITCH"/>
-  </ap_only_commands>
-
-  <rc_commands>
-    <set command="THROTTLE"      value="@THROTTLE"/>
-    <set command="ROLL"          value="@ROLL + rc_roll_trim"/>
-    <set command="PITCH"         value="@PITCH + rc_pitch_trim"/>
-    <set command="YAW"           value="@YAW*0.5 + rc_yaw_trim"/>
+    <set command="ROLL"     value="@ROLL"/>
+    <set command="PITCH"    value="@PITCH"/>
+    <set command="YAW"      value="@YAW*0.5"/>
   </rc_commands>
 
   <section name="MIXER">
@@ -52,14 +36,13 @@
   </section>
 
   <command_laws>
-    <let var="aileron"           value="@ROLL  * AILEVON_AILERON_RATE"/>
-    <let var="elevator"          value="@PITCH * AILEVON_ELEVATOR_RATE"/>
-    <let var="yaw"               value="@YAW * RUDDER_RATE"/>
-    <set servo="MOTOR_LEFT"      value="@THROTTLE + $yaw"/>
-    <set servo="MOTOR_RIGHT"     value="@THROTTLE - $yaw"/>
-    <set servo="AILEVON_LEFT"    value="$elevator - $aileron"/>
-    <set servo="AILEVON_RIGHT"   value="$elevator + $aileron"/>
-    <set servo="CAM_SWITCH"	 value="@CAM_SWITCH"/>
+    <let var="aileron"  value="@ROLL  * AILEVON_AILERON_RATE"/>
+    <let var="elevator" value="@PITCH * AILEVON_ELEVATOR_RATE"/>
+    <let var="yaw"      value="@YAW * RUDDER_RATE"/>
+    <set servo="MOTOR_LEFT"    value="@THROTTLE + $yaw"/>
+    <set servo="MOTOR_RIGHT"   value="@THROTTLE - $yaw"/>
+    <set servo="AILEVON_LEFT"  value="$elevator - $aileron"/>
+    <set servo="AILEVON_RIGHT" value="$elevator + $aileron"/>
   </command_laws>
 
   <section name="AUTO1" prefix="AUTO1_">
@@ -78,6 +61,7 @@
 
   <section name="BAT">
     <define name="MILLIAMP_AT_FULL_THROTTLE" value="2000"/>
+
     <define name="CATASTROPHIC_BAT_LEVEL" value="9.3" unit="V"/>
   </section>
 
@@ -90,7 +74,7 @@
     <define name="NO_XBEE_API_INIT" value="TRUE"/>
     <define name="ALT_KALMAN_ENABLED" value="TRUE"/>
 
-    <define name="DEFAULT_CIRCLE_RADIUS" value="100."/>
+    <define name="DEFAULT_CIRCLE_RADIUS" value="50."/>
 
     <define name="GLIDE_AIRSPEED" value="10"/>
     <define name="GLIDE_VSPEED" value="3."/>
@@ -108,7 +92,7 @@
     <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.35"/>
     <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.0"/>
     <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="0.95"/>
-<!--    <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/> -->
+    <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500"/>
     <define name="AUTO_THROTTLE_DASH_TRIM" value="-4000"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.15" unit="%/(m/s)"/>
     <define name="AUTO_THROTTLE_PGAIN" value="-0.01"/>
@@ -121,42 +105,40 @@
   </section>
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
-
     <define name="COURSE_PGAIN" value="-0.308"/>
     <define name="COURSE_DGAIN" value="0.012"/>
-
- 
+    <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
     <define name="PITCH_MAX_SETPOINT" value="0.523" /> <!--  0.523  ~ 30 deg  -->
-    <define name="PITCH_MIN_SETPOINT" value="0.1046667"/> <!-- -0.087 ~ -5 deg   -->
-    <define name="PITCH_NEUTRAL"             value="0.26"/>
-    <define name="PITCH_PGAIN" value="-15500."/>
+    <define name="PITCH_MIN_SETPOINT" value="-0.087"/> <!-- -0.087 ~ -5 deg   -->
+
+    <define name="PITCH_PGAIN" value="-12000."/>
     <define name="PITCH_DGAIN" value="1.5"/>
 
-    <define name="ROLL_MAX_SETPOINT" value="0.91"  />  <!--  0.91   ~ 52 deg  -->
-    <define name="ATTITUDE_HOLD_ROLL_GAIN"   value="0"/>
-    <define name="ATTITUDE_HOLD_RUDDER_GAIN" value="-3600"/> 
+    <define name="ELEVATOR_OF_ROLL" value="1250"/>
+
     <define name="ROLL_SLEW" value="0.045"/>
+
     <define name="ROLL_ATTITUDE_GAIN" value="-5300"/>
     <define name="ROLL_ATTITUDE_RUDDER_GAIN" value="-1800"/>
-    <define name="ELEVATOR_OF_ROLL" value="1250"/>
-    <define name="ROLL_NEUTRAL"             value="0.0"/>
+    
+    <define name="ATTITUDE_HOLD_ROLL_GAIN"   value="0"/>
+    <define name="ATTITUDE_HOLD_RUDDER_GAIN" value="-3600"/> 
+
     <define name="ROLL_RATE_GAIN" value="-1350"/>
     <define name="ROLL_RATE_MODE_DEFAULT"  value="0"/>
     <define name="ROLL_RATE_SETPOINT_PGAIN"     value="-5"  />
-
     <define name="HI_THROTTLE_ROLL_RATE_PGAIN"  value="1000"/>
     <define name="LO_THROTTLE_ROLL_RATE_PGAIN"  value="1000"/>
     <define name="RATE_LOOP"/>
   </section>
 
-<!-- Currently not used -->
   <section name="AGGRESSIVE" prefix="AGR_">
     <define name="BLEND_START" value="20"/><!-- Altitude Error to Initiate Aggressive Climb CANNOT BE ZERO!!-->
     <define name="BLEND_END" value="10"/><!-- Altitude Error to Blend Aggressive to Regular Climb Modes  CANNOT BE ZERO!!-->
-    <define name="CLIMB_THROTTLE" value="0.7"/><!-- Gaz for Aggressive Climb -->
+    <define name="CLIMB_THROTTLE" value="1.00"/><!-- Gaz for Aggressive Climb -->
     <define name="CLIMB_PITCH" value="0.3"/><!-- Pitch for Aggressive Climb -->
-    <define name="DESCENT_THROTTLE" value="0.15"/><!-- Gaz for Aggressive Decent -->
-    <define name="DESCENT_PITCH" value="0.17"/><!-- Pitch for Aggressive Decent -->
+    <define name="DESCENT_THROTTLE" value="0.1"/><!-- Gaz for Aggressive Decent -->
+    <define name="DESCENT_PITCH" value="-0.25"/><!-- Pitch for Aggressive Decent -->
     <define name="CLIMB_NAV_RATIO" value="0.8"/><!-- Percent Navigation for Altitude Error Equal to Start Altitude -->
     <define name="DESCENT_NAV_RATIO" value="1.0"/>
     </section>
@@ -175,22 +157,25 @@
 
 <modules>
   <load name="ins_vn100.xml"/>
-
   <load name="adc_generic.xml">
     <configure name="ADC_CHANNEL_GENERIC1" value="ADC_6"/>
     <configure name="ADC_CHANNEL_GENERIC2" value="ADC_4"/>
     <configure name="ADC_CHANNEL_GENERIC3" value="ADC_3"/>
   </load>
-
-  <load name="airspeed_MS5701.xml"/>
+  <load name="airspeed_adc.xml">
+      <configure name="ADC_AIRSPEED"     value="ADC_6"/> 
+      <define name="AIRSPEED_SCALE"      value="1.075"/>      <!-- Correction from wind tunnel testing             -->
+      <define name="AIRSPEED_BIAS"       value="10.0/1.075"/> <!-- Correction from wind tunnel testing             -->
+      <define name="AIRSPEED_ADC_OFFSET" value="-13"/>        <!-- From previous code. Not sure why this is needed -->
+      <define name="AIRSPEED_ADC_SCALE"  value="0.0091575"/>  <!-- Convert ADC value to millibars                  -->
+      <define name="AIRSPEED_ADC_DELTAPRESSURE"/>             <!-- use the dp2cas function to calculate airspeed   -->
+  </load>
   <load name="baro_MS5803.xml"/>
   <load name="rc_gyro.xml">
     <define name="RC_GYRO_ROLL_GAIN"  value="-1100"/>
     <define name="RC_GYRO_PITCH_GAIN"  value="-1000"/>
     <define name="RC_GYRO_YAW_GAIN"  value="-1000"/>
   </load>
-  <load name="cam.xml"/>
-  <load name="rc_trim.xml"/>
 </modules>
 
 <!-- HACK: for current use in sim -->
@@ -217,20 +202,19 @@
     <target name="ap" 			board="tiny_2.11"           />
       <define name="MANTA_TESTING"/>
 <!--      <define name="AGR_CLIMB" /> -->
-<!--      <define name="LOITER_TRIM" /> -->
+      <define name="LOITER_TRIM" />
       <define name="ALT_KALMAN" />
       <define name="MEASURE_AIRSPEED"                                       />
       <define name="RC_LOST_MODE"		value="PPRZ_MODE_HOME"      /> <!-- This is the PPRZ default -->
-      <define name="ESTIMATOR_HEADING_SOURCE"   value="1"/>
       <define name="RC_LOST_MODE_FBW"           value="FBW_MODE_FAILSAFE"   /> <!-- This should be set to FBW_MODE_AUTO once successfull autopilot flights have been completed. -->
 <!--    <define name="USE_AIRSPEED"/> -->
 
 <!------------------SUBSYSTEMS--------------->
     <subsystem name="control"                      />
-    <subsystem name="usb_debug"                   />
+<!--    <subsystem name="usb_serial"                   /> -->
     <subsystem name="spi"/> 
     <subsystem name="radio_control" type="datalink"/>
-    <define name="RADIO_CONTROL_NO_MODESET"/> 
+       <define name="RADIO_CONTROL_NO_MODESET"/>
 <!--    <subsystem name="attitude" 		type="infrared"/> -->
     <!-- Communication -->
     <subsystem name="telemetry" 	type="transparent">

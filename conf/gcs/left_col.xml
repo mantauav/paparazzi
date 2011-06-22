@@ -4,7 +4,7 @@
  <columns>
    <rows size="400">
       <widget size="300" name="strips"/>
-<!--      <widget size="300" name="plugin"/> -->
+      <widget size="300" name="plugin"/> 
       <widget name="alarms"/>
    </rows>
    <rows>

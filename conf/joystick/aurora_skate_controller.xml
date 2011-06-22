@@ -38,12 +38,12 @@ It has 9 buttons.
   <button index="11" name="b11"/>
 </input>
 
-<messages period="0.0333333333">
+<messages period="0.02">
 
 
   <message class="datalink" name="RC_4CH" send_always="1">
    <field name="joystick_id" value="JoystickID()"/>
-   <field name="throttle"    value="Scale(ly,-10,127)"/>
+   <field name="throttle"    value="Scale(ly,0,127)"/>
    <field name="roll"        value="rx"/>
    <field name="yaw"         value="lx"/>
    <field name="pitch"       value="0-ry"/>
@@ -129,9 +129,20 @@ It has 9 buttons.
   </message>
 
   <!-- Green Button -->  <!-- MANUAL mode -->
+
   <message class="ground" name="DL_SETTING" send_always="0" on_event="b9">
     <field name="index" value="IndexOfSetting('pprz_mode')"/>
     <field name="value" value="0"/> 
+  </message>
+
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b8 || b7 || b9">
+    <field name="index" value="IndexOfSetting('kill_throttle')"/>
+    <field name="value" value="0"/> 
+  </message>
+
+  <message class="ground" name="DL_SETTING" send_always="0" on_event="b1 && b10">
+    <field name="index" value="IndexOfSetting('kill_throttle')"/>
+    <field name="value" value="1"/> 
   </message>
 
  <message class="ground" name="DL_SETTING" send_always="0" on_event="b7 || b8 || b9">

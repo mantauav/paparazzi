@@ -142,8 +142,8 @@
 #include "subsystems/imu.h"
 #define PERIODIC_SEND_IMU_ACCEL_RAW(_chan) { DOWNLINK_SEND_IMU_ACCEL_RAW(_chan, &imu.accel_unscaled.x, &imu.accel_unscaled.y, &imu.accel_unscaled.z)}
 #define PERIODIC_SEND_IMU_GYRO_RAW(_chan) { DOWNLINK_SEND_IMU_GYRO_RAW(_chan, &imu.gyro_unscaled.p, &imu.gyro_unscaled.q, &imu.gyro_unscaled.r)}
-#define PERIODIC_SEND_IMU_ACCEL(_chan) { DOWNLINK_SEND_IMU_ACCEL_RAW(_chan, &imu.accel.x, &imu.accel.y, &imu.accel.z)}
-#define PERIODIC_SEND_IMU_GYRO(_chan) { DOWNLINK_SEND_IMU_GYRO_RAW(_chan, &imu.gyro.p, &imu.gyro.q, &imu.gyro.r)}
+#define PERIODIC_SEND_IMU_ACCEL(_chan) { struct FloatVect3 accel_float; ACCELS_FLOAT_OF_BFP(accel_float, imu.accel); DOWNLINK_SEND_IMU_ACCEL(_chan, &accel_float.x, &accel_float.y, &accel_float.z)}
+#define PERIODIC_SEND_IMU_GYRO(_chan) { struct FloatRates gyro_float; RATES_FLOAT_OF_BFP(gyro_float, imu.gyro); DOWNLINK_SEND_IMU_GYRO(_chan, &gyro_float.p, &gyro_float.q, &gyro_float.r)}
 #else
 #define PERIODIC_SEND_IMU_ACCEL_RAW(_chan) {}
 #define PERIODIC_SEND_IMU_GYRO_RAW(_chan) {}
@@ -221,8 +221,13 @@
 #include "firmwares/fixedwing/stabilization/stabilization_adaptive.h"
 #define PERIODIC_SEND_H_CTL_A(_chan) DOWNLINK_SEND_H_CTL_A(_chan, &h_ctl_roll_sum_err, &h_ctl_ref_roll_angle, &h_ctl_pitch_sum_err, &h_ctl_ref_pitch_angle)
 
-#ifdef MANTA_TESTING
-#define PERIODIC_SEND_MANTA_TESTING(_chan) DOWNLINK_SEND_MANTA_TESTING(_chan,&ins_eulers.phi,&ins_eulers.theta,&ins_eulers.psi,&ins_rates.p,&ins_rates.q,&ins_rates.r,&ins_accel.x,&ins_accel.y,&ins_accel.z,&ins_mag.x,&ins_mag.y,&ins_mag.z,&baro_MS5803_last_altitude,&df1.x,&h_ctl_last_course_error,&df1.z,&df2.x,&df2.y,&df2.z)
+#ifdef SITL
+#define PERIODIC_SEND_SKATE_TESTING(_chan) {}
+#define PERIODIC_SEND_MS5701_TESTING(_chan) {}
+#define PERIODIC_SEND_MS5803_TESTING(_chan) {}
+#else
+#ifdef SKATE_TESTING
+#define PERIODIC_SEND_SKATE_TESTING(_chan) DOWNLINK_SEND_SKATE_TESTING(_chan,&ins_eulers.phi,&ins_eulers.theta,&ins_eulers.psi,&ins_rates.p,&ins_rates.q,&ins_rates.r,&ins_accel.x,&ins_accel.y,&ins_accel.z,&ins_mag.x,&ins_mag.y,&ins_mag.z,&baro_MS5803_last_altitude,&df1.x,&h_ctl_last_course_error,&df1.z,&df2.x,&df2.y,&df2.z)
 #endif
 
 #ifdef USE_AIRSPEED_MS5701
@@ -232,7 +237,7 @@
 #ifdef USE_BARO_MS5803
 #define PERIODIC_SEND_MS5803_TESTING(_chan) DOWNLINK_SEND_MS5803_TESTING(_chan, &ms5803_dT, &baro_periodic_state, &ms5803_state, &MS5803_last_pressure, &MS5803_last_temperature, &baro_MS5803_last_altitude, &baro_MS5803_sealevel_reference_pressure, MS5803_CAL_NUM_VALUES, ms5803_cal_table )
 #endif
-
+#endif
 
 
 #endif /* AP_DOWNLINK_H */

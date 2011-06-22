@@ -36,6 +36,7 @@
  *  code to read pressure and calculate altitude from the measurement specialities MS5803 sensor.
  * 
  *   datasheet for sensor is here:  
+
  *    MS5803   http://www.meas-spec.com/pressure-sensors/board-level-pressure-sensors/digital-pressure-sensors.aspx#
  */
 
@@ -69,6 +70,10 @@ unsigned char baro_read_byte (void);
 void baro_dump_debugging(void);
 void baro_reset(void);
 int check_baro_state(void);
+void baro_startTemperature (void);
+void baro_startPressure (void);
+float baro_readPressure (void);
+float baro_readTemperature (void);
 
 //calibration functions
 int baro_calibrateReferenceAltitude (float refAlt);
@@ -86,6 +91,9 @@ extern float MS5803_last_pressure;
 extern int32_t baro_periodic_state;
 
 extern float baro_MS5803_sealevel_reference_pressure;
+
+inline void ms5803_select(void);
+inline void ms5803_unselect(void);
 
 #endif //USE_BARO_MS5803
 

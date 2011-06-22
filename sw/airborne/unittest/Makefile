@@ -13,7 +13,7 @@
 # $^ - right side of :
 
 #airframe = SKATE_GENERIC
-airframe = MANTA
+airframe = SKATE
 
 top_dir      = ../../..
 sw_dir       = $(top_dir)/sw

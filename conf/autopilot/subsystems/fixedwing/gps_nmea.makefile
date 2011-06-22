@@ -1,4 +1,4 @@
-# Manta NMEA GPS unit
+# NMEA GPS unit
 
 
 ap.CFLAGS += -DUSE_GPS  -DNMEA -DGPS_USE_LATLONG

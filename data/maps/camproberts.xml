@@ -1,0 +1,4 @@
+<map file="camproberts.png" projection="Mercator">
+  <point x="0" y="0" geo="WGS84 35.753659	-120.785452"/>
+  <point x="3669" y="1668" geo="WGS84 35.739126	-120.746081"/>
+</map>
